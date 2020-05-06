@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <com.starts.hencoderview.view.FlipBoardView
+        android:id="@+id/flipView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+    <SeekBar
+        android:id="@+id/seekRotate"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:max="100"
+        android:progressDrawable="@drawable/layer_list_progress_drawable"
+        android:layout_marginBottom="100dp"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:visibility="invisible"
+        />
+
+    <SeekBar
+        android:id="@+id/seekCamera"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:max="100"
+        android:layout_marginBottom="100dp"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:progressDrawable="@drawable/layer_list_progress_drawable"
+        android:visibility="invisible"
+        app:layout_constraintTop_toBottomOf="@+id/seekRotate"
+        android:layout_marginTop="20dp"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
