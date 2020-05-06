@@ -47,14 +47,11 @@ class FlipBoardScene : AppCompatScene() {
         val cameraAnimator = ObjectAnimator.ofFloat(flipView, "cameraAngle", 0f, 45f)
         cameraAnimator.interpolator = LinearInterpolator()
         cameraAnimator.duration = 300
-//        cameraAnimator.startDelay = 500
-//        cameraAnimator.start()
 
         val animator = ObjectAnimator.ofFloat(flipView, "angle", 0f, 360f)
         animator.interpolator = DecelerateInterpolator()
         animator.duration = 1000
-//        animator.startDelay = 500
-//        animator.start()
+
         val animatorSet = AnimatorSet()
         animatorSet.playSequentially(cameraAnimator, animator)
         animatorSet.startDelay = 500
