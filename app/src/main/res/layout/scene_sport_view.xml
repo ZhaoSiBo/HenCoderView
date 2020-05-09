@@ -19,8 +19,6 @@
         android:layout_marginBottom="100dp"
         style="@android:style/Widget.ProgressBar.Horizontal"
         android:progressDrawable="@drawable/layer_list_progress_drawable"
-        android:indeterminateOnly="true"
-        android:indeterminateDrawable="@color/colorAccent"
         android:visibility="invisible"
         />
 

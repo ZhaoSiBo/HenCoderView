@@ -16,10 +16,9 @@ import com.bytedance.scene.ui.template.AppCompatScene
 
  */
 class MainScene : AppCompatScene() {
-
-
     private lateinit var btnSport: AppCompatButton
     private lateinit var btnFlipBoard: AppCompatButton
+    private lateinit var btnTagLayout: AppCompatButton
 
     override fun onCreateContentView(
         inflater: LayoutInflater,
@@ -29,17 +28,21 @@ class MainScene : AppCompatScene() {
         val root = inflater.inflate(R.layout.activity_main, null, false)
         btnSport = root.findViewById(R.id.btnSport)
         btnFlipBoard = root.findViewById(R.id.btnFlipBoard)
+        btnTagLayout = root.findViewById(R.id.btnTagLayout)
         return root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        setTitle("首页")
+        setTitle("HenCoderView")
         btnSport.setOnClickListener {
             requireNavigationScene().push(SportScene::class.java)
         }
         btnFlipBoard.setOnClickListener {
             requireNavigationScene().push(FlipBoardScene::class.java)
+        }
+        btnTagLayout.setOnClickListener {
+            requireNavigationScene().push(TagLayoutScene::class.java)
         }
 
         setStatusBarVisible(true)
