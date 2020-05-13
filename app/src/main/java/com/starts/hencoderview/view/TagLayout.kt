@@ -14,7 +14,7 @@ import kotlin.math.max
  *作者：Created by Administrator on 2020/5/9.
  *版本号：1.0
  */
-class TagLayout(context: Context?,attrs: AttributeSet?) : ViewGroup(context, attrs) {
+class TagLayout(context: Context?, attrs: AttributeSet?) : ViewGroup(context, attrs) {
 
     private val childBounds = ArrayList<Rect>()
     //1.调用每个子 View 的 measure() 来计算子 View 的尺寸
@@ -23,67 +23,67 @@ class TagLayout(context: Context?,attrs: AttributeSet?) : ViewGroup(context, att
     @SuppressLint("DrawAllocation")
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        val widthMeasureSize = MeasureSpec.getSize(widthMeasureSpec)
+        val widthMeasureMode = MeasureSpec.getMode(widthMeasureSpec)
 
-        var widthUsed = 0
-
-        var heightUsed = 0
-
-        //单行被占用的宽度
-        var lineWidthUsed = 0
+        var height = 0
+        var width = 0
 
         var lineMaxHeight = 0
+        var lineWidthUsed = 0
+        var lineHeightUsed = 0
 
-        //获取当前Layout的Spec（当前Layout的父View给自己的测量规则和尺寸）
-        val specMode  = MeasureSpec.getMode(widthMeasureSpec)
-        val specWidth  = MeasureSpec.getSize(widthMeasureSpec)
+
+
 
         for (i in 0 until childCount) {
-            val  childView = getChildAt(i)
-            //测量子View的宽度和高度（withUsed 给0 是位置让空间自由测量，这样就可以得到空间的自由尺寸，用来指导是否需要折行）
-            measureChildWithMargins(childView, widthMeasureSpec, 0, heightMeasureSpec, heightUsed)
-            //判断折行
-            if(lineWidthUsed  + childView.measuredWidth > specWidth){
+            val child = getChildAt(i)
+            measureChildWithMargins(child, 0, lineWidthUsed, heightMeasureSpec, lineHeightUsed)
+
+            if (child.measuredWidth + lineWidthUsed > widthMeasureSize) {
+                lineHeightUsed += lineMaxHeight
                 lineWidthUsed = 0
-                heightUsed += lineMaxHeight
                 lineMaxHeight = 0
-                measureChildWithMargins(childView, widthMeasureSpec, 0, heightMeasureSpec, heightUsed)
+                measureChildWithMargins(child, 0, lineWidthUsed, heightMeasureSpec, lineHeightUsed)
             }
 
-
-            //存位置
-            lateinit var childBound: Rect;
-            if (childBounds.size <= i) {
-                childBound = Rect()
-                childBounds.add(childBound)
+            //保存过程
+            if (i < childBounds.size) {
+                childBounds[i].set(
+                    lineWidthUsed,
+                    lineHeightUsed,
+                    lineWidthUsed + child.measuredWidth,
+                    lineHeightUsed + child.measuredHeight
+                )
             } else {
-                childBound = childBounds[i]
+                val childBound = Rect()
+                childBound.set(
+                    lineWidthUsed,
+                    lineHeightUsed,
+                    lineWidthUsed + child.measuredWidth,
+                    lineHeightUsed + child.measuredHeight
+                )
+                childBounds.add(childBound)
             }
-            childBound.set(
-                lineWidthUsed,
-                heightUsed,
-                lineWidthUsed + childView.measuredWidth,
-                heightUsed + childView.measuredHeight
-            )
 
-            lineWidthUsed += childView.measuredWidth
-            widthUsed  += max(widthUsed, lineWidthUsed)
-            lineMaxHeight = max(childView.measuredHeight,lineMaxHeight)
+            lineWidthUsed += child.measuredWidth
+            lineMaxHeight = max(lineMaxHeight, child.measuredHeight)
+            width = max(lineWidthUsed, width)
 
         }
+        height = lineHeightUsed + lineMaxHeight
+        setMeasuredDimension(width, height)
 
-        //存自己的测量宽度
-        val with = widthUsed
-        val height = heightUsed + lineMaxHeight
-        setMeasuredDimension(with, height)
     }
 
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         for (i in 0 until childCount) {
+            val bound = childBounds[i]
             val child = getChildAt(i)
-            val childBounds = childBounds[i]
-            child.layout(childBounds.left, childBounds.top, childBounds.right, childBounds.bottom)
+            child.layout(bound.left, bound.top, bound.right, bound.bottom)
         }
+
     }
 
     override fun generateLayoutParams(attrs: AttributeSet?): LayoutParams {
