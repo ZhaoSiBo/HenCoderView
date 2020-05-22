@@ -23,59 +23,44 @@ class TagLayout(context: Context?, attrs: AttributeSet?) : ViewGroup(context, at
     @SuppressLint("DrawAllocation")
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        val widthMeasureSize = MeasureSpec.getSize(widthMeasureSpec)
+
+        val widthMeasureSize  = MeasureSpec.getSize(widthMeasureSpec)
         val widthMeasureMode = MeasureSpec.getMode(widthMeasureSpec)
 
-        var height = 0
-        var width = 0
+        var widthUsed = 0
+        var heightUsed = 0
 
-        var lineMaxHeight = 0
+        var maxHeight = 0
         var lineWidthUsed = 0
-        var lineHeightUsed = 0
 
-
-
-
-        for (i in 0 until childCount) {
+        for(i in 0 until childCount ){
             val child = getChildAt(i)
-            measureChildWithMargins(child, 0, lineWidthUsed, heightMeasureSpec, lineHeightUsed)
-
-            if (child.measuredWidth + lineWidthUsed > widthMeasureSize) {
-                lineHeightUsed += lineMaxHeight
+            measureChildWithMargins(child,widthMeasureSpec, 0 , heightMeasureSpec ,heightUsed)
+            if(lineWidthUsed + child.measuredWidth > widthMeasureSize){
+                heightUsed += maxHeight
+                maxHeight = 0
                 lineWidthUsed = 0
-                lineMaxHeight = 0
-                measureChildWithMargins(child, 0, lineWidthUsed, heightMeasureSpec, lineHeightUsed)
+                measureChildWithMargins(child,widthMeasureSpec, 0 , heightMeasureSpec,heightUsed)
             }
 
-            //保存过程
-            if (i < childBounds.size) {
-                childBounds[i].set(
-                    lineWidthUsed,
-                    lineHeightUsed,
-                    lineWidthUsed + child.measuredWidth,
-                    lineHeightUsed + child.measuredHeight
-                )
-            } else {
-                val childBound = Rect()
-                childBound.set(
-                    lineWidthUsed,
-                    lineHeightUsed,
-                    lineWidthUsed + child.measuredWidth,
-                    lineHeightUsed + child.measuredHeight
-                )
-                childBounds.add(childBound)
+
+            if(i < childBounds.size){
+                val bound = childBounds[i]
+                bound.set(lineWidthUsed , heightUsed, lineWidthUsed + child.measuredWidth ,heightUsed + child.measuredHeight)
+            }else{
+                val bound = Rect()
+                bound.set(lineWidthUsed , heightUsed, lineWidthUsed + child.measuredWidth ,heightUsed + child.measuredHeight)
+                childBounds.add(bound)
             }
+
+            maxHeight = max(maxHeight , child.measuredHeight)
 
             lineWidthUsed += child.measuredWidth
-            lineMaxHeight = max(lineMaxHeight, child.measuredHeight)
-            width = max(lineWidthUsed, width)
 
+            widthUsed = max(lineWidthUsed , widthUsed)
         }
-        height = lineHeightUsed + lineMaxHeight
-        setMeasuredDimension(width, height)
-
+        setMeasuredDimension(widthUsed , heightUsed+ maxHeight)
     }
-
 
     override fun onLayout(changed: Boolean, l: Int, t: Int, r: Int, b: Int) {
         for (i in 0 until childCount) {

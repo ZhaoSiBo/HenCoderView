@@ -9,23 +9,22 @@ import com.bytedance.scene.ui.template.AppCompatScene
 /**
 
  *文件描述：.
- *作者：Created by Administrator on 2020/5/9.
+ *作者：Created by Administrator on 2020/5/20.
  *版本号：1.0
 
  */
-class TagLayoutScene : AppCompatScene() {
+class ScaleImageScene :AppCompatScene() {
     override fun onCreateContentView(
         inflater: LayoutInflater,
         container: ViewGroup,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.scene_tag_layout,null)
+        return inflater.inflate(R.layout.scene_scale_image_view,null)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        setTitle("TagLayout")
+        setTitle("ScaleImageView")
     }
-
 
 }

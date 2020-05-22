@@ -19,6 +19,7 @@ class MainScene : AppCompatScene() {
     private lateinit var btnSport: AppCompatButton
     private lateinit var btnFlipBoard: AppCompatButton
     private lateinit var btnTagLayout: AppCompatButton
+    private lateinit var btnScaleImg: AppCompatButton
 
     override fun onCreateContentView(
         inflater: LayoutInflater,
@@ -29,6 +30,7 @@ class MainScene : AppCompatScene() {
         btnSport = root.findViewById(R.id.btnSport)
         btnFlipBoard = root.findViewById(R.id.btnFlipBoard)
         btnTagLayout = root.findViewById(R.id.btnTagLayout)
+        btnScaleImg = root.findViewById(R.id.btnScaleImg)
         return root
     }
 
@@ -44,6 +46,10 @@ class MainScene : AppCompatScene() {
         btnTagLayout.setOnClickListener {
             requireNavigationScene().push(TagLayoutScene::class.java)
         }
+        btnScaleImg.setOnClickListener {
+            requireNavigationScene().push(ScaleImageScene::class.java)
+        }
+
 
         setStatusBarVisible(true)
         setToolbarVisible(true)
