@@ -24,163 +24,126 @@ import kotlin.math.min
  *版本号：1.0
 
  */
-class ScaleImageView(context: Context, attrs: AttributeSet) : View(context, attrs),
-    GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener,Runnable {
+class ScaleImageView(context: Context, attrs: AttributeSet) : View(context, attrs),GestureDetector.OnDoubleTapListener,GestureDetector.OnGestureListener {
 
-    private var originOffsetX: Float = 0f
-    private var originOffsetY: Float = 0f
+    private var originalOffsetX = 0f
+    private var originalOffsetY = 0f
 
-    private var offsetX = 0f
-    private var offsetY = 0f
-
-    private var isBig: Boolean = false
-
-    private var bigScale = 0f
-    private var smallScale = 0f
     private var currentScale = 0f
         set(value) {
             field = value
             invalidate()
         }
+    private var bigScale = 0f
+    private var smallScale = 0f
 
+    private val OVER_SCALE_FACTOR = 1.2f
 
-    private val overScroller: OverScroller = OverScroller(context)
+    private var isBig = false
 
-    private val gestureDetectorCompat = GestureDetectorCompat(context, this)
+    private var offsetX = 0f
+    private var offsetY = 0f
 
-    private lateinit var scaleAnimator: ObjectAnimator
+    private val gestureDetector:GestureDetectorCompat by  lazy {
+        GestureDetectorCompat(context,this)
+    }
 
+    private val scroll = OverScroller(context)
+
+    private val scaleAnimation: ObjectAnimator by lazy {
+        ObjectAnimator.ofFloat(this, "currentScale", smallScale, bigScale)
+    }
+
+    private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
     private val bitmap: Bitmap by lazy {
         BitmapFactory.decodeResource(context.resources, R.mipmap.ui_scale_img_2)
     }
 
-    private val bitmapPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        originOffsetX = (w * 1f - bitmap.width) / 2
-        originOffsetY = (h * 1f - bitmap.height) / 2
 
-        if (bitmap.width * 1f / bitmap.height > w * 1f / h) {
-            bigScale = height * 1f / bitmap.height * 1.5f
+        originalOffsetX = (width * 1f - bitmap.width) / 2f
+        originalOffsetY = (height * 1f - bitmap.height) / 2f
+
+        if (bitmap.width * 1f / bitmap.height > width * 1f / height) {
             smallScale = width * 1f / bitmap.width
+            bigScale = height * 1f / bitmap.height * OVER_SCALE_FACTOR
         } else {
-            bigScale = width * 1f / bitmap.width * 1.5f
             smallScale = height * 1f / bitmap.height
+            bigScale = width * 1f / bitmap.width * OVER_SCALE_FACTOR
         }
-
         currentScale = smallScale
-        scaleAnimator = ObjectAnimator.ofFloat(this, "currentScale", smallScale, bigScale)
-
-
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        val scaleFraction = (bigScale - smallScale) * scaleAnimator.animatedFraction
-        canvas.translate(offsetX * scaleFraction, offsetY * scaleFraction)
-        canvas.scale(currentScale, currentScale, width * 1f / 2, height * 1f / 2)
-        canvas.drawBitmap(bitmap, originOffsetX, originOffsetY, bitmapPaint)
+        canvas.translate(offsetX * currentScale , offsetY * currentScale)
+        canvas.scale(currentScale, currentScale, width / 2f, height / 2f)
+        canvas.drawBitmap(bitmap, originalOffsetX, originalOffsetY, paint)
+
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        return gestureDetectorCompat.onTouchEvent(event)
+        return gestureDetector.onTouchEvent(event)
     }
 
-    override fun onShowPress(e: MotionEvent?) {
-
-    }
-
-    override fun onSingleTapUp(e: MotionEvent?): Boolean {
+    override fun onDoubleTap(e: MotionEvent?):Boolean{
+        isBig = !isBig
+        if(isBig){
+            scaleAnimation.start()
+        }else{
+            scaleAnimation.reverse()
+        }
         return false
     }
 
-    override fun onDown(e: MotionEvent?): Boolean {
-        return true
+    override fun onDoubleTapEvent(e: MotionEvent?) = false
+    override fun onSingleTapConfirmed(e: MotionEvent?) = false
+    override fun onShowPress(e: MotionEvent?){
+
     }
+    override fun onSingleTapUp(e: MotionEvent?): Boolean = false
+
+    override fun onDown(e: MotionEvent?) = true
 
     override fun onFling(
-        e1: MotionEvent,
-        e2: MotionEvent,
+        e1: MotionEvent?,
+        e2: MotionEvent?,
         velocityX: Float,
         velocityY: Float
     ): Boolean {
-        if (isBig) {
-            overScroller.fling(
-                offsetX.toInt(),
-                offsetY.toInt(),
-                velocityX.toInt(),
-                velocityY.toInt(),
-                (-(bitmap.width * bigScale - width) / 2).toInt(),
-                ((bitmap.width * bigScale - width) / 2).toInt(),
-                (-(bitmap.height * bigScale - height) / 2).toInt(),
-                ((bitmap.height * bigScale - height) / 2).toInt(),
-                150,
-                150
-            )
-            postOnAnimation(this)
-        }
-
         return false
     }
 
     override fun onScroll(
-        //down事件
-        e1: MotionEvent,
-        //移动事件
-        e2: MotionEvent,
-        //旧位置 - 新位置
+        e1: MotionEvent?,
+        e2: MotionEvent?,
         distanceX: Float,
         distanceY: Float
     ): Boolean {
-        if (isBig) {
-            offsetX -= distanceX
-            offsetY -= distanceY
+        if(isBig){
+            offsetX-=distanceX
+            offsetY-=distanceY
             fixOffsets()
-            Log.d("onScroll", "distanceX = $distanceX ,distanceY = $distanceY ")
+            Log.d("onScroll","distanceX:${distanceX} , distanceY:${distanceY}")
             invalidate()
         }
-        return false
+       return false
     }
-
-    private fun fixOffsets() {
-        offsetX = min(offsetX, (bitmap.width * bigScale - width) / 2);
-        offsetX = max(offsetX, -(bitmap.width * bigScale - width) / 2);
-        offsetY = min(offsetY, (bitmap.height * bigScale - height) / 2);
-        offsetY = max(offsetY, -(bitmap.height * bigScale - height) / 2);
-    }
-
 
     override fun onLongPress(e: MotionEvent?) {
 
     }
 
 
-    override fun onDoubleTap(e: MotionEvent): Boolean {
-        isBig = !isBig
-        if (isBig) {
-            scaleAnimator.start()
-        } else {
-            scaleAnimator.reverse()
-        }
+    private fun fixOffsets(){
+        offsetX = max(offsetX , (width*1f - bitmap.width*1f) / 2)
+        offsetX = min(offsetX, -(width * 1f - bitmap.width * 1f) / 2)
 
-        return false
+        offsetY = max(offsetY , (height*1f - bitmap.height*1f) / 2)
+        offsetY = min(offsetY, -(height * 1f - bitmap.height * 1f) / 2)
+
     }
 
-    override fun onDoubleTapEvent(e: MotionEvent?): Boolean {
-        return false
-    }
 
-    override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
-        return false
-    }
-
-    override fun run() {
-        if(overScroller.computeScrollOffset()){
-            offsetX = overScroller.currX * 1f
-            offsetY = overScroller.currY * 1f
-            invalidate()
-            postOnAnimation(this)
-        }
-    }
 }
