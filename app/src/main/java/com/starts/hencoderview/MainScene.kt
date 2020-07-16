@@ -20,6 +20,7 @@ class MainScene : AppCompatScene() {
     private lateinit var btnFlipBoard: AppCompatButton
     private lateinit var btnTagLayout: AppCompatButton
     private lateinit var btnScaleImg: AppCompatButton
+    private lateinit var btnFragmentTest: AppCompatButton
 
     override fun onCreateContentView(
         inflater: LayoutInflater,
@@ -31,6 +32,7 @@ class MainScene : AppCompatScene() {
         btnFlipBoard = root.findViewById(R.id.btnFlipBoard)
         btnTagLayout = root.findViewById(R.id.btnTagLayout)
         btnScaleImg = root.findViewById(R.id.btnScaleImg)
+        btnFragmentTest = root.findViewById(R.id.btnFragmentTest)
         return root
     }
 
@@ -49,7 +51,9 @@ class MainScene : AppCompatScene() {
         btnScaleImg.setOnClickListener {
             requireNavigationScene().push(ScaleImageScene::class.java)
         }
-
+        btnFragmentTest.setOnClickListener {
+            requireNavigationScene().push(ViewPagerTestScene::class.java)
+        }
 
         setStatusBarVisible(true)
         setToolbarVisible(true)

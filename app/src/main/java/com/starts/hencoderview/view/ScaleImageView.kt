@@ -24,7 +24,8 @@ import kotlin.math.min
  *版本号：1.0
 
  */
-class ScaleImageView(context: Context, attrs: AttributeSet) : View(context, attrs),GestureDetector.OnDoubleTapListener,GestureDetector.OnGestureListener {
+class ScaleImageView(context: Context, attrs: AttributeSet) : View(context, attrs),
+    GestureDetector.OnDoubleTapListener, GestureDetector.OnGestureListener , Runnable {
 
     private var originalOffsetX = 0f
     private var originalOffsetY = 0f
@@ -44,11 +45,11 @@ class ScaleImageView(context: Context, attrs: AttributeSet) : View(context, attr
     private var offsetX = 0f
     private var offsetY = 0f
 
-    private val gestureDetector:GestureDetectorCompat by  lazy {
-        GestureDetectorCompat(context,this)
+    private val gestureDetector: GestureDetectorCompat by lazy {
+        GestureDetectorCompat(context, this)
     }
 
-    private val scroll = OverScroller(context)
+    private val scroller = OverScroller(context)
 
     private val scaleAnimation: ObjectAnimator by lazy {
         ObjectAnimator.ofFloat(this, "currentScale", smallScale, bigScale)
@@ -77,7 +78,9 @@ class ScaleImageView(context: Context, attrs: AttributeSet) : View(context, attr
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        canvas.translate(offsetX * currentScale , offsetY * currentScale)
+        val scaleFraction = (currentScale - smallScale) / (bigScale - smallScale)
+        canvas.translate(offsetX * scaleFraction, offsetY * scaleFraction)
+        //参数里的 sx sy 是横向和纵向的放缩倍数； px py 是放缩的轴心。
         canvas.scale(currentScale, currentScale, width / 2f, height / 2f)
         canvas.drawBitmap(bitmap, originalOffsetX, originalOffsetY, paint)
 
@@ -87,11 +90,11 @@ class ScaleImageView(context: Context, attrs: AttributeSet) : View(context, attr
         return gestureDetector.onTouchEvent(event)
     }
 
-    override fun onDoubleTap(e: MotionEvent?):Boolean{
+    override fun onDoubleTap(e: MotionEvent?): Boolean {
         isBig = !isBig
-        if(isBig){
+        if (isBig) {
             scaleAnimation.start()
-        }else{
+        } else {
             scaleAnimation.reverse()
         }
         return false
@@ -99,9 +102,10 @@ class ScaleImageView(context: Context, attrs: AttributeSet) : View(context, attr
 
     override fun onDoubleTapEvent(e: MotionEvent?) = false
     override fun onSingleTapConfirmed(e: MotionEvent?) = false
-    override fun onShowPress(e: MotionEvent?){
+    override fun onShowPress(e: MotionEvent?) {
 
     }
+
     override fun onSingleTapUp(e: MotionEvent?): Boolean = false
 
     override fun onDown(e: MotionEvent?) = true
@@ -112,6 +116,24 @@ class ScaleImageView(context: Context, attrs: AttributeSet) : View(context, attr
         velocityX: Float,
         velocityY: Float
     ): Boolean {
+        if (isBig) {
+            scroller.fling(
+                offsetX.toInt(),
+                offsetY.toInt(),
+                velocityX.toInt(),
+                velocityY.toInt(),
+                (-(bitmap.width * bigScale - width * 1f) / 2).toInt(),
+                ((bitmap.width * bigScale - width * 1f) / 2).toInt(),
+                (-(bitmap.height * bigScale - height * 1f) / 2).toInt(),
+                ((bitmap.height * bigScale - height * 1f) / 2).toInt(),
+                100,
+                100
+            )
+            postOnAnimation(this)
+
+        }
+
+
         return false
     }
 
@@ -121,14 +143,14 @@ class ScaleImageView(context: Context, attrs: AttributeSet) : View(context, attr
         distanceX: Float,
         distanceY: Float
     ): Boolean {
-        if(isBig){
-            offsetX-=distanceX
-            offsetY-=distanceY
+        if (isBig) {
+            offsetX -= distanceX
+            offsetY -= distanceY
             fixOffsets()
-            Log.d("onScroll","distanceX:${distanceX} , distanceY:${distanceY}")
+            Log.d("onScroll", "distanceX:${distanceX} , distanceY:${distanceY}")
             invalidate()
         }
-       return false
+        return false
     }
 
     override fun onLongPress(e: MotionEvent?) {
@@ -136,13 +158,22 @@ class ScaleImageView(context: Context, attrs: AttributeSet) : View(context, attr
     }
 
 
-    private fun fixOffsets(){
-        offsetX = max(offsetX , (width*1f - bitmap.width*1f) / 2)
-        offsetX = min(offsetX, -(width * 1f - bitmap.width * 1f) / 2)
+    private fun fixOffsets() {
+        offsetX = min(offsetX, (bitmap.width * bigScale - width * 1f) / 2)
+        offsetX = max(offsetX, -(bitmap.width * bigScale - width * 1f) / 2)
 
-        offsetY = max(offsetY , (height*1f - bitmap.height*1f) / 2)
-        offsetY = min(offsetY, -(height * 1f - bitmap.height * 1f) / 2)
+        offsetY = min(offsetY, (bitmap.height * bigScale - height * 1f) / 2)
+        offsetY = max(offsetY, -(bitmap.height * bigScale - height * 1f) / 2)
 
+    }
+
+    override fun run() {
+        if(scroller.computeScrollOffset()){
+            offsetX = scroller.currX.toFloat()
+            offsetY = scroller.currY.toFloat()
+            invalidate()
+            postOnAnimation(this)
+        }
     }
 
 
