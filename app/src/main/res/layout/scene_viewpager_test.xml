@@ -50,4 +50,22 @@
         />
 
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bt3"
+        app:layout_constraintTop_toTopOf="@+id/viewPager2"
+        app:layout_constraintLeft_toLeftOf="@+id/viewPager2"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:text="3号"
+        />
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/bt4"
+        app:layout_constraintTop_toBottomOf="@+id/bt3"
+        app:layout_constraintLeft_toLeftOf="@+id/viewPager2"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:text="4号"
+        />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -42,6 +42,7 @@ class EmptyFragment : Fragment() {
         val g = random.nextInt(256)
         val b = random.nextInt(256)
         binding.root.setBackgroundColor(Color.rgb(r, g, b))
+        binding.tvTag.text = hashCode().toString()
     }
 
     override fun onHiddenChanged(hidden: Boolean) {
@@ -54,9 +55,14 @@ class EmptyFragment : Fragment() {
         Log.d("fragmentLife", "setUserVisibleHint${isVisibleToUser}")
     }
 
+    override fun onStart() {
+        super.onStart()
+        Log.d("fragmentLife", "hashCode:${this.hashCode()}:onStart")
+    }
+
     override fun onResume() {
         super.onResume()
-        Log.d("fragmentLife", "onResume")
+        Log.d("fragmentLife", "hashCode:${this.hashCode()}onResume")
     }
 
 

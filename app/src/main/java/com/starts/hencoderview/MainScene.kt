@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatButton
 import com.bytedance.scene.ui.template.AppCompatScene
+import com.starts.hencoderview.databinding.ActivityMainBinding
 
 
 /**
@@ -16,45 +17,38 @@ import com.bytedance.scene.ui.template.AppCompatScene
 
  */
 class MainScene : AppCompatScene() {
-    private lateinit var btnSport: AppCompatButton
-    private lateinit var btnFlipBoard: AppCompatButton
-    private lateinit var btnTagLayout: AppCompatButton
-    private lateinit var btnScaleImg: AppCompatButton
-    private lateinit var btnFragmentTest: AppCompatButton
+   lateinit var binding : ActivityMainBinding
 
     override fun onCreateContentView(
         inflater: LayoutInflater,
         container: ViewGroup,
         savedInstanceState: Bundle?
     ): View? {
-        val root = inflater.inflate(R.layout.activity_main, null, false)
-        btnSport = root.findViewById(R.id.btnSport)
-        btnFlipBoard = root.findViewById(R.id.btnFlipBoard)
-        btnTagLayout = root.findViewById(R.id.btnTagLayout)
-        btnScaleImg = root.findViewById(R.id.btnScaleImg)
-        btnFragmentTest = root.findViewById(R.id.btnFragmentTest)
-        return root
+        binding = ActivityMainBinding.inflate(inflater)
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setTitle("HenCoderView")
-        btnSport.setOnClickListener {
+        binding.btnSport.setOnClickListener {
             requireNavigationScene().push(SportScene::class.java)
         }
-        btnFlipBoard.setOnClickListener {
+        binding.btnFlipBoard.setOnClickListener {
             requireNavigationScene().push(FlipBoardScene::class.java)
         }
-        btnTagLayout.setOnClickListener {
+        binding.btnTagLayout.setOnClickListener {
             requireNavigationScene().push(TagLayoutScene::class.java)
         }
-        btnScaleImg.setOnClickListener {
+        binding.btnScaleImg.setOnClickListener {
             requireNavigationScene().push(ScaleImageScene::class.java)
         }
-        btnFragmentTest.setOnClickListener {
+        binding.btnFragmentTest.setOnClickListener {
             requireNavigationScene().push(ViewPagerTestScene::class.java)
         }
-
+        binding.btnPSView.setOnClickListener {
+            requireNavigationScene().push(ParticleScatteringScene::class.java)
+        }
         setStatusBarVisible(true)
         setToolbarVisible(true)
     }

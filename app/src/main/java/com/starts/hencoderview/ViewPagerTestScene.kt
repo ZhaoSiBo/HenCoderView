@@ -1,24 +1,15 @@
 package com.starts.hencoderview
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentPagerAdapter
 import androidx.fragment.app.FragmentStatePagerAdapter
-import androidx.lifecycle.Lifecycle
-import androidx.recyclerview.widget.RecyclerView
-import androidx.viewbinding.ViewBinding
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.bytedance.scene.ktx.fragmentActivity
 import com.bytedance.scene.ktx.requireFragmentActivity
 import com.bytedance.scene.ui.template.AppCompatScene
 import com.starts.hencoderview.databinding.SceneViewpagerTestBinding
-import com.starts.hencoderview.ui.AbstractScene
 import com.starts.hencoderview.ui.EmptyFragment
 
 /**
@@ -28,17 +19,21 @@ import com.starts.hencoderview.ui.EmptyFragment
  *版本号：1.0
 
  */
-class ViewPagerTestScene:AppCompatScene() {
+class ViewPagerTestScene : AppCompatScene() {
 
-    lateinit var binding:SceneViewpagerTestBinding
+
+    var f1: Fragment? = null
+    var f2: Fragment? = null
+
+    lateinit var binding: SceneViewpagerTestBinding
 
     override fun onCreateContentView(
         inflater: LayoutInflater,
         container: ViewGroup,
         savedInstanceState: Bundle?
     ): View? {
-        binding =SceneViewpagerTestBinding.inflate(inflater)
-        return  binding.root
+        binding = SceneViewpagerTestBinding.inflate(inflater)
+        return binding.root
 //        return inflater.inflate(R.layout.scene_viewpager_test,null)
     }
 
@@ -46,29 +41,37 @@ class ViewPagerTestScene:AppCompatScene() {
         super.onActivityCreated(savedInstanceState)
         setTitle("Viewpager测试")
         val fragments = arrayListOf<Fragment>(EmptyFragment(),EmptyFragment(),EmptyFragment(),EmptyFragment(),EmptyFragment())
-
         binding.bt1.setOnClickListener {
-            val f = requireFragmentActivity().supportFragmentManager.beginTransaction()
-            f.add(fragments[0],"")
-            f.commitAllowingStateLoss()
+            val b = requireFragmentActivity().supportFragmentManager.beginTransaction()
+            if (f1 == null) {
+                f1 = EmptyFragment()
+                b.add(binding.viewPager1.id, f1!!)
+            } else {
+                b.show(f1!!)
+                f2?.let {
+                    b.hide(it)
+                }
+            }
+            b.commitAllowingStateLoss()
         }
         binding.bt2.setOnClickListener {
-            val f = requireFragmentActivity().supportFragmentManager.beginTransaction()
-            f.add(fragments[1],"")
-            f.commitAllowingStateLoss()
-        }
+            val b = requireFragmentActivity().supportFragmentManager.beginTransaction()
+            if (f2 == null) {
+                f2 = EmptyFragment()
+                b.add(binding.viewPager1.id, f2!!)
+            } else {
+                b.show(f2!!)
+                f1?.let {
+                    b.hide(it)
+                }
 
-        //        binding.viewPager1.adapter = object :FragmentStatePagerAdapter(requireFragmentActivity().supportFragmentManager){
-//            override fun getItem(position: Int): Fragment {
-//                return fragments[position]
-//            }
-//
-//            override fun getCount(): Int {
-//                return fragments.size
-//            }
-//
-//        }
-        binding.viewPager2.adapter  = object :FragmentStateAdapter(requireFragmentActivity()){
+            }
+            b.commitAllowingStateLoss()
+        }
+        binding.viewPager2.offscreenPageLimit = 1
+        binding.viewPager2.isUserInputEnabled = false
+
+        binding.viewPager2.adapter = object : FragmentStateAdapter(requireFragmentActivity()) {
             override fun getItemCount(): Int {
                 return fragments.size
             }
@@ -79,6 +82,13 @@ class ViewPagerTestScene:AppCompatScene() {
 
         }
 
+        binding.bt3.setOnClickListener {
+            binding.viewPager2.currentItem = 0
+        }
+
+        binding.bt4.setOnClickListener {
+            binding.viewPager2.setCurrentItem(2,false)
+        }
 
     }
 
