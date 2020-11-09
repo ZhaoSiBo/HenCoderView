@@ -1,4 +1,5 @@
 # HenCoderView
+工作过程中和平时，针对自定义View进行的实践和总结
 
 ### 网易云特效
 ![网易云特效](https://ftp.bmp.ovh/imgs/2020/11/794e1bec8869a26f.gif)
