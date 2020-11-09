@@ -52,4 +52,7 @@ dependencies {
     implementation 'com.bytedance.scene:scene-shared-element-animation:1.0.4'
     implementation 'com.bytedance.scene:scene-ktx:1.0.4'
 
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+
 }
