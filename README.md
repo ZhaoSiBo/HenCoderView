@@ -46,3 +46,46 @@
 1. 先画原，再画弧线（进度条完成）
 2. 文字要根据实际需求，通过getTextBounds判断画文字的位置，因为文字不一样，可能导致中心点变化（基线的固定，和文字是否越过基线）
 3. 通过drawText 绘制文字
+
+### 轮播图的水波纹背景
+![轮播图的水波纹背景](https://ftp.bmp.ovh/imgs/2020/11/3286b2d39b8cd13d.gif)
+项目中实际应用的轮播图水波纹背景，将图片的保存使用LurCache单独存放，在实际开发过程中可以使用图片加载框架，
+加载网络图片到内存，充当背景，也可以自己修改逻辑使用纯色暂时充当背景
+### 思路：
+1. 通过BitmapCache单独使用图片的存取功能
+2. 通过在registerOnPageChangeCallback中使用下面的代码来判断是向左滑动中还是向右滑动中
+
+·
+
+                        if(positionOffset != 0f && positionOffsetPixels != 0){
+                            if (position + positionOffset > sumPositionAndPositionOffset) {
+                                //right to left
+                            
+                                fromRightToLeft = true
+                                currentPosition = fixPosition(position)
+                                nextPosition = fixPosition(currentPosition + 1)
+
+                                calculateDirection()
+                            } else {
+                                //left to right
+                              
+                                fromRightToLeft = false
+                                currentPosition = fixPosition(position + 1)
+                                nextPosition = fixPosition(position)
+
+                            }
+                            sumPositionAndPositionOffset = position + positionOffset
+                        }else{
+                            //最后一刻，当前位置和下一个位置 ，则根据position来确定
+                            currentPosition = position
+                            nextPo
+                            sition = fixPosition(position + 1)
+                        }
+·
+
+3. 为避免月结 使用fixPosition（）方法控制越界情况
+4. 在onDraw（）方法中，使用创建的canvas和bitmap，对要操作的bitmap进行绘制，并使用PorterDuffXfermode(PorterDuff.Mode.CLEAR)形式，进行重叠
+
+
+
+

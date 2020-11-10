@@ -1,6 +1,7 @@
 package com.starts.hencoderview
 
 import android.content.res.Resources
+import android.graphics.Color
 
 /**
 
@@ -22,4 +23,13 @@ fun px2dp(px: Int): Int {
 fun sp(sp: Int): Float {
     val scaledDensity = Resources.getSystem().displayMetrics.scaledDensity
     return sp * scaledDensity
+}
+
+fun getMaterialColor(resources: Resources , index:Int):Int {
+    val colors = resources.obtainTypedArray(R.array.mdcolor_300);
+
+    val  returnColor = colors.getColor(index % colors.length(), Color.BLACK);
+
+    colors.recycle();
+    return returnColor
 }

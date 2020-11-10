@@ -49,6 +49,9 @@ class MainScene : AppCompatScene() {
         binding.btnPSView.setOnClickListener {
             requireNavigationScene().push(ParticleScatteringScene::class.java)
         }
+        binding.btnWave.setOnClickListener{
+            requireNavigationScene().push(WaveViewScene::class.java)
+        }
         setStatusBarVisible(true)
         setToolbarVisible(true)
     }
