@@ -39,6 +39,7 @@ class WaveView:View{
     var bannerViewPager: BannerViewPager<String, ViewPager2LoopViewHolder>? = null
     private var currentPosition = 0
     private var nextPosition = 0
+    //手指是否是从右向左
     private var fromRightToLeft = false
     private var scrollState = 0
     private var positionOffset = 0f
@@ -93,6 +94,8 @@ class WaveView:View{
                 mBitmapPaint.xfermode = null
 
                 canvas.drawBitmap(drawBitmap, 0f, 0f, mBitmapPaint)
+
+
 
                 canvas.restoreToCount(saved)
             }
