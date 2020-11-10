@@ -84,7 +84,12 @@
 ·
 
 3. 为避免越界使用fixPosition（）方法控制越界情况
-4. 在onDraw（）方法中，使用创建的canvas和bitmap，对要操作的bitmap进行绘制，并使用PorterDuffXfermode(PorterDuff.Mode.CLEAR)
+4. 在onDraw（）方法中，使用创建的canvas和bitmap，对要操作的bitmap进行绘制，并使用PorterDuffXfermode(PorterDuff.Mode.SRC_IN) ， （PorterDuff.Mode.DST_OVER）
+注意：
+1. 在使用过程中，先画的是目标图像，后画的源图像，使用过程中注意使用离屏缓冲，避免port的使用失效
+2. port的原理是在融合出，通过算法处理颜色保留
+
+
 
 
 

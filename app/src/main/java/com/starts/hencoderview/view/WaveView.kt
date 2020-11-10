@@ -7,10 +7,8 @@ import android.util.AttributeSet
 import android.util.LruCache
 import android.view.View
 import android.widget.ImageView
-import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
-import com.starts.hencoderview.HenApplication
 import com.starts.hencoderview.R
 import com.starts.hencoderview.getMaterialColor
 import com.zhpan.bannerview.BannerViewPager
@@ -35,7 +33,13 @@ class WaveView:View{
         defStyleAttr
     )
 
-    private var mBitmapPaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    var viewHeight = 0
+    var viewWidth = 0
+
+    private var circlePaint  = Paint(Paint.ANTI_ALIAS_FLAG)
+    private var nextPaint: Paint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val curPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+
     var bannerViewPager: BannerViewPager<String, ViewPager2LoopViewHolder>? = null
     private var currentPosition = 0
     private var nextPosition = 0
@@ -44,7 +48,13 @@ class WaveView:View{
     private var scrollState = 0
     private var positionOffset = 0f
 
-    val portMode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+    //圆和下一帧图片的PorterDuff
+    private val circleAndNextPort = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+    //当前帧和下一帧的PortDuff
+    private val nextAndrCurPort = PorterDuffXfermode(PorterDuff.Mode.DST_OVER)
+
+
+
 
     /**
      * 波纹半径
@@ -54,8 +64,12 @@ class WaveView:View{
     private lateinit var drawBitmap: Bitmap
     private lateinit var drawCanvas: Canvas
 
+    private val rectF = RectF()
+
     init {
-        mBitmapPaint.isAntiAlias = true
+        nextPaint.isAntiAlias = true
+        nextPaint.xfermode = circleAndNextPort
+
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -64,47 +78,38 @@ class WaveView:View{
             drawBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
             drawCanvas = Canvas(drawBitmap)
             mRadius = sqrt((height / 2.0).pow(2.0) + width.toDouble().pow(2.0)) * 1.2
+            viewHeight = h
+            viewWidth = w
+            rectF.set(0f,0f , viewWidth * 1f , viewHeight * 1f)
         }
     }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         if (bannerViewPager != null && bannerViewPager?.data?.isNotEmpty() == true) {
-            val currentItemSection = bannerViewPager!!.data[currentPosition]
-//            Logger.d("currentSection = $currentItemSection")
-            val nextItemSection = bannerViewPager!!.data[nextPosition]
-//            Logger.d("nextItemSection = $nextItemSection")
-
             val curBitmap = BitmapCache.getBitmap(currentPosition,
                 width, height , resources)
             val nextBitmap = BitmapCache.getBitmap(nextPosition, width, height ,resources)
             if (positionOffset == 0f) {
+
                 canvas.drawBitmap(curBitmap, 0f, 0f, null)
+
             } else if (positionOffset < 1f) {
 
-//                canvas.drawBitmap(nextBitmap, 0f, 0f, null)
-//                drawCanvas.drawBitmap(curBitmap, 0f, 0f, mBitmapPaint)
-//                mBitmapPaint.xfermode = portMode
-//                if (fromRightToLeft) {
-//                    drawCanvas.drawCircle(width.toFloat(), height / 2f, (positionOffset * mRadius).toFloat(), mBitmapPaint)
-//                } else {
-//                    drawCanvas.drawCircle(0f, height / 2f, ((1 - positionOffset) * mRadius).toFloat(), mBitmapPaint)
-//                }
-//                mBitmapPaint.xfermode = null
-//                canvas.drawBitmap(drawBitmap, 0f, 0f, mBitmapPaint)
-
-                canvas.drawBitmap(curBitmap , 0f , 0f , mBitmapPaint)
-                drawCanvas.drawBitmap(nextBitmap,0f, 0f , mBitmapPaint)
-                mBitmapPaint.xfermode = portMode
+                val saveCircleAndNext = canvas.saveLayer(rectF, nextPaint)
                 if (fromRightToLeft) {
-                    drawCanvas.drawCircle(width.toFloat(), height / 2f, (positionOffset * mRadius).toFloat(), mBitmapPaint)
+                    canvas.drawCircle(width.toFloat(), height / 2f, (positionOffset * mRadius).toFloat(), circlePaint)
                 } else {
-                    drawCanvas.drawCircle(0f, height / 2f, ((1 - positionOffset) * mRadius).toFloat(), mBitmapPaint)
+                    canvas.drawCircle(0f, height / 2f, ((1 - positionOffset) * mRadius).toFloat(), circlePaint)
                 }
-                canvas.drawBitmap(drawBitmap, 0f, 0f, mBitmapPaint)
+                nextPaint.xfermode = circleAndNextPort
+                canvas.drawBitmap(nextBitmap,0f, 0f , nextPaint)
+                canvas.restoreToCount(saveCircleAndNext)
 
-//                mBitmapPaint.xfermode = null
-
+                val saveNextAndCur = canvas.saveLayer(rectF , curPaint)
+                curPaint.xfermode = nextAndrCurPort
+                canvas.drawBitmap(curBitmap , 0f,0f , curPaint)
+                canvas.restoreToCount(saveNextAndCur)
             }
         }
     }
