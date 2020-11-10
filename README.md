@@ -83,8 +83,8 @@
                         }
 ·
 
-3. 为避免月结 使用fixPosition（）方法控制越界情况
-4. 在onDraw（）方法中，使用创建的canvas和bitmap，对要操作的bitmap进行绘制，并使用PorterDuffXfermode(PorterDuff.Mode.CLEAR)形式，进行重叠
+3. 为避免越界使用fixPosition（）方法控制越界情况
+4. 在onDraw（）方法中，使用创建的canvas和bitmap，对要操作的bitmap进行绘制，并使用PorterDuffXfermode(PorterDuff.Mode.CLEAR)
 
 
 

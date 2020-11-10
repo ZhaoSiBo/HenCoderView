@@ -44,7 +44,7 @@ class WaveView:View{
     private var scrollState = 0
     private var positionOffset = 0f
 
-    val portMode = PorterDuffXfermode(PorterDuff.Mode.CLEAR)
+    val portMode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
 
     /**
      * 波纹半径
@@ -81,23 +81,30 @@ class WaveView:View{
             if (positionOffset == 0f) {
                 canvas.drawBitmap(curBitmap, 0f, 0f, null)
             } else if (positionOffset < 1f) {
-                val saved = canvas.saveLayer(null, null, Canvas.ALL_SAVE_FLAG)
 
-                canvas.drawBitmap(nextBitmap, 0f, 0f, null)
-                drawCanvas.drawBitmap(curBitmap, 0f, 0f, mBitmapPaint)
+//                canvas.drawBitmap(nextBitmap, 0f, 0f, null)
+//                drawCanvas.drawBitmap(curBitmap, 0f, 0f, mBitmapPaint)
+//                mBitmapPaint.xfermode = portMode
+//                if (fromRightToLeft) {
+//                    drawCanvas.drawCircle(width.toFloat(), height / 2f, (positionOffset * mRadius).toFloat(), mBitmapPaint)
+//                } else {
+//                    drawCanvas.drawCircle(0f, height / 2f, ((1 - positionOffset) * mRadius).toFloat(), mBitmapPaint)
+//                }
+//                mBitmapPaint.xfermode = null
+//                canvas.drawBitmap(drawBitmap, 0f, 0f, mBitmapPaint)
+
+                canvas.drawBitmap(curBitmap , 0f , 0f , mBitmapPaint)
+                drawCanvas.drawBitmap(nextBitmap,0f, 0f , mBitmapPaint)
                 mBitmapPaint.xfermode = portMode
                 if (fromRightToLeft) {
                     drawCanvas.drawCircle(width.toFloat(), height / 2f, (positionOffset * mRadius).toFloat(), mBitmapPaint)
                 } else {
                     drawCanvas.drawCircle(0f, height / 2f, ((1 - positionOffset) * mRadius).toFloat(), mBitmapPaint)
                 }
-                mBitmapPaint.xfermode = null
-
                 canvas.drawBitmap(drawBitmap, 0f, 0f, mBitmapPaint)
 
+//                mBitmapPaint.xfermode = null
 
-
-                canvas.restoreToCount(saved)
             }
         }
     }
