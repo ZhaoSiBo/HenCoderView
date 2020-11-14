@@ -51,7 +51,7 @@ class WaveView:View{
     //圆和下一帧图片的PorterDuff
     private val circleAndNextPort = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
     //当前帧和下一帧的PortDuff
-    private val nextAndrCurPort = PorterDuffXfermode(PorterDuff.Mode.DST_OVER)
+    private val nextAndCurPort = PorterDuffXfermode(PorterDuff.Mode.DST_OVER)
 
 
 
@@ -107,7 +107,7 @@ class WaveView:View{
                 canvas.restoreToCount(saveCircleAndNext)
 
                 val saveNextAndCur = canvas.saveLayer(rectF , curPaint)
-                curPaint.xfermode = nextAndrCurPort
+                curPaint.xfermode = nextAndCurPort
                 canvas.drawBitmap(curBitmap , 0f,0f , curPaint)
                 canvas.restoreToCount(saveNextAndCur)
             }

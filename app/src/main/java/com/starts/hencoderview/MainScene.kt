@@ -1,5 +1,6 @@
 package com.starts.hencoderview
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.AppCompatButton
 import com.bytedance.scene.ui.template.AppCompatScene
 import com.starts.hencoderview.databinding.ActivityMainBinding
+import com.starts.hencoderview.ui.MemoryLeakActivity
 
 
 /**
@@ -51,6 +53,10 @@ class MainScene : AppCompatScene() {
         }
         binding.btnWave.setOnClickListener{
             requireNavigationScene().push(WaveViewScene::class.java)
+        }
+        binding.btnLeak.setOnClickListener {
+            val intent = Intent(requireActivity() , MemoryLeakActivity::class.java)
+            requireActivity().startActivity(intent)
         }
         setStatusBarVisible(true)
         setToolbarVisible(true)
