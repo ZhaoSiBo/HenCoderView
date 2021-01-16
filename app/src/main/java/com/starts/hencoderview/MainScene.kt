@@ -2,6 +2,7 @@ package com.starts.hencoderview
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,6 +28,7 @@ class MainScene : AppCompatScene() {
         savedInstanceState: Bundle?
     ): View? {
         binding = ActivityMainBinding.inflate(inflater)
+        val h = Looper.getMainLooper()
         return binding.root
     }
 
@@ -58,6 +60,10 @@ class MainScene : AppCompatScene() {
             val intent = Intent(requireActivity() , MemoryLeakActivity::class.java)
             requireActivity().startActivity(intent)
         }
+        binding.btnPath.setOnClickListener {
+            requireNavigationScene().push(PathScene::class.java)
+        }
+
         setStatusBarVisible(true)
         setToolbarVisible(true)
     }

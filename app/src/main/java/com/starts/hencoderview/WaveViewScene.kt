@@ -24,7 +24,7 @@ import com.zhpan.indicator.enums.IndicatorStyle
  */
 class WaveViewScene : AppCompatScene() {
     lateinit var binding: SceneWaveViewBinding
-
+ 
     private val bannerAdapter = ViewPager2LoopAdapter()
 
     lateinit var banner:BannerViewPager<String , ViewPager2LoopViewHolder>

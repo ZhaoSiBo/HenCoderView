@@ -204,7 +204,11 @@ class WaveView:View{
 
 object BitmapCache{
 
-    private val lruCache = LruCache<Int, Bitmap?>(10)
+    private val lruCache = object : LruCache<Int, Bitmap?>(10*1024*1024){
+        override fun sizeOf(key: Int?, value: Bitmap?): Int {
+            return value?.byteCount?:0
+        }
+    }
 
     fun getBitmap(position:Int , width:Int ,height:Int , resources: Resources): Bitmap {
         val bitmap = lruCache.get(position)

@@ -31,8 +31,12 @@ class PathLayoutManager : RecyclerView.LayoutManager() {
         return super.isAutoMeasureEnabled()
     }
 
-    override fun onLayoutChildren(recycler: RecyclerView.Recycler?, state: RecyclerView.State?) {
+    override fun onLayoutChildren(recycler: RecyclerView.Recycler, state: RecyclerView.State) {
         super.onLayoutChildren(recycler, state)
+
+        detachAndScrapAttachedViews(recycler)
+        removeAndRecycleAllViews(recycler)
+
     }
 
     override fun canScrollHorizontally(): Boolean {

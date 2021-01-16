@@ -104,4 +104,17 @@
             android:textAllCaps="false"
             />
 
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnPath"
+            android:layout_width="120dp"
+            android:layout_height="60dp"
+            android:textColor="@color/white"
+            android:background="#59B0FF"
+            android:text="PathView"
+            android:elevation="5dp"
+            android:layout_marginTop="12dp"
+            android:textAllCaps="false"
+            />
+
+
 </LinearLayout>

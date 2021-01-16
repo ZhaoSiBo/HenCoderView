@@ -1,6 +1,7 @@
 package com.starts.hencoderview
 
 import android.app.Application
+import kotlin.properties.Delegates
 
 /**
 
@@ -11,7 +12,13 @@ import android.app.Application
  */
 class HenApplication : Application() {
 
+    companion object{
+        var instance: HenApplication by Delegates.notNull()
+    }
+
     override fun onCreate() {
         super.onCreate()
+        instance = this
     }
+
 }
