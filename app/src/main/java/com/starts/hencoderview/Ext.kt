@@ -3,8 +3,10 @@ package com.starts.hencoderview
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
+import android.graphics.Paint
 import android.os.Handler
 import android.os.Looper
+import android.text.SpannableStringBuilder
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -52,11 +54,37 @@ fun <T>copy(from:Array<out T>,to:Array<in T>){
     }
 }
 
-//fun main(args: Array<String>) {
-//    val a = "str"
-//    val b = String(StringBuffer("str"))
-//    println(a == b )
-//    val a = ThreadLocal<Looper>
-//
-//    val h = Handler()
-//}
+fun TextView.setEllipsizedSuffix(maxLines: Int, suffix: SpannableStringBuilder) {
+    addOnLayoutChangeListener(object: View.OnLayoutChangeListener {
+        override fun onLayoutChange(v: View?, left: Int, top: Int, right: Int, bottom: Int, oldLeft: Int, oldTop: Int, oldRight: Int, oldBottom:     Int) {
+
+            val allText = text.toString()
+            var newText = allText
+            val tvWidth = width
+            val textSize = textSize
+
+            if(!textHasEllipsized(newText, tvWidth, textSize, maxLines)) return
+
+            while (textHasEllipsized(newText, tvWidth, textSize, maxLines)) {
+                newText = newText.substring(0, newText.length - 1).trim()
+            }
+
+            //now replace the last few chars with the suffix if we can
+            val endIndex = newText.length - suffix.length - 1 //minus 1 just to make sure we have enough room
+            if(endIndex > 0) {
+                newText = "${newText.substring(0, endIndex).trim()}$suffix"
+            }
+
+            text = newText
+
+            removeOnLayoutChangeListener(this)
+        }
+    })
+}
+
+fun textHasEllipsized(text: String, tvWidth: Int, textSize: Float, maxLines: Int): Boolean {
+    val paint = Paint()
+    paint.textSize = textSize
+    val size = paint.measureText(text).toInt()
+    return size > tvWidth * maxLines
+}
