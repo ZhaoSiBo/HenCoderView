@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="#000000"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <TextView
+    <com.starts.hencoderview.view.EllipsizeIconTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tv1"
@@ -18,6 +18,13 @@
         android:textColor="@color/white"
         android:ellipsize="end"
         android:maxLines="2"
+        app:iconHeight="10dp"
+        app:iconWidth="6dp"
+        app:moreIcon="@drawable/playing_com_into"
+        app:keepText="@string/app_name"
+        app:keepTextSize="12sp"
+        app:keepTextColor="@color/c_4d97ff"
+        app:isDisPlayIcon="true"
         />
 
 

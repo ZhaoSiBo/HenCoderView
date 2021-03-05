@@ -4,13 +4,15 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Paint
-import android.os.Handler
-import android.os.Looper
+import android.graphics.drawable.Drawable
+import android.text.Spannable
+import android.text.SpannableString
 import android.text.SpannableStringBuilder
+import android.text.style.ImageSpan
 import android.view.View
-import android.widget.Button
 import android.widget.TextView
-import org.w3c.dom.Text
+import androidx.annotation.DrawableRes
+import androidx.core.content.ContextCompat
 
 /**
 
@@ -87,4 +89,25 @@ fun textHasEllipsized(text: String, tvWidth: Int, textSize: Float, maxLines: Int
     paint.textSize = textSize
     val size = paint.measureText(text).toInt()
     return size > tvWidth * maxLines
+}
+
+fun getPicAtEnd(
+    context:Context,
+    @DrawableRes picRes: Int,
+    charSequence: CharSequence,
+    picSize: Int
+): SpannableString {
+    val drawable: Drawable = ContextCompat.getDrawable(context, picRes)!!
+    val picWidth = if (picSize < 0) drawable.intrinsicWidth else picSize
+    val picHeight = if (picSize < 0) drawable.intrinsicHeight else picSize
+    drawable.setBounds(0, 0, picWidth, picHeight)
+    val ret = SpannableString(charSequence.toString() + "p")
+    val imgSpan = ImageSpan(drawable, ImageSpan.ALIGN_BASELINE)
+    ret.setSpan(
+        imgSpan,
+        charSequence.length,
+        charSequence.length + 1,
+        Spannable.SPAN_INCLUSIVE_EXCLUSIVE
+    )
+    return ret
 }
