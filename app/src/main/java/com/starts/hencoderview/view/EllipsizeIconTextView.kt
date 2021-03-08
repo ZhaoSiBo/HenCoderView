@@ -1,16 +1,20 @@
 package com.starts.hencoderview.view
 
 import android.content.Context
-import android.graphics.*
+import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.Paint
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.text.TextUtils
 import android.util.AttributeSet
 import androidx.annotation.ColorInt
-import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
+import androidx.core.text.TextUtilsCompat
 import com.starts.hencoderview.R
+import com.starts.hencoderview.SpanUtils
+import com.starts.hencoderview.dp2px
 
 /**
  *  文件描述：当 Ellipsize = end 并且 多行 。在超出情况下，可以显示包括尾部图片， 追加文字  Tips：只能在缩略状态下才会生效！！！
@@ -27,100 +31,60 @@ import com.starts.hencoderview.R
 class EllipsizeIconTextView : AppCompatTextView {
 
     companion object {
+        const val TAG = "EllipsizeIconTextView"
         const val PADDING_TEXT_SIZE = 10
         const val PADDING_ICON_SIZE = 10
+
+        //用于缩略的符号
+        var EXPAND_TEXT = "…"
+
+        //箭头和缩略符之间的空格
+        var SPACE_WITH_ICON = 1
+
     }
 
     private var needOverDraw = false
-    private var viewWidth = 0
-    private var viewHeight = 0
-    private var hasEllipsis = false
 
-    var iconWidth = 0
-        set(value) {
-            field = value
-            invalidate()
-        }
-
-    var iconHeight = 0
-        set(value) {
-            field = value
-            invalidate()
-        }
-
-    var keepText = ""
-        set(value) {
-            field = value
-            invalidate()
-        }
+    private var iconWidth = -1
+    private var iconHeight = -1
+    private var keepText = ""
+    private var content:String = ""
     private val keepTextPaint = Paint(Paint.ANTI_ALIAS_FLAG)
+    private var moreIcon: Drawable = BitmapDrawable(
+        resources,
+        BitmapFactory.decodeResource(resources, R.drawable.playing_com_into)
+    )
 
-    var moreIcon: Drawable = BitmapDrawable(
-            resources,
-            BitmapFactory.decodeResource(resources, R.drawable.playing_com_into)
-        )
-        set(value) {
-            field = value
-            invalidate()
-        }
-
-    var isDisplayIcon = false
-        set(value) {
-            field = value
-            invalidate()
-        }
-
+    private var isDisplayIcon = false
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
         context,
         attrs,
         defStyleAttr
-    ) {
-        val typedArray = context.obtainStyledAttributes(attrs, R.styleable.EllipsizeIconTextView)
-        iconHeight = typedArray.getDimension(
-            R.styleable.EllipsizeIconTextView_iconHeight,
-            moreIcon.intrinsicHeight * 1f
-        ).toInt()
-        iconWidth = typedArray.getDimension(
-            R.styleable.EllipsizeIconTextView_iconWidth,
-            moreIcon.intrinsicWidth * 1f
-        ).toInt()
-        moreIcon = typedArray.getDrawable(R.styleable.EllipsizeIconTextView_moreIcon)
-            ?: ContextCompat.getDrawable(context, R.drawable.playing_com_into)!!
-
-        keepTextPaint.color =
-            typedArray.getColor(R.styleable.EllipsizeIconTextView_keepTextColor, currentTextColor)
-
-        keepTextPaint.textSize =
-            typedArray.getDimension(R.styleable.EllipsizeIconTextView_keepTextSize, textSize)
-
-        keepText = typedArray.getString(R.styleable.EllipsizeIconTextView_keepText).toString()
-
-        isDisplayIcon =
-            typedArray.getBoolean(R.styleable.EllipsizeIconTextView_isDisPlayIcon, false)
-
-        typedArray.recycle()
-    }
-
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        super.onSizeChanged(w, h, oldw, oldh)
-        viewHeight = h
-        viewWidth = w
-    }
+    )
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        if (lineCount < maxLines) {
-            return
-        }
-
-        hasEllipsis = layout.getEllipsisStart(maxLines - 1) != 0
-        if (!hasEllipsis) {
+        if (!isEllipsized()) {
             return
         }
 
         needOverDraw = true
+        if(TextUtils.isEmpty(keepText) && isDisplayIcon){
+            //在没有保留文字，只有保留图片功能的时候，通过缩略的字符串数量来操作，这样会更准确的显示图片的位置
+            val lastLine = maxLines - 1
+            val lineStartIndex = layout.getLineStart(lastLine)
+            val lineEllipsisStart = lineStartIndex + layout.getEllipsisStart(lastLine)
+            val expandTextLength: Int = EXPAND_TEXT.length
+
+            val temp = text.subSequence(
+                0,
+                lineEllipsisStart - expandTextLength + 1 - SPACE_WITH_ICON
+            ).toString() + EXPAND_TEXT
+            text = temp
+            return
+        }
 
         val keepTextWidth = keepTextPaint.measureText(keepText)
 
@@ -145,12 +109,10 @@ class EllipsizeIconTextView : AppCompatTextView {
 
     fun setKeepTextColor(@ColorInt color: Int) {
         keepTextPaint.color = color
-        invalidate()
     }
 
     fun setKeepTextSize(textSize: Float) {
         keepTextPaint.textSize = textSize
-        invalidate()
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -187,8 +149,70 @@ class EllipsizeIconTextView : AppCompatTextView {
                 moreIcon.draw(canvas)
             }
         }
+    }
+
+    private fun isEllipsized(): Boolean {
+        if (ellipsize == null || TextUtils.TruncateAt.MARQUEE == ellipsize) {
+            return false;
+        }
+        if (layout == null) {
+            return false
+        }
+        for (line in 0 until layout.lineCount) {
+            if (layout.getEllipsisCount(line) > 0) {
+                return true
+            }
+        }
+        return false
+    }
+
+
+    fun setTextWithKeepText(text:String , keepTextString:String ,isDisplayIcon:Boolean , drawable: Drawable? = null, drawableHeight:Int = -1  , drawableWidth:Int = -1){
+        this.keepText = keepTextString
+        this.isDisplayIcon = isDisplayIcon
+        this.content = text
+
+        if(isDisplayIcon){
+            checkNotNull(null == drawable){
+                throw IllegalAccessException("${TAG}-fun setTextWithKeepText:drawable is null")
+            }
+            iconWidth = if(drawableWidth == -1){
+                moreIcon.intrinsicWidth
+            }else{
+                dp2px(drawableWidth)
+            }
+            iconHeight = if(drawableHeight == -1){
+                moreIcon.intrinsicHeight
+            }else{
+                dp2px(drawableHeight)
+            }
+            moreIcon.setBounds(0 , 0 , iconWidth ,iconHeight)
+
+            val sp = SpanUtils(context)
+                .append(text)
+                .setFontSize(this.textSize.toInt())
+                .setForegroundColor(this.currentTextColor)
+                .append(keepText)
+                .setFontSize(keepTextPaint.textSize.toInt())
+                .setForegroundColor(keepTextPaint.color)
+                .appendImage(moreIcon)
+                .create()
+            setText(sp)
+        }else{
+            val sp = SpanUtils(context)
+                .append(text)
+                .setFontSize(this.textSize.toInt())
+                .setForegroundColor(this.currentTextColor)
+                .append(keepText)
+                .setFontSize(keepTextPaint.textSize.toInt())
+                .setForegroundColor(keepTextPaint.color)
+                .create()
+            setText(sp)
+        }
 
 
     }
+
+
 
 }

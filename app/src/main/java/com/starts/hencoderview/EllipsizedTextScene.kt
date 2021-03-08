@@ -40,15 +40,11 @@ class EllipsizedTextScene : AppCompatScene() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val text =
-            "电影主题曲《my heart will go on 》"
+            "电影主题曲《my heart will go on 》,"
         binding.tv1.text = text
-        binding.tv1.keepText = "已经听了30%"
-        binding.tv1.setKeepTextColor(Color.GREEN)
-        binding.tv1.setKeepTextSize(sp(16))
-        binding.tv1.moreIcon = BitmapDrawable(resources , BitmapFactory.decodeResource(resources , R.drawable.playing_com_into))
-        binding.tv1.iconWidth = dp2px(10)
-        binding.tv1.iconHeight = dp2px(10)
-        binding.tv1.isDisplayIcon = true
+        binding.tv1.setKeepTextSize(sp(12))
+        binding.tv1.setKeepTextColor( Color.GREEN)
+        binding.tv1.setTextWithKeepText(text , "已经听了百分之30",false)
     }
 }
 
