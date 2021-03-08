@@ -20,10 +20,4 @@
         android:maxLines="2"
         />
 
-<!--    app:iconHeight="10dp"-->
-<!--    app:iconWidth="6dp"-->
-<!--    app:moreIcon="@drawable/playing_com_into"-->
-<!--    app:keepTextSize="12sp"-->
-<!--    app:keepTextColor="@color/c_4d97ff"-->
-<!--    app:isDisPlayIcon="true"-->
 </androidx.constraintlayout.widget.ConstraintLayout>

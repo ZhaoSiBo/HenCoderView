@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import android.text.TextUtils
 import android.util.AttributeSet
+import android.util.Log
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatTextView
@@ -20,16 +21,19 @@ import com.starts.hencoderview.SpanUtils
 import com.starts.hencoderview.dp2px
 
 /**
- *  文件描述：当 Ellipsize = end 并且 多行 。在超出情况下，可以显示包括尾部图片， 追加文字  Tips：只能在缩略状态下才会生效！！！
- *  实现 文字...image  文字...文字的样式
+ *  文件描述：实现 文字...文字，文字...icon，文字...文字+icon的样式
+ *  当设置了isDisplay = true ，在Ellipsize = end 并且 多行的情况下，图片才会显示，并不会直接追加文本末尾
+ *  keepText不管在当前TextView是在缩略状态，keepText都会被保留
+ *  非缩略状态下，会自动通过SpannableStringBuilder方案实现图文混排
+ *
  *  作者：Created by Lorizhao on 2021/3/4.
  *  版本号：1.0
  *
- *  如果要显示图片，请务必设置 自定义属性 isDisplayIcon = true,并设置图片的宽高
+ *  使用时，请使用 setTextWithKeepText方法设置 保留图片和 保留文字
  *  可以单独设置保留文字的 大小，颜色，如果需要修改对齐方式，那就重写在OnDraw（）方法中的绘制方法
  *
  *  在onMeasure()方法中判断文字是否会超出，并设置needOverDraw，触发在onDraw()方法中追加绘制图片和文字
- *  避免在onDraw()方法中调用setText()方法，StaticLayout()在生成出来后，会重新调用OnDraw()方法
+ *  在onMeasure(),onDraw()方法中调用setText()方法后会再次出发onMeasure(),onDraw()，所以要注意结束条件，自测onMeasure()，onDraw()方法的调用次数
  */
 class EllipsizeIconTextView : AppCompatTextView {
 
@@ -48,12 +52,14 @@ class EllipsizeIconTextView : AppCompatTextView {
 
     private var needOverDraw = false
 
-    private var iconWidth = -1
-    private var iconHeight = -1
+    private var iconWidth = 0
+    private var iconHeight = 0
+
     private var keepText = ""
     private var content: String = ""
     private val keepTextPaint = Paint(Paint.ANTI_ALIAS_FLAG)
     private var moreIcon: Drawable? = null
+
 
     private var isDisplayIcon = false
 
@@ -65,12 +71,14 @@ class EllipsizeIconTextView : AppCompatTextView {
         defStyleAttr
     )
 
+    var measureCount = 0
+
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         if (!isEllipsized()) {
             return
         }
-
+        measureCount++
         needOverDraw = true
         if (TextUtils.isEmpty(keepText) && isDisplayIcon) {
             //在没有保留文字，只有保留图片功能的时候，通过缩略的字符串数量来操作，这样会更准确的显示图片的位置
@@ -106,6 +114,9 @@ class EllipsizeIconTextView : AppCompatTextView {
         val subText = TextUtils.ellipsize(text, paint, space, TextUtils.TruncateAt.END)
 
         text = subText
+
+        Log.d(TAG, "onMeasureCount = $measureCount")
+
     }
 
     fun setKeepTextColor(@ColorInt color: Int) {
@@ -116,12 +127,17 @@ class EllipsizeIconTextView : AppCompatTextView {
         keepTextPaint.textSize = textSize
     }
 
+    var drawCount = 0
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
 
         if (!needOverDraw) {
             return
         }
+
+        drawCount++
+
         val keepTextWidth = keepTextPaint.measureText(keepText)
 
         val middle =
@@ -150,6 +166,8 @@ class EllipsizeIconTextView : AppCompatTextView {
                 moreIcon?.draw(canvas)
             }
         }
+
+        Log.d(TAG, "onDraw count  = $drawCount")
     }
 
     private fun isEllipsized(): Boolean {
@@ -174,9 +192,19 @@ class EllipsizeIconTextView : AppCompatTextView {
         @DrawableRes drawableRes: Int = 0,
         drawableHeight: Int = -1,
         drawableWidth: Int = -1
-    ){
-        val drawable = BitmapDrawable(resources , BitmapFactory.decodeResource(resources , R.drawable.playing_com_into))
-        setTextWithKeepText(text , keepTextString , isDisplayIcon , drawable , drawableHeight , drawableWidth)
+    ) {
+        val drawable = BitmapDrawable(
+            resources,
+            BitmapFactory.decodeResource(resources, R.drawable.playing_com_into)
+        )
+        setTextWithKeepText(
+            text,
+            keepTextString,
+            isDisplayIcon,
+            drawable,
+            drawableHeight,
+            drawableWidth
+        )
     }
 
 
@@ -191,50 +219,32 @@ class EllipsizeIconTextView : AppCompatTextView {
         this.keepText = keepTextString
         this.isDisplayIcon = isDisplayIcon
         this.content = text
-        if (isDisplayIcon) {
-            if (BuildConfig.DEBUG) {
-                checkNotNull(drawable) {
-                    throw IllegalAccessException("${TAG}-fun setTextWithKeepText:drawable is null")
-                }
-            } else {
-                drawable?.let {
-
-                    iconWidth = if (drawableWidth == -1) {
-                        it.intrinsicWidth
-                    } else {
-                        dp2px(drawableWidth)
-                    }
-                    iconHeight = if (drawableHeight == -1) {
-                        it.intrinsicHeight
-                    } else {
-                        dp2px(drawableHeight)
-                    }
-                    it.setBounds(0, 0, iconWidth, iconHeight)
-                    moreIcon = it
-                    val sp = SpanUtils(context)
-                        .append(text)
-                        .setFontSize(this.textSize.toInt())
-                        .setForegroundColor(this.currentTextColor)
-                        .append(keepText)
-                        .setFontSize(keepTextPaint.textSize.toInt())
-                        .setForegroundColor(keepTextPaint.color)
-                        .appendImage(moreIcon!!)
-                        .create()
-                    setText(sp)
-                }
+        if (isDisplayIcon && BuildConfig.DEBUG) {
+            checkNotNull(drawable) {
+                throw IllegalAccessException("${TAG}-fun setTextWithKeepText:drawable is null")
+            }
+            iconWidth = if(drawableWidth == -1){
+                drawable.intrinsicWidth
+            }else{
+                drawableWidth
             }
 
-        } else {
-            val sp = SpanUtils(context)
-                .append(text)
-                .setFontSize(this.textSize.toInt())
-                .setForegroundColor(this.currentTextColor)
-                .append(keepText)
-                .setFontSize(keepTextPaint.textSize.toInt())
-                .setForegroundColor(keepTextPaint.color)
-                .create()
-            setText(sp)
+            iconHeight = if(drawableHeight == -1){
+                drawable.intrinsicHeight
+            }else{
+                drawableHeight
+            }
+            moreIcon = drawable
         }
+        val sp = SpanUtils(context)
+            .append(text)
+            .setFontSize(this.textSize.toInt())
+            .setForegroundColor(this.currentTextColor)
+            .append(keepText)
+            .setFontSize(keepTextPaint.textSize.toInt())
+            .setForegroundColor(keepTextPaint.color)
+            .create()
+        setText(sp)
 
 
     }
