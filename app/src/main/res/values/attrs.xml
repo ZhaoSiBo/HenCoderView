@@ -2,21 +2,21 @@
 <resources>
 
     <declare-styleable name="EllipsizedTextView">
-        <attr name="foldText" format="string"/>
-        <attr name="unFoldText" format="string"/>
-        <attr name="foldLine" format="integer"/>
-        <attr name="tailTextColor" format="color"/>
-        <attr name="canFoldAgain" format="boolean"/>
+        <attr name="foldText" format="string" />
+        <attr name="unFoldText" format="string" />
+        <attr name="foldLine" format="integer" />
+        <attr name="tailTextColor" format="color" />
+        <attr name="canFoldAgain" format="boolean" />
     </declare-styleable>
 
     <declare-styleable name="EllipsizeIconTextView">
-        <attr name="moreIcon" format="reference"/>
-        <attr name="iconHeight" format="dimension"/>
-        <attr name="iconWidth" format="dimension"/>
-        <attr name="keepText" format="string"/>
-        <attr name="keepTextSize" format="dimension"/>
-        <attr name="keepTextColor" format="color"/>
-        <attr name="isDisPlayIcon" format="boolean"/>
+        <attr name="moreIcon" format="reference" />
+        <attr name="iconHeight" format="dimension" />
+        <attr name="iconWidth" format="dimension" />
+        <attr name="keepText" format="string" />
+        <attr name="keepTextSize" format="dimension" />
+        <attr name="keepTextColor" format="color" />
+        <attr name="isDisPlayIcon" format="boolean" />
     </declare-styleable>
 
 

@@ -13,7 +13,7 @@ import androidx.core.content.ContextCompat
 import com.starts.hencoderview.R
 
 /**
- *  文件描述：当 Ellipsize = end 并且 多行 。在超出情况下，可以显示包括尾部图片， 追加文字
+ *  文件描述：当 Ellipsize = end 并且 多行 。在超出情况下，可以显示包括尾部图片， 追加文字  Tips：只能在缩略状态下才会生效！！！
  *  实现 文字...image  文字...文字的样式
  *  作者：Created by Lorizhao on 2021/3/4.
  *  版本号：1.0
