@@ -44,7 +44,7 @@ class EllipsizedTextScene : AppCompatScene() {
         binding.tv1.text = text
         binding.tv1.setKeepTextSize(sp(12))
         binding.tv1.setKeepTextColor( Color.GREEN)
-        binding.tv1.setTextWithKeepText(text , "已经听了百分之30",false)
+        binding.tv1.setTextWithKeepText(text , "已经听了百分之30",true, R.drawable.playing_com_into, -1 , -1 )
     }
 }
 

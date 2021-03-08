@@ -6,12 +6,15 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.text.TextUtils
 import android.util.AttributeSet
 import androidx.annotation.ColorInt
+import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import androidx.core.text.TextUtilsCompat
+import com.starts.hencoderview.BuildConfig
 import com.starts.hencoderview.R
 import com.starts.hencoderview.SpanUtils
 import com.starts.hencoderview.dp2px
@@ -48,14 +51,12 @@ class EllipsizeIconTextView : AppCompatTextView {
     private var iconWidth = -1
     private var iconHeight = -1
     private var keepText = ""
-    private var content:String = ""
+    private var content: String = ""
     private val keepTextPaint = Paint(Paint.ANTI_ALIAS_FLAG)
-    private var moreIcon: Drawable = BitmapDrawable(
-        resources,
-        BitmapFactory.decodeResource(resources, R.drawable.playing_com_into)
-    )
+    private var moreIcon: Drawable? = null
 
     private var isDisplayIcon = false
+
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attrs: AttributeSet?) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
@@ -71,7 +72,7 @@ class EllipsizeIconTextView : AppCompatTextView {
         }
 
         needOverDraw = true
-        if(TextUtils.isEmpty(keepText) && isDisplayIcon){
+        if (TextUtils.isEmpty(keepText) && isDisplayIcon) {
             //在没有保留文字，只有保留图片功能的时候，通过缩略的字符串数量来操作，这样会更准确的显示图片的位置
             val lastLine = maxLines - 1
             val lineStartIndex = layout.getLineStart(lastLine)
@@ -136,8 +137,8 @@ class EllipsizeIconTextView : AppCompatTextView {
                 val bottom = middle + iconHeight / 2
                 val top = middle - iconHeight / 2
                 val right = left + iconWidth
-                moreIcon.setBounds(left, top, right, bottom)
-                moreIcon.draw(canvas)
+                moreIcon?.setBounds(left, top, right, bottom)
+                moreIcon?.draw(canvas)
             }
         } else {
             if (isDisplayIcon) {
@@ -145,8 +146,8 @@ class EllipsizeIconTextView : AppCompatTextView {
                 val bottom = middle + iconHeight / 2
                 val top = middle - iconHeight / 2
                 val right = left + iconWidth
-                moreIcon.setBounds(left, top, right, bottom)
-                moreIcon.draw(canvas)
+                moreIcon?.setBounds(left, top, right, bottom)
+                moreIcon?.draw(canvas)
             }
         }
     }
@@ -166,39 +167,64 @@ class EllipsizeIconTextView : AppCompatTextView {
         return false
     }
 
+    fun setTextWithKeepText(
+        text: String,
+        keepTextString: String,
+        isDisplayIcon: Boolean,
+        @DrawableRes drawableRes: Int = 0,
+        drawableHeight: Int = -1,
+        drawableWidth: Int = -1
+    ){
+        val drawable = BitmapDrawable(resources , BitmapFactory.decodeResource(resources , R.drawable.playing_com_into))
+        setTextWithKeepText(text , keepTextString , isDisplayIcon , drawable , drawableHeight , drawableWidth)
+    }
 
-    fun setTextWithKeepText(text:String , keepTextString:String ,isDisplayIcon:Boolean , drawable: Drawable? = null, drawableHeight:Int = -1  , drawableWidth:Int = -1){
+
+    fun setTextWithKeepText(
+        text: String,
+        keepTextString: String,
+        isDisplayIcon: Boolean,
+        drawable: Drawable? = null,
+        drawableHeight: Int = -1,
+        drawableWidth: Int = -1
+    ) {
         this.keepText = keepTextString
         this.isDisplayIcon = isDisplayIcon
         this.content = text
+        if (isDisplayIcon) {
+            if (BuildConfig.DEBUG) {
+                checkNotNull(drawable) {
+                    throw IllegalAccessException("${TAG}-fun setTextWithKeepText:drawable is null")
+                }
+            } else {
+                drawable?.let {
 
-        if(isDisplayIcon){
-            checkNotNull(null == drawable){
-                throw IllegalAccessException("${TAG}-fun setTextWithKeepText:drawable is null")
+                    iconWidth = if (drawableWidth == -1) {
+                        it.intrinsicWidth
+                    } else {
+                        dp2px(drawableWidth)
+                    }
+                    iconHeight = if (drawableHeight == -1) {
+                        it.intrinsicHeight
+                    } else {
+                        dp2px(drawableHeight)
+                    }
+                    it.setBounds(0, 0, iconWidth, iconHeight)
+                    moreIcon = it
+                    val sp = SpanUtils(context)
+                        .append(text)
+                        .setFontSize(this.textSize.toInt())
+                        .setForegroundColor(this.currentTextColor)
+                        .append(keepText)
+                        .setFontSize(keepTextPaint.textSize.toInt())
+                        .setForegroundColor(keepTextPaint.color)
+                        .appendImage(moreIcon!!)
+                        .create()
+                    setText(sp)
+                }
             }
-            iconWidth = if(drawableWidth == -1){
-                moreIcon.intrinsicWidth
-            }else{
-                dp2px(drawableWidth)
-            }
-            iconHeight = if(drawableHeight == -1){
-                moreIcon.intrinsicHeight
-            }else{
-                dp2px(drawableHeight)
-            }
-            moreIcon.setBounds(0 , 0 , iconWidth ,iconHeight)
 
-            val sp = SpanUtils(context)
-                .append(text)
-                .setFontSize(this.textSize.toInt())
-                .setForegroundColor(this.currentTextColor)
-                .append(keepText)
-                .setFontSize(keepTextPaint.textSize.toInt())
-                .setForegroundColor(keepTextPaint.color)
-                .appendImage(moreIcon)
-                .create()
-            setText(sp)
-        }else{
+        } else {
             val sp = SpanUtils(context)
                 .append(text)
                 .setFontSize(this.textSize.toInt())
@@ -212,7 +238,6 @@ class EllipsizeIconTextView : AppCompatTextView {
 
 
     }
-
 
 
 }
