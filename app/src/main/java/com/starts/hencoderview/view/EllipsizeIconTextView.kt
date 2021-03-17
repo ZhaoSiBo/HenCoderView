@@ -86,11 +86,11 @@ class EllipsizeIconTextView : AppCompatTextView {
             val lineStartIndex = layout.getLineStart(lastLine)
             val lineEllipsisStart = lineStartIndex + layout.getEllipsisStart(lastLine)
             val expandTextLength: Int = EXPAND_TEXT.length
-
+            //TextView自己计算layout.getEllipsisStart(lastLine)的时候，就已经去掉了省略的字符，所以不再需要多余的 - 1，
+            // 目前这样就是最好的距离，预留一个字符的长度
             val temp = text.subSequence(
                 0,
-                lineEllipsisStart - expandTextLength + 1 - SPACE_WITH_ICON
-            ).toString() + EXPAND_TEXT
+                lineEllipsisStart - expandTextLength).toString() + EXPAND_TEXT
             text = temp
             return
         }
