@@ -1,31 +1,42 @@
 package com.starts.hencoderview
 
+import android.content.Context
+import android.graphics.BitmapFactory
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Rect
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-import android.text.TextPaint
-import android.text.TextUtils
-import android.text.style.DynamicDrawableSpan
+import android.text.*
+import android.text.style.ImageSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.bytedance.scene.ui.template.AppCompatScene
-import com.starts.hencoderview.SpanUtils.ALIGN_BASELINE
 import com.starts.hencoderview.databinding.SceneEllipsizedTextBinding
-import com.starts.hencoderview.util.QMUIAlignMiddleImageSpan
-import com.starts.hencoderview.util.QMUIAlignMiddleImageSpan.ALIGN_BASELINE
-import com.starts.hencoderview.util.QMUIAlignMiddleImageSpan.ALIGN_MIDDLE
+import kotlin.math.ceil
 
 
 /**
 
- *文件描述：.
- *作者：Created by zhaosibo on 2021/2/8.
- *版本号：1.0
-
+ *文件描述：.实现 文字...文字，文字...icon，文字...文字+icon的样式
+ *  当设置了isDisplay = true ，在Ellipsize = end 并且 多行的情况下，图片才会显示，并不会直接追加文本末尾
+ *  keepText不管在当前TextView是在缩略状态，keepText都会被保留
+ *  非缩略状态下，会自动通过SpannableStringBuilder方案实现图文混排
+ *
+ *  作者：Created by Lorizhao on 2021/3/4.
+ *  版本号：1.0
+ *
+ *  使用时，请使用 setTextWithKeepText 方法设置 保留图片和 保留文字
+ *  单独修改文字的颜色和字体大小，并不会触发重绘，请提前修改，最后通过 setTextWithKeepText 方法触发
+ *  可以单独设置保留文字的 大小，颜色，如果需要修改对齐方式，那就重写在OnDraw（）方法中的绘制方法
+ *
+ *  在onMeasure()方法中判断文字是否会超出，并设置needOverDraw，触发在onDraw()方法中追加绘制图片和文字
+ *  在onMeasure(),onDraw()方法中调用setText()方法后会再次出发onMeasure(),onDraw()，所以要注意结束条件，自测onMeasure()，onDraw()方法的调用次数
+ *  作者：Created by lorizhao on 2021/2/8.
+ *  版本号：1.0
  */
 class EllipsizedTextScene : AppCompatScene() {
     lateinit var binding: SceneEllipsizedTextBinding
@@ -40,45 +51,13 @@ class EllipsizedTextScene : AppCompatScene() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-//        val drawable =
-//            ContextCompat.getDrawable(requireSceneContext(), R.drawable.playing_com_into)!!
-//        drawable.setBounds(0, 0, dp2px(10), dp2px(10))
-//
         val text =
-            "电影主题曲《my heart will go on 》,电影主题曲《myhe"
-//        val span = QMUIAlignMiddleImageSpan(drawable, ALIGN_MIDDLE, -1f)
-//
-//        val spannableString = SpannableString(text)
-//        spannableString.setSpan(
-//            span,
-//            text.length - 2,
-//            text.length,
-//            Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
-//        )
-//        binding.tv1.text = spannableString
-
-        measureTextWith(binding.tv1 ,text )
+            "电影主题曲《my heart will go on 》,电影主题曲《my heart will go ,"
+        binding.tv1.text = text
+        binding.tv1.setKeepTextSize(sp(12))
+        binding.tv1.setKeepTextColor( Color.GREEN)
+        binding.tv1.setTextWithKeepText(text , "已经播放30%",false, R.drawable.playing_com_into, -1 , -1 )
+        binding.tv1.text = text
     }
-
-    private fun measureTextWith(textView: TextView, text: String) {
-        val textWith = resources.displayMetrics.widthPixels
-        val textLength = textWith * 2 - dp2px(10)
-        val paint = textView.paint
-        paint.textSize = textView.textSize
-        val temp = TextUtils.ellipsize(text , paint, textLength * 1f , TextUtils.TruncateAt.END)
-
-        val drawable =
-            ContextCompat.getDrawable(requireSceneContext(), R.drawable.playing_com_into)!!
-        drawable.setBounds(0, 0, dp2px(10), dp2px(10))
-//        val spannableString = SpannableString(temp)
-//        spannableString.setSpan(QMUIAlignMiddleImageSpan(drawable, ALIGN_MIDDLE, -1f) , temp.length-2 ,temp.length -1  , SPAN_EXCLUSIVE_EXCLUSIVE)
-        textView.text = SpanUtils(requireSceneContext())
-            .append(temp)
-            .appendImage(drawable , SpanUtils.ALIGN_BASELINE)
-            .create()
-
-    }
-
-
 }
 

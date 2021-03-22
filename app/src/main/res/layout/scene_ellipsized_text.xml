@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="#000000"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <TextView
+    <com.starts.hencoderview.view.EllipsizeIconTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/tv1"
@@ -19,7 +19,5 @@
         android:ellipsize="end"
         android:maxLines="2"
         />
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

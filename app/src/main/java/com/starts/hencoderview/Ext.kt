@@ -4,13 +4,17 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Paint
-import android.os.Handler
-import android.os.Looper
+import android.graphics.drawable.Drawable
+import android.text.Spannable
+import android.text.SpannableString
 import android.text.SpannableStringBuilder
+import android.text.style.ImageSpan
 import android.view.View
-import android.widget.Button
+import android.view.ViewGroup
 import android.widget.TextView
-import org.w3c.dom.Text
+import androidx.annotation.DrawableRes
+import androidx.core.content.ContextCompat
+import java.lang.IllegalArgumentException
 
 /**
 
@@ -43,48 +47,27 @@ fun getMaterialColor(resources: Resources , index:Int):Int {
     return returnColor
 }
 
-fun <T>fill(array:Array<in T>, ob:T ) {
-    array[0] = ob
-}
-
-fun <T>copy(from:Array<out T>,to:Array<in T>){
-    check(from.size == to.size)
-    for (i in from.indices){
-        to[i] == from[i]
-    }
-}
-
-fun TextView.setEllipsizedSuffix(maxLines: Int, suffix: SpannableStringBuilder) {
-    addOnLayoutChangeListener(object: View.OnLayoutChangeListener {
-        override fun onLayoutChange(v: View?, left: Int, top: Int, right: Int, bottom: Int, oldLeft: Int, oldTop: Int, oldRight: Int, oldBottom:     Int) {
-
-            val allText = text.toString()
-            var newText = allText
-            val tvWidth = width
-            val textSize = textSize
-
-            if(!textHasEllipsized(newText, tvWidth, textSize, maxLines)) return
-
-            while (textHasEllipsized(newText, tvWidth, textSize, maxLines)) {
-                newText = newText.substring(0, newText.length - 1).trim()
-            }
-
-            //now replace the last few chars with the suffix if we can
-            val endIndex = newText.length - suffix.length - 1 //minus 1 just to make sure we have enough room
-            if(endIndex > 0) {
-                newText = "${newText.substring(0, endIndex).trim()}$suffix"
-            }
-
-            text = newText
-
-            removeOnLayoutChangeListener(this)
-        }
-    })
-}
-
 fun textHasEllipsized(text: String, tvWidth: Int, textSize: Float, maxLines: Int): Boolean {
     val paint = Paint()
     paint.textSize = textSize
     val size = paint.measureText(text).toInt()
     return size > tvWidth * maxLines
+}
+
+val Int.dp:Int get() = (this * Resources.getSystem().displayMetrics.density + 0.5f).toInt()
+
+fun Int.toExactlyMeasureSpace():Int{
+    return View.MeasureSpec.makeMeasureSpec(this,View.MeasureSpec.EXACTLY)
+}
+fun Int.toAtMostMeasureSpace():Int{
+    return View.MeasureSpec.makeMeasureSpec(this,View.MeasureSpec.AT_MOST)
+}
+
+fun View.defaultWithMeasureSpace(parentView:ViewGroup):Int{
+    return when(layoutParams.width){
+        View.MeasureSpec.AT_MOST -> parentView.measuredWidth.toExactlyMeasureSpace()
+        View.MeasureSpec.EXACTLY -> parentView.measuredWidth.toExactlyMeasureSpace()
+        0->throw IllegalArgumentException("UNSPECIFIED is not support")
+        else-> parentView.measuredWidth.toExactlyMeasureSpace()
+    }
 }

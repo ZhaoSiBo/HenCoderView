@@ -66,6 +66,9 @@ class MainScene : AppCompatScene() {
         binding.btnEllipsize.setOnClickListener {
             requireNavigationScene().push(EllipsizedTextScene::class.java)
         }
+        binding.btnCustom.setOnClickListener {
+//            requireNavigationScene().push(RelateScene::class.java)
+        }
 
         setStatusBarVisible(true)
         setToolbarVisible(true)
