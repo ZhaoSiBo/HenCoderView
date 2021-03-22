@@ -131,12 +131,12 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent">
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btnRelate"
+            android:id="@+id/btnCustom"
             android:layout_width="120dp"
             android:layout_height="60dp"
             android:background="#59B0FF"
             android:elevation="5dp"
-            android:text="相对布局测试"
+            android:text="自定义ViewGroup"
             android:textAllCaps="false"
             android:textColor="@color/white" />
     </LinearLayout>

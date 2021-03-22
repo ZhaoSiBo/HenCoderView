@@ -10,9 +10,11 @@ import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.style.ImageSpan
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
+import java.lang.IllegalArgumentException
 
 /**
 
@@ -45,45 +47,6 @@ fun getMaterialColor(resources: Resources , index:Int):Int {
     return returnColor
 }
 
-fun <T>fill(array:Array<in T>, ob:T ) {
-    array[0] = ob
-}
-
-fun <T>copy(from:Array<out T>,to:Array<in T>){
-    check(from.size == to.size)
-    for (i in from.indices){
-        to[i] == from[i]
-    }
-}
-
-fun TextView.setEllipsizedSuffix(maxLines: Int, suffix: SpannableStringBuilder) {
-    addOnLayoutChangeListener(object: View.OnLayoutChangeListener {
-        override fun onLayoutChange(v: View?, left: Int, top: Int, right: Int, bottom: Int, oldLeft: Int, oldTop: Int, oldRight: Int, oldBottom:     Int) {
-
-            val allText = text.toString()
-            var newText = allText
-            val tvWidth = width
-            val textSize = textSize
-
-            if(!textHasEllipsized(newText, tvWidth, textSize, maxLines)) return
-
-            while (textHasEllipsized(newText, tvWidth, textSize, maxLines)) {
-                newText = newText.substring(0, newText.length - 1).trim()
-            }
-
-            //now replace the last few chars with the suffix if we can
-            val endIndex = newText.length - suffix.length - 1 //minus 1 just to make sure we have enough room
-            if(endIndex > 0) {
-                newText = "${newText.substring(0, endIndex).trim()}$suffix"
-            }
-
-            text = newText
-
-            removeOnLayoutChangeListener(this)
-        }
-    })
-}
-
 fun textHasEllipsized(text: String, tvWidth: Int, textSize: Float, maxLines: Int): Boolean {
     val paint = Paint()
     paint.textSize = textSize
@@ -91,23 +54,20 @@ fun textHasEllipsized(text: String, tvWidth: Int, textSize: Float, maxLines: Int
     return size > tvWidth * maxLines
 }
 
-fun getPicAtEnd(
-    context:Context,
-    @DrawableRes picRes: Int,
-    charSequence: CharSequence,
-    picSize: Int
-): SpannableString {
-    val drawable: Drawable = ContextCompat.getDrawable(context, picRes)!!
-    val picWidth = if (picSize < 0) drawable.intrinsicWidth else picSize
-    val picHeight = if (picSize < 0) drawable.intrinsicHeight else picSize
-    drawable.setBounds(0, 0, picWidth, picHeight)
-    val ret = SpannableString(charSequence.toString() + "p")
-    val imgSpan = ImageSpan(drawable, ImageSpan.ALIGN_BASELINE)
-    ret.setSpan(
-        imgSpan,
-        charSequence.length,
-        charSequence.length + 1,
-        Spannable.SPAN_INCLUSIVE_EXCLUSIVE
-    )
-    return ret
+val Int.dp:Int get() = (this * Resources.getSystem().displayMetrics.density + 0.5f).toInt()
+
+fun Int.toExactlyMeasureSpace():Int{
+    return View.MeasureSpec.makeMeasureSpec(this,View.MeasureSpec.EXACTLY)
+}
+fun Int.toAtMostMeasureSpace():Int{
+    return View.MeasureSpec.makeMeasureSpec(this,View.MeasureSpec.AT_MOST)
+}
+
+fun View.defaultWithMeasureSpace(parentView:ViewGroup):Int{
+    return when(layoutParams.width){
+        View.MeasureSpec.AT_MOST -> parentView.measuredWidth.toExactlyMeasureSpace()
+        View.MeasureSpec.EXACTLY -> parentView.measuredWidth.toExactlyMeasureSpace()
+        0->throw IllegalArgumentException("UNSPECIFIED is not support")
+        else-> parentView.measuredWidth.toExactlyMeasureSpace()
+    }
 }

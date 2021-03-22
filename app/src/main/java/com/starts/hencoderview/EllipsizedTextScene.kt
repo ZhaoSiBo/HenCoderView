@@ -29,7 +29,8 @@ import kotlin.math.ceil
  *  作者：Created by Lorizhao on 2021/3/4.
  *  版本号：1.0
  *
- *  使用时，请使用 setTextWithKeepText方法设置 保留图片和 保留文字
+ *  使用时，请使用 setTextWithKeepText 方法设置 保留图片和 保留文字
+ *  单独修改文字的颜色和字体大小，并不会触发重绘，请提前修改，最后通过 setTextWithKeepText 方法触发
  *  可以单独设置保留文字的 大小，颜色，如果需要修改对齐方式，那就重写在OnDraw（）方法中的绘制方法
  *
  *  在onMeasure()方法中判断文字是否会超出，并设置needOverDraw，触发在onDraw()方法中追加绘制图片和文字
