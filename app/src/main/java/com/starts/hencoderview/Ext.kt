@@ -40,21 +40,17 @@ fun sp(sp: Int): Float {
 
 fun getMaterialColor(resources: Resources , index:Int):Int {
     val colors = resources.obtainTypedArray(R.array.mdcolor_300);
-
     val  returnColor = colors.getColor(index % colors.length(), Color.BLACK);
-
     colors.recycle();
     return returnColor
 }
 
-fun textHasEllipsized(text: String, tvWidth: Int, textSize: Float, maxLines: Int): Boolean {
-    val paint = Paint()
-    paint.textSize = textSize
-    val size = paint.measureText(text).toInt()
-    return size > tvWidth * maxLines
+val Int.dp:Int get() = (this * Resources.getSystem().displayMetrics.density + 0.5f).toInt()
+
+fun getScreenWidth():Int{
+    return Resources.getSystem().displayMetrics.widthPixels
 }
 
-val Int.dp:Int get() = (this * Resources.getSystem().displayMetrics.density + 0.5f).toInt()
 
 fun Int.toExactlyMeasureSpace():Int{
     return View.MeasureSpec.makeMeasureSpec(this,View.MeasureSpec.EXACTLY)
@@ -66,8 +62,62 @@ fun Int.toAtMostMeasureSpace():Int{
 fun View.defaultWithMeasureSpace(parentView:ViewGroup):Int{
     return when(layoutParams.width){
         View.MeasureSpec.AT_MOST -> parentView.measuredWidth.toExactlyMeasureSpace()
-        View.MeasureSpec.EXACTLY -> parentView.measuredWidth.toExactlyMeasureSpace()
+        View.MeasureSpec.EXACTLY -> parentView.measuredWidth.toAtMostMeasureSpace()
         0->throw IllegalArgumentException("UNSPECIFIED is not support")
         else-> parentView.measuredWidth.toExactlyMeasureSpace()
     }
+}
+
+fun View.defaultHeightMeasureSpace(parentView:ViewGroup):Int{
+    return when(layoutParams.height){
+        View.MeasureSpec.AT_MOST -> parentView.measuredHeight.toExactlyMeasureSpace()
+        View.MeasureSpec.EXACTLY -> parentView.measuredHeight.toAtMostMeasureSpace()
+        0->throw IllegalArgumentException("UNSPECIFIED is not support")
+        else-> parentView.measuredHeight.toExactlyMeasureSpace()
+    }
+}
+
+fun View.setVisibility(isVisibility:Boolean){
+    if(isVisibility){
+        this.visibility  = View.VISIBLE
+    }else{
+        this.visibility = View.GONE
+    }
+}
+fun View.setLayoutMarginTop(marginTop:Int){
+    if (this.layoutParams is ViewGroup.MarginLayoutParams){
+        val lp = layoutParams as ViewGroup.MarginLayoutParams
+        lp.topMargin = marginTop
+        this.layoutParams = lp
+    }
+}
+fun View.setLayoutMarginLeft(marginLeft:Int){
+    if (this.layoutParams is ViewGroup.MarginLayoutParams){
+        val lp = layoutParams as ViewGroup.MarginLayoutParams
+        lp.leftMargin = marginLeft
+        this.layoutParams = lp
+    }
+}
+fun View.setLayoutMarginRight(marginRight:Int){
+    if (this.layoutParams is ViewGroup.MarginLayoutParams){
+        val lp = layoutParams as ViewGroup.MarginLayoutParams
+        lp.rightMargin = marginRight
+        this.layoutParams = lp
+    }
+}
+fun View.setLayoutMarginBottom(marginBottom:Int){
+    if (this.layoutParams is ViewGroup.MarginLayoutParams){
+        val lp = layoutParams as ViewGroup.MarginLayoutParams
+        lp.bottomMargin = marginBottom
+        this.layoutParams = lp
+    }
+}
+
+fun View.defaultLayout(left:Int, top:Int, isRight:Boolean = false){
+    if(!isRight){
+        this.layout(left,top,left + measuredWidth , top + measuredHeight)
+    }else{
+//        this.layout()
+    }
+
 }
