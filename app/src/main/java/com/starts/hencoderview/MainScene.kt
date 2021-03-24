@@ -67,11 +67,10 @@ class MainScene : AppCompatScene() {
             requireNavigationScene().push(EllipsizedTextScene::class.java)
         }
         binding.btnCustom.setOnClickListener {
-//            requireNavigationScene().push(RelateScene::class.java)
+            requireNavigationScene().push(SongDetailScene::class.java)
         }
 
         setStatusBarVisible(true)
         setToolbarVisible(true)
     }
-
 }

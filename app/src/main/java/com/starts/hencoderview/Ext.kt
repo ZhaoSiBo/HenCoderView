@@ -61,19 +61,19 @@ fun Int.toAtMostMeasureSpace():Int{
 
 fun View.defaultWithMeasureSpace(parentView:ViewGroup):Int{
     return when(layoutParams.width){
-        View.MeasureSpec.AT_MOST -> parentView.measuredWidth.toExactlyMeasureSpace()
-        View.MeasureSpec.EXACTLY -> parentView.measuredWidth.toAtMostMeasureSpace()
-        0->throw IllegalArgumentException("UNSPECIFIED is not support")
-        else-> parentView.measuredWidth.toExactlyMeasureSpace()
+        ViewGroup.LayoutParams.MATCH_PARENT -> (parentView.measuredWidth - parentView.paddingLeft - parentView.paddingRight).toExactlyMeasureSpace()
+        ViewGroup.LayoutParams.WRAP_CONTENT -> (parentView.measuredWidth - parentView.paddingLeft - parentView.paddingRight).toAtMostMeasureSpace()
+        0->throw IllegalAccessException("Need special treatment for $this")
+        else-> layoutParams.width.toExactlyMeasureSpace()
     }
 }
 
 fun View.defaultHeightMeasureSpace(parentView:ViewGroup):Int{
     return when(layoutParams.height){
-        View.MeasureSpec.AT_MOST -> parentView.measuredHeight.toExactlyMeasureSpace()
-        View.MeasureSpec.EXACTLY -> parentView.measuredHeight.toAtMostMeasureSpace()
-        0->throw IllegalArgumentException("UNSPECIFIED is not support")
-        else-> parentView.measuredHeight.toExactlyMeasureSpace()
+        ViewGroup.LayoutParams.MATCH_PARENT ->(parentView.measuredHeight - parentView.paddingTop - parentView.paddingBottom).toExactlyMeasureSpace()
+        ViewGroup.LayoutParams.WRAP_CONTENT -> (parentView.measuredHeight - parentView.paddingTop - parentView.paddingBottom).toAtMostMeasureSpace()
+        0->throw IllegalAccessException("Need special treatment for $this")
+        else-> layoutParams.height.toExactlyMeasureSpace()
     }
 }
 
@@ -111,13 +111,4 @@ fun View.setLayoutMarginBottom(marginBottom:Int){
         lp.bottomMargin = marginBottom
         this.layoutParams = lp
     }
-}
-
-fun View.defaultLayout(left:Int, top:Int, isRight:Boolean = false){
-    if(!isRight){
-        this.layout(left,top,left + measuredWidth , top + measuredHeight)
-    }else{
-//        this.layout()
-    }
-
 }
