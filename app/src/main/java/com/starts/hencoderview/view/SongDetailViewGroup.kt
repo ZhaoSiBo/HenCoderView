@@ -2,7 +2,6 @@ package com.starts.hencoderview.view
 
 import android.content.Context
 import android.graphics.Color
-import android.graphics.Paint
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.view.View
@@ -10,14 +9,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.core.view.isVisible
 import androidx.core.view.marginTop
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.starts.hencoderview.*
-import java.time.format.TextStyle
-import kotlin.random.Random
 
 /**
  *  文件描述：.业务中，经常遇到，根据业务的数据值，或有或无，来控制UI的显示隐藏，位置上下，测试使用自定义ViewGroup来实现这种效果
@@ -60,7 +53,7 @@ class SongDetailViewGroup : ViewGroup {
 
     val songDetails: EllipsizeIconTextView = EllipsizeIconTextView(context).apply {
         layoutParams = MarginLayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT)
-        textSize  = 14f
+        textSize = 14f
         ellipsize = TextUtils.TruncateAt.END
         maxLines = 2
         addView(this)
@@ -80,12 +73,12 @@ class SongDetailViewGroup : ViewGroup {
         attrs,
         defStyleAttr
     ) {
-        setBackgroundColor(ContextCompat.getColor(context , R.color.light_blue_300))
+        setBackgroundColor(ContextCompat.getColor(context, R.color.light_blue_300))
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
-        setPadding(PADDING_SIZE , PADDING_SIZE , PADDING_SIZE , PADDING_SIZE)
+        setPadding(PADDING_SIZE, PADDING_SIZE, PADDING_SIZE, PADDING_SIZE)
 
         songName.setVisibility(!TextUtils.isEmpty(songName.text))
         songPublishTime.setVisibility(!TextUtils.isEmpty(songPublishTime.text))
@@ -100,8 +93,16 @@ class SongDetailViewGroup : ViewGroup {
             songName.measuredHeight +
                     songPublishTime.measuredHeight +
                     songDetails.measuredHeight +
-                    if(songPublishTime.visibility == View.VISIBLE){14.dp}else{0} +
-                    if(songDetails.visibility == View.VISIBLE){14.dp}else{0} +
+                    if (songPublishTime.visibility == View.VISIBLE) {
+                        14.dp
+                    } else {
+                        0
+                    } +
+                    if (songDetails.visibility == View.VISIBLE) {
+                        14.dp
+                    } else {
+                        0
+                    } +
                     PADDING_SIZE * 2
         setMeasuredDimension(
             widthMeasureSpec,
@@ -114,15 +115,32 @@ class SongDetailViewGroup : ViewGroup {
             it.layout(PADDING_SIZE, it.marginTop + PADDING_SIZE)
         }
         songPublishTime.let {
-            it.layout(PADDING_SIZE, songName.bottom +  if(songPublishTime.visibility == View.VISIBLE){14.dp}else{0})
+            it.layout(
+                PADDING_SIZE,
+                songName.bottom + if (songPublishTime.visibility == View.VISIBLE) {
+                    14.dp
+                } else {
+                    0
+                }
+            )
         }
         songDetails.let {
-            it.layout(PADDING_SIZE, songPublishTime.bottom + if(songDetails.visibility == View.VISIBLE){14.dp}else{0})
+            it.layout(
+                PADDING_SIZE,
+                songPublishTime.bottom + if (songDetails.visibility == View.VISIBLE) {
+                    14.dp
+                } else {
+                    0
+                }
+            )
         }
 
         if (songDetails.text == "歌曲详情") {
             songMore.visibility = View.VISIBLE
-            songMore.layout(songDetails.right + 2.dp, (songDetails.top + songDetails.measuredHeight /2) - songMore.measuredHeight /2 )
+            songMore.layout(
+                songDetails.right + 2.dp,
+                (songDetails.top + songDetails.measuredHeight / 2) - songMore.measuredHeight / 2
+            )
         } else {
             songMore.layout(0, 0, 0, 0)
             songMore.visibility = View.INVISIBLE

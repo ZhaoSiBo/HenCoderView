@@ -28,7 +28,6 @@ class MainScene : AppCompatScene() {
         savedInstanceState: Bundle?
     ): View? {
         binding = ActivityMainBinding.inflate(inflater)
-        val h = Looper.getMainLooper()
         return binding.root
     }
 
@@ -68,6 +67,12 @@ class MainScene : AppCompatScene() {
         }
         binding.btnCustom.setOnClickListener {
             requireNavigationScene().push(SongDetailScene::class.java)
+        }
+        binding.btnScaleAlphaImg.setOnClickListener {
+            requireNavigationScene().push(ScaleAlphaAnimScene::class.java)
+        }
+        binding.btnBottomSheetBehavior.setOnClickListener {
+            requireNavigationScene().push(BottomSheetBehaviorScene::class.java)
         }
 
         setStatusBarVisible(true)
