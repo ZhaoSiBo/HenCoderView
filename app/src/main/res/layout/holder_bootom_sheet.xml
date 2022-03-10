@@ -10,7 +10,6 @@
         android:layout_height="60dp"
         android:gravity="center"
         android:textColor="@color/white"
-        android:background="@color/light_blue_300"
         tools:text="1000"
         android:textSize="26sp"
         app:layout_constraintTop_toTopOf="parent"
