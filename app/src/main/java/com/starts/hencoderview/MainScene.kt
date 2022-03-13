@@ -74,6 +74,9 @@ class MainScene : AppCompatScene() {
         binding.btnBottomSheetBehavior.setOnClickListener {
             requireNavigationScene().push(BottomSheetBehaviorScene::class.java)
         }
+        binding.linkedScroll.setOnClickListener {
+            requireNavigationScene().push(LinkedScene::class.java)
+        }
 
         setStatusBarVisible(true)
         setToolbarVisible(true)

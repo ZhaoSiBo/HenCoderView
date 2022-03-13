@@ -16,6 +16,7 @@ import androidx.core.view.NestedScrollingParent3
 import androidx.core.view.NestedScrollingParentHelper
 import androidx.core.view.ViewCompat
 import com.starts.hencoderview.util.*
+import java.lang.RuntimeException
 import kotlin.math.abs
 
 /**
@@ -31,10 +32,9 @@ import kotlin.math.abs
  * @author https://github.com/funnywolfdadada
  * @since 2020/9/26
  */
-open class BehavioralScrollView @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
-): ConstraintLayout(context, attrs, defStyleAttr), NestedScrollingParent3, NestedScrollingChild3,
-    NestedScrollBehavior {
+abstract class BehavioralScrollView : CustomLayout, NestedScrollingParent3, NestedScrollingChild3, NestedScrollBehavior {
+
+
 
     /**
      * 滚动方向，水平 or 垂直
@@ -93,7 +93,7 @@ open class BehavioralScrollView @JvmOverloads constructor(
     /**
      * 使能日志
      */
-    var enableLog = false
+    var enableLog = true
 
     // region 一些辅助变量
 
@@ -159,6 +159,14 @@ open class BehavioralScrollView @JvmOverloads constructor(
     private var downY = 0F
     private var downState = ScrollState.NONE
 
+    constructor(context: Context?) : super(context)
+    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
+    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    )
+
     // endregion
 
     init {
@@ -223,12 +231,12 @@ open class BehavioralScrollView @JvmOverloads constructor(
     // region layout
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
-        super.onLayout(changed, left, top, right, bottom)
         adjustScrollBounds()
-        // 重新 layout 后，滚动范围可能已经变了，当前的滚动量可能超范围了
-        // 需要重新矫正，scrollBy 内部会进行滚动范围的矫正
+//         重新 layout 后，滚动范围可能已经变了，当前的滚动量可能超范围了
+//         需要重新矫正，scrollBy 内部会进行滚动范围的矫正
         scrollBy(0, 0)
     }
+
 
     /**
      * 调整默认的滚动边界

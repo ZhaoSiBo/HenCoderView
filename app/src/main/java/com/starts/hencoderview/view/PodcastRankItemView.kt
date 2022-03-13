@@ -91,22 +91,18 @@ class PodcastRankItemView : BaseViewGroup {
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         val centerY = ((bottom - top) * 0.5f + top).toInt()
-        tvRankNum.let {
-            layout(
-                left,
-                centerY - (it.measuredHeight + max(
-                    rankStateImg.measuredHeight,
-                    tvRankChange.measuredHeight
-                )) / 2
-            )
-        }
+        layout(
+            left,
+            centerY - (tvRankNum.measuredHeight + max(
+                rankStateImg.measuredHeight,
+                tvRankChange.measuredHeight
+            )) / 2
+        )
 
-        rankStateImg.let {
-            layout(
-                tvRankNum.measuredWidth / 2 - (rankStateImg.measuredWidth + 4.dp + tvRankChange.measuredWidth) / 2,
-                tvRankNum.bottom
-            )
-        }
+        layout(
+            tvRankNum.measuredWidth / 2 - (rankStateImg.measuredWidth + 4.dp + tvRankChange.measuredWidth) / 2,
+            tvRankNum.bottom
+        )
 
         tvRankChange.let {
             layout(rankStateImg.right + 4.dp, rankStateImg.top)

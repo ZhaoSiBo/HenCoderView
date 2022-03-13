@@ -28,11 +28,6 @@ fun dp2px(dp: Int): Int {
     return (dp * density).toInt()
 }
 
-fun px2dp(px: Int): Int {
-    val density = Resources.getSystem().displayMetrics.density
-    return (px / density).toInt()
-}
-
 fun sp(sp: Int): Float {
     val scaledDensity = Resources.getSystem().displayMetrics.scaledDensity
     return sp * scaledDensity
@@ -45,36 +40,12 @@ fun getMaterialColor(resources: Resources , index:Int):Int {
     return returnColor
 }
 
-val Int.dp:Int get() = (this * Resources.getSystem().displayMetrics.density + 0.5f).toInt()
 
 fun getScreenWidth():Int{
     return Resources.getSystem().displayMetrics.widthPixels
 }
-
-
-fun Int.toExactlyMeasureSpace():Int{
-    return View.MeasureSpec.makeMeasureSpec(this,View.MeasureSpec.EXACTLY)
-}
-fun Int.toAtMostMeasureSpace():Int{
-    return View.MeasureSpec.makeMeasureSpec(this,View.MeasureSpec.AT_MOST)
-}
-
-fun View.defaultWithMeasureSpace(parentView:ViewGroup):Int{
-    return when(layoutParams.width){
-        ViewGroup.LayoutParams.MATCH_PARENT -> (parentView.measuredWidth - parentView.paddingLeft - parentView.paddingRight).toExactlyMeasureSpace()
-        ViewGroup.LayoutParams.WRAP_CONTENT -> (parentView.measuredWidth - parentView.paddingLeft - parentView.paddingRight).toAtMostMeasureSpace()
-        0->throw IllegalAccessException("Need special treatment for $this")
-        else-> layoutParams.width.toExactlyMeasureSpace()
-    }
-}
-
-fun View.defaultHeightMeasureSpace(parentView:ViewGroup):Int{
-    return when(layoutParams.height){
-        ViewGroup.LayoutParams.MATCH_PARENT ->(parentView.measuredHeight - parentView.paddingTop - parentView.paddingBottom).toExactlyMeasureSpace()
-        ViewGroup.LayoutParams.WRAP_CONTENT -> (parentView.measuredHeight - parentView.paddingTop - parentView.paddingBottom).toAtMostMeasureSpace()
-        0->throw IllegalAccessException("Need special treatment for $this")
-        else-> layoutParams.height.toExactlyMeasureSpace()
-    }
+fun getScreenHeight():Int{
+    return Resources.getSystem().displayMetrics.heightPixels
 }
 
 fun View.setVisibility(isVisibility:Boolean){
@@ -82,33 +53,5 @@ fun View.setVisibility(isVisibility:Boolean){
         this.visibility  = View.VISIBLE
     }else{
         this.visibility = View.GONE
-    }
-}
-fun View.setLayoutMarginTop(marginTop:Int){
-    if (this.layoutParams is ViewGroup.MarginLayoutParams){
-        val lp = layoutParams as ViewGroup.MarginLayoutParams
-        lp.topMargin = marginTop
-        this.layoutParams = lp
-    }
-}
-fun View.setLayoutMarginLeft(marginLeft:Int){
-    if (this.layoutParams is ViewGroup.MarginLayoutParams){
-        val lp = layoutParams as ViewGroup.MarginLayoutParams
-        lp.leftMargin = marginLeft
-        this.layoutParams = lp
-    }
-}
-fun View.setLayoutMarginRight(marginRight:Int){
-    if (this.layoutParams is ViewGroup.MarginLayoutParams){
-        val lp = layoutParams as ViewGroup.MarginLayoutParams
-        lp.rightMargin = marginRight
-        this.layoutParams = lp
-    }
-}
-fun View.setLayoutMarginBottom(marginBottom:Int){
-    if (this.layoutParams is ViewGroup.MarginLayoutParams){
-        val lp = layoutParams as ViewGroup.MarginLayoutParams
-        lp.bottomMargin = marginBottom
-        this.layoutParams = lp
     }
 }

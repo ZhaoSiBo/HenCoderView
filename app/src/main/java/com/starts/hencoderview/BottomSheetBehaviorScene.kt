@@ -1,6 +1,5 @@
 package com.starts.hencoderview
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,21 +8,14 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import androidx.viewpager2.widget.ViewPager2
 import com.bytedance.scene.ktx.requireFragmentActivity
 import com.bytedance.scene.ui.template.AppCompatScene
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.tabs.TabLayoutMediator
-import com.starts.hencoderview.databinding.FramgentAlbumDetailBinding
 import com.starts.hencoderview.databinding.SceneBottomSheetBehaviorBinding
 import com.starts.hencoderview.ui.ListFragment
 import com.starts.hencoderview.util.getRandomColor
-import com.starts.hencoderview.view.BehavioralScrollListener
-import com.starts.hencoderview.view.BehavioralScrollView
-import com.starts.hencoderview.view.BottomSheetLayout
-import java.util.*
+import com.starts.hencoderview.view.ColoredTextView
 
 /**
 
@@ -52,7 +44,7 @@ class BottomSheetBehaviorScene : AppCompatScene() {
         binding.rvInfo.layoutManager = LinearLayoutManager(requireSceneContext())
         val titles = arrayListOf("歌曲面板","相似面板")
         val fragments = arrayListOf(ListFragment(), ListFragment())
-        binding.subViewPager .adapter = object :FragmentStateAdapter(requireFragmentActivity()){
+        val viewPagerAdapter = object :FragmentStateAdapter(requireFragmentActivity()){
             override fun getItemCount(): Int {
                 return fragments.size
             }
@@ -61,63 +53,12 @@ class BottomSheetBehaviorScene : AppCompatScene() {
                 return fragments[position]
             }
         }
+
+        binding.subViewPager .adapter = viewPagerAdapter
         TabLayoutMediator(binding.subTableLayout,binding.subViewPager){tab,positon->
             tab.text = titles[positon]
         }.attach()
-
-//        binding.linkageScroll.topScrollTarget = { binding.topRecycler }
-//        binding.linkageScroll.listeners.add(object: BehavioralScrollListener {
-//            override fun onScrollChanged(v: BehavioralScrollView, from: Int, to: Int) {
-//                updateFloatState()
-//            }
-//        })
-//
-//        binding.bottomSheet.setup(BottomSheetLayout.POSITION_MIN, floatingHeight)
-//        updateFloatState()
     }
-
-//    private fun updateFloatState() {
-//        if (binding.bottomSheet.indexOfChild(binding.bottomViewPager) >= 0) {
-//            if (binding.linkageScroll.scrollY >= floatingHeight) {
-//                binding.bottomSheet.visibility = View.GONE
-//                binding.bottomSheet.removeView(binding.rvLinkageBottom)
-//                binding.bottomSheet.removeAllViews()
-//                if (binding.layoutBottom.indexOfChild(binding.bottomViewPager) < 0) {
-//                    binding.layoutBottom.addView(binding.bottomTabLayout)
-//                    binding.layoutBottom.addView(binding.bottomViewPager)
-//                }
-//                binding.linkageScroll.bottomScrollTarget = { findCurrentChildRecyclerView() }
-//            }
-//        } else {
-//            if (binding.linkageScroll.scrollY < floatingHeight) {
-//                binding.linkageScroll.bottomScrollTarget = null
-//                if (binding.layoutBottom.indexOfChild(binding.bottomViewPager) >= 0) {
-//                    binding.layoutBottom.removeAllViews()
-//                }
-//                if (binding.bottomSheet.indexOfChild(binding.bottomViewPager) < 0) {
-//                    binding.bottomSheet.addView(binding.bottomTabLayout)
-//                    binding.bottomSheet.addView(binding.bottomViewPager)
-//                }
-//                binding.bottomSheet.visibility = View.VISIBLE
-//            }
-//        }
-//    }
-
-
-//    private fun findCurrentChildRecyclerView(): RecyclerView? {
-//        val layoutManagerFiled = binding.bottomViewPager::class.java.getDeclaredField("mLayoutManager")
-//        layoutManagerFiled.isAccessible = true
-//        val pagerLayoutManager = layoutManagerFiled.get(binding.bottomViewPager) as LinearLayoutManager
-//        val currentChild = pagerLayoutManager.findViewByPosition(binding.bottomViewPager.currentItem)
-//
-//        return if (currentChild is RecyclerView) {
-//            return currentChild
-//        } else {
-//            null
-//        }
-//    }
-
-
 }
 
 class InnerAdapter(private val data:List<String>) : RecyclerView.Adapter<InnerHolder>(){
@@ -126,7 +67,6 @@ class InnerAdapter(private val data:List<String>) : RecyclerView.Adapter<InnerHo
     }
 
     override fun onBindViewHolder(holder: InnerHolder, position: Int) {
-        holder.tvText.setBackgroundColor(getRandomColor())
         holder.tvText.text = data[position]
     }
 
@@ -137,5 +77,5 @@ class InnerAdapter(private val data:List<String>) : RecyclerView.Adapter<InnerHo
 }
 
 class InnerHolder(item:View) : RecyclerView.ViewHolder(item){
-    val tvText: TextView = item.findViewById(R.id.tvText)
+    val tvText: ColoredTextView = item.findViewById(R.id.tvText)
 }

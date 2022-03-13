@@ -2,17 +2,18 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_height="60dp"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <TextView
+    <com.starts.hencoderview.view.ColoredTextView
         android:id="@+id/tvText"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="80dp"
         android:gravity="center"
         android:textColor="@color/white"
         tools:text="1000"
         android:textSize="26sp"
         app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/deep_orange_300"
         />
     <View
         android:id="@+id/line"

@@ -2,13 +2,16 @@ package com.starts.hencoderview.util
 
 import android.graphics.Outline
 import android.os.SystemClock
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewOutlineProvider
 import androidx.core.view.NestedScrollingChild
 import androidx.core.view.ViewCompat
+import com.starts.hencoderview.link.NestScrollContainerLayout
 import com.starts.hencoderview.view.BehavioralScrollView
+import com.starts.hencoderview.view.NestedScrollBehavior
 
 /**
  * [isUnder] 判断 View 是否在某个点下
@@ -229,6 +232,11 @@ fun BehavioralScrollView.inStablePosition(): Boolean {
  * 发生嵌套滚动的直接子 view 是否完全展示出来
  */
 fun BehavioralScrollView.isScrollChildTotalShowing(): Boolean {
+//    Log.d(
+//        NestScrollContainerLayout.TAG,"nestedScrollChild = ${nestedScrollChild}" +
+//                "，nestedScrollChild.y = ${nestedScrollChild?.y} " +
+//                ",nestedScrollChild.scrollY =  ${scrollY}," +
+//                "nestedScrollChild height = ${nestedScrollChild?.height},view height = ${height}")
     val v = nestedScrollChild ?: return true
     return when (nestedScrollAxes) {
         ViewCompat.SCROLL_AXIS_VERTICAL -> v.y - scrollY >= 0 && v.y + v.height - scrollY <= height
@@ -236,4 +244,3 @@ fun BehavioralScrollView.isScrollChildTotalShowing(): Boolean {
         else -> return true
     }
 }
-

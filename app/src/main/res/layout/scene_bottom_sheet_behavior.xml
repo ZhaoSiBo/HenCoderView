@@ -1,51 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rootCoordinator"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvInfo"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbarLayout"
         android:layout_width="match_parent"
-        android:nestedScrollingEnabled="false"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="80dp"
-        android:background="@color/light_blue_300" />
+        android:layout_height="wrap_content">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id ="@+id/rvInfo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/light_blue_300"
+            app:layout_scrollFlags="scroll"
+            />
+    </com.google.android.material.appbar.AppBarLayout>
 
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/layoutBottomSheet"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:behavior_hideable="false"
-        app:behavior_peekHeight="80dp"
-        app:behavior_expandedOffset="40dp"
-        app:behavior_fitToContents="true"
-        app:layout_behavior=".ui.BottomSheetBehavior">
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        >
 
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/subTableLayout"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layoutBottomSheet"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            app:tabIndicatorFullWidth="false"
-            app:tabMode="fixed"
-            app:tabIndicatorHeight="4dp"
-            android:background="@color/red_300"
-            app:tabIndicatorColor="@color/blue_300"
-            app:tabTextColor="#000000"
-            app:tabSelectedTextColor="@color/white"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="match_parent"
+            app:behavior_hideable="false"
+            app:behavior_peekHeight="80dp"
+            app:behavior_expandedOffset="40dp"
+            app:behavior_fitToContents="true"
+            app:layout_behavior=".behavior.BottomSheetBehavior"
+            >
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/subTableLayout"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                app:tabIndicatorFullWidth="false"
+                app:tabMode="fixed"
+                app:tabIndicatorHeight="4dp"
+                android:background="@color/red_300"
+                app:tabIndicatorColor="@color/blue_300"
+                app:tabTextColor="#000000"
+                app:tabSelectedTextColor="@color/white"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/subViewPager"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/subTableLayout" />
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/subViewPager"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/subTableLayout" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout >

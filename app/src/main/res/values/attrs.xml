@@ -8,4 +8,14 @@
         <attr name="tailTextColor" format="color" />
         <attr name="canFoldAgain" format="boolean" />
     </declare-styleable>
+
+
+    <declare-styleable name="NestScrollContainerLayout">
+        <attr format="dimension" name="peekHeight"  />
+        <attr format="dimension" name="halfExpandedHeight"/>
+        <attr format="dimension" name="behavior_expandedOffset"/>
+    </declare-styleable>
+
+
+
 </resources>

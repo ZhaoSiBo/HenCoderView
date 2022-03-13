@@ -1,4 +1,4 @@
-package com.starts.hencoderview.ui
+package com.starts.hencoderview.behavior
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -14,6 +14,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
 import androidx.customview.view.AbsSavedState
 import androidx.customview.widget.ViewDragHelper
+import com.google.android.material.appbar.AppBarLayout
 import com.starts.hencoderview.R
 import com.starts.hencoderview.util.readBooleanUsingCompat
 import com.starts.hencoderview.util.writeBooleanUsingCompat
@@ -24,20 +25,26 @@ import kotlin.math.absoluteValue
  * Copy of material lib's BottomSheetBehavior that includes some bug fixes.
  */
 // TODO remove when a fixed version in material lib is released.
-class BottomSheetBehavior<V : View> : CoordinatorLayout.Behavior<V> {
+open class BottomSheetBehavior<V : ViewGroup> : CoordinatorLayout.Behavior<V> {
 
     companion object {
         const val TAG = "BottomSheetBehavior"
+
         /** The bottom sheet is dragging. */
         const val STATE_DRAGGING = 1
+
         /** The bottom sheet is settling. */
         const val STATE_SETTLING = 2
+
         /** The bottom sheet is expanded. */
         const val STATE_EXPANDED = 3
+
         /** The bottom sheet is collapsed. */
         const val STATE_COLLAPSED = 4
+
         /** The bottom sheet is hidden. */
         const val STATE_HIDDEN = 5
+
         /** The bottom sheet is half-expanded (used when behavior_fitToContents is false). */
         const val STATE_HALF_EXPANDED = 6
 
@@ -98,6 +105,7 @@ class BottomSheetBehavior<V : View> : CoordinatorLayout.Behavior<V> {
 
     /** The current state of the bottom sheet, backing property */
     private var _state = STATE_COLLAPSED
+
     /** The current state of the bottom sheet */
     @State
     var state
@@ -149,6 +157,7 @@ class BottomSheetBehavior<V : View> : CoordinatorLayout.Behavior<V> {
 
     /** Real peek height in pixels */
     private var _peekHeight = 0
+
     /** Peek height in pixels, or [PEEK_HEIGHT_AUTO] */
     var peekHeight
         get() = if (peekHeightAuto) PEEK_HEIGHT_AUTO else _peekHeight
@@ -194,21 +203,27 @@ class BottomSheetBehavior<V : View> : CoordinatorLayout.Behavior<V> {
 
     /** Whether or not to use automatic peek height */
     private var peekHeightAuto = false
+
     /** Minimum peek height allowed */
     private var peekHeightMin = 0
+
     /** The last peek height calculated in onLayoutChild */
     private var lastPeekHeight = 0
 
     private var parentHeight = 0
+
     /** Bottom sheet's top offset in [STATE_EXPANDED] state. */
     private var fitToContentsOffset = 0
+
     /** Bottom sheet's top offset in [STATE_HALF_EXPANDED] state. */
     private var halfExpandedOffset = 0
+
     /** Bottom sheet's top offset in [STATE_COLLAPSED] state. */
     private var collapsedOffset = 0
 
     /** Keeps reference to the bottom sheet outside of Behavior callbacks */
     private var viewRef: WeakReference<View>? = null
+
     /** Controls movement of the bottom sheet */
     private lateinit var dragHelper: ViewDragHelper
 
@@ -265,6 +280,52 @@ class BottomSheetBehavior<V : View> : CoordinatorLayout.Behavior<V> {
         )
     }
 
+    override fun layoutDependsOn(parent: CoordinatorLayout, child: V, dependency: View): Boolean {
+        return dependency is AppBarLayout
+    }
+
+    override fun onDependentViewChanged(
+        parent: CoordinatorLayout,
+        child: V,
+        dependency: View
+    ): Boolean {
+        val isNeedOffset = dependency is AppBarLayout && dependency.isLiftOnScroll
+        if (isNeedOffset){
+            child.layout(
+                child.left,
+                dependency.bottom,
+                child.left + child.measuredWidth,
+                dependency.bottom + child.measuredHeight
+            )
+        }
+        return isNeedOffset
+    }
+
+
+//    fun offsetChildAsNeeded(child: View, dependency: View) {
+//        val behavior = (dependency.layoutParams as CoordinatorLayout.LayoutParams).behavior
+//        if (behavior is AppBarLayout.Behavior) {
+//            // Offset the child, pinning it to the bottom the header-dependency, maintaining
+//            // any vertical gap and overlap
+//            ViewCompat.offsetTopAndBottom(
+//                child, (dependency.bottom - child.top
+//                        + behavior.offsetDelta
+//                        + getVerticalLayoutGap())
+//                        - getOverlapPixelsForOffset(dependency)
+//            )
+//        }
+//    }
+
+//    fun updateLiftedStateIfNeeded(child: View, dependency: View) {
+//        if (dependency is AppBarLayout) {
+//            val appBarLayout = dependency
+//            if (appBarLayout.isLiftOnScroll) {
+//                appBarLayout.setLiftedState(appBarLayout.shouldLift(child))
+//            }
+//        }
+//    }
+
+
     override fun onRestoreInstanceState(parent: CoordinatorLayout, child: V, state: Parcelable) {
         val ss = state as SavedState
         super.onRestoreInstanceState(parent, child, ss.superState ?: Bundle.EMPTY)
@@ -291,7 +352,7 @@ class BottomSheetBehavior<V : View> : CoordinatorLayout.Behavior<V> {
         callbacks.remove(callback)
     }
 
-    private fun setStateInternal(@State state: Int) {
+    fun setStateInternal(@State state: Int) {
         if (_state != state) {
             _state = state
             viewRef?.get()?.let { view ->
@@ -370,7 +431,7 @@ class BottomSheetBehavior<V : View> : CoordinatorLayout.Behavior<V> {
         child: V,
         event: MotionEvent
     ): Boolean {
-        Log.d(TAG,"child = ${child.javaClass.simpleName},event = ${event.action}")
+        Log.d(TAG, "child = ${child.javaClass.simpleName},event = ${event.action}")
         if (!isDraggable || !child.isShown) {
             acceptTouches = false
             return false
@@ -414,7 +475,7 @@ class BottomSheetBehavior<V : View> : CoordinatorLayout.Behavior<V> {
                 // CoordinatorLayout can call us before the view is laid out. >_<
                 ::dragHelper.isInitialized &&
                 dragHelper.shouldInterceptTouchEvent(event)
-        Log.d(TAG,"onInterceptTouchEvent result = $result")
+        Log.d(TAG, "onInterceptTouchEvent result = $result")
         return result
     }
 
@@ -486,8 +547,10 @@ class BottomSheetBehavior<V : View> : CoordinatorLayout.Behavior<V> {
             // Scrolling view is a descendent of the sheet and scrolling vertically.
             // Let's follow along!
             nestedScrollingChildRef = WeakReference(target)
+            Log.d(TAG, "onStartNestedScroll : true")
             return true
         }
+        Log.d(TAG, "onStartNestedScroll : false")
         return false
     }
 
@@ -562,12 +625,12 @@ class BottomSheetBehavior<V : View> : CoordinatorLayout.Behavior<V> {
         velocityY: Float
     ): Boolean {
         return isDraggable &&
-            target == nestedScrollingChildRef?.get() &&
-            (
-                state != STATE_EXPANDED || super.onNestedPreFling(
-                    coordinatorLayout, child, target, velocityX, velocityY
-                )
-                )
+                target == nestedScrollingChildRef?.get() &&
+                (
+                        state != STATE_EXPANDED || super.onNestedPreFling(
+                            coordinatorLayout, child, target, velocityX, velocityY
+                        )
+                        )
     }
 
     private fun clearNestedScroll() {
@@ -582,6 +645,31 @@ class BottomSheetBehavior<V : View> : CoordinatorLayout.Behavior<V> {
             computeCurrentVelocity(1000, maximumVelocity.toFloat())
             getYVelocity(activePointerId)
         } ?: 0f
+    }
+
+    override fun onNestedScroll(
+        coordinatorLayout: CoordinatorLayout,
+        child: V,
+        target: View,
+        dxConsumed: Int,
+        dyConsumed: Int,
+        dxUnconsumed: Int,
+        dyUnconsumed: Int,
+        type: Int,
+        consumed: IntArray
+    ) {
+        super.onNestedScroll(
+            coordinatorLayout,
+            child,
+            target,
+            dxConsumed,
+            dyConsumed,
+            dxUnconsumed,
+            dyUnconsumed,
+            type,
+            consumed
+        )
+        Log.d(TAG, "onNestedScroll dyConsumed = ${dyConsumed}")
     }
 
     private fun settleBottomSheet(sheet: View, yVelocity: Float, isNestedScroll: Boolean) {
@@ -657,7 +745,7 @@ class BottomSheetBehavior<V : View> : CoordinatorLayout.Behavior<V> {
         }
     }
 
-    private fun shouldHide(child: View, yVelocity: Float): Boolean {
+    fun shouldHide(child: View, yVelocity: Float): Boolean {
         if (skipCollapsed) {
             return true
         }
@@ -700,7 +788,7 @@ class BottomSheetBehavior<V : View> : CoordinatorLayout.Behavior<V> {
         }
     }
 
-    private fun dispatchOnSlide(top: Int) {
+    fun dispatchOnSlide(top: Int) {
         viewRef?.get()?.let { sheet ->
             val denom = if (top > collapsedOffset) {
                 parentHeight - collapsedOffset
@@ -811,7 +899,8 @@ class BottomSheetBehavior<V : View> : CoordinatorLayout.Behavior<V> {
     /** SavedState implementation */
     internal class SavedState : AbsSavedState {
 
-        @State internal val state: Int
+        @State
+        internal val state: Int
         internal val peekHeight: Int
         internal val isFitToContents: Boolean
         internal val isHideable: Boolean
