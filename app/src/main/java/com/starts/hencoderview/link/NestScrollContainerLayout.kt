@@ -2,13 +2,11 @@ package com.starts.hencoderview.link
 
 import android.content.Context
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.starts.hencoderview.R
-import com.starts.hencoderview.getScreenHeight
 import com.starts.hencoderview.util.isScrollChildTotalShowing
 import com.starts.hencoderview.view.BehavioralScrollView
 
@@ -46,7 +44,7 @@ class NestScrollContainerLayout : BehavioralScrollView {
     var peekHeight = 120.dp
 
     // 半展开高度（屏幕底下是0 。顶部是最高）
-    var halfExpandedHeight = 400.dp
+    var halfExpandedHeight = 360.dp
 
     // 全展开距离顶部的偏移量，0是和顶部重合，越大离顶部越远
     var behaviorExpandedOffset = 45.dp
@@ -74,7 +72,6 @@ class NestScrollContainerLayout : BehavioralScrollView {
 
     }
 
-
     override fun onMeasureChildren(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         rvTopInfo.measure(widthMeasureSpec,(MeasureSpec.getSize(heightMeasureSpec) - peekHeight).toExactlyMeasureSpec())
         bottomSheetLayout.autoMeasure()
@@ -82,72 +79,49 @@ class NestScrollContainerLayout : BehavioralScrollView {
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         rvTopInfo.layout(left, top)
+        bottomSheetLayout.setup(peekHeight , halfExpandedHeight , behaviorExpandedOffset)
         bottomSheetLayout.layout(left, measuredHeight - peekHeight)
-//        super.onLayout(changed, left, top, right, bottom)
-//        Log.d(TAG, "minScroll = $minScroll,maxScroll = $maxScroll")
         super.onLayout(changed, left, top, right, bottom)
-
     }
 
-//    override fun adjustScrollBounds() {
-//        minScroll = 0
-//        maxScroll = bottomSheetLayout.bottom - height
-//    }
+    override fun adjustScrollBounds() {
+        minScroll = 0
+        maxScroll = this.measuredHeight - peekHeight
+    }
 
     override fun onNestedPreFling(target: View, velocityX: Float, velocityY: Float): Boolean {
         // 为了能够将滚动传递下去，需要把 fling 拦截下来
         fling(velocityY)
         return true
     }
+//
 
     override fun handleNestedPreScrollFirst(scroll: Int, type: Int): Boolean? {
-        val resutl = if (isScrollChildTotalShowing()) {
+        return if (isScrollChildTotalShowing()) {
             null
         } else {
-            false
+            true
         }
-        Log.d(TAG,"resutl = ${resutl}")
-        return resutl
     }
-
 
     override fun handleNestedScrollFirst(scroll: Int, type: Int): Boolean? {
-        return false
+        return true
     }
-
+//
     override fun handleScrollSelf(scroll: Int, type: Int): Boolean? {
+        bottomSheetLayout.isFloat = false
         return if (type == ViewCompat.TYPE_TOUCH) {
             handleDrag(scroll)
         } else {
             handleFling(scroll)
         }
     }
-
+//
     private fun handleDrag(scroll: Int): Boolean? {
-        scrollBy(
-            0, if (scrollY > 0) {
-                scroll
-            } else {
-                scroll / 2
-            }
-        )
+        scrollBy(0, if (scrollY > 0) { scroll } else { scroll / 2 })
         return true
     }
-    //判断TopRecyclerView是否全部展示了
-    fun isRecyclerViewTotalShowing():Boolean{
-        val v = nestedScrollChild ?: return true
-        return when (nestedScrollAxes) {
-            ViewCompat.SCROLL_AXIS_VERTICAL -> v.y - scrollY >= 0 && v.y + v.height - scrollY <= height
-            ViewCompat.SCROLL_AXIS_HORIZONTAL -> v.x - scrollX >= 0 && v.x + v.width - scrollX <= width
-            else -> return true
-        }
-    }
-
-    override fun adjustScrollBounds() {
-        super.adjustScrollBounds()
-//        minScroll = 0
-        maxScroll = measuredHeight
-    }
+//
     private fun handleFling(scroll: Int): Boolean? {
         if (isScrollChildTotalShowing() && nestedScrollTarget?.canScrollVertically(scroll) == true) {
             nestedScrollTarget?.scrollBy(0, scroll)
@@ -158,7 +132,7 @@ class NestScrollContainerLayout : BehavioralScrollView {
             return null
         }
         // 自己无法滚动时根据方向确定滚动传递的目标
-        val target: View = if (scroll < 0) {
+        val target:View = if (scroll < 0) {
             rvTopInfo
         } else {
             bottomSheetLayout
@@ -169,6 +143,5 @@ class NestScrollContainerLayout : BehavioralScrollView {
         }
         return false
     }
-
 
 }

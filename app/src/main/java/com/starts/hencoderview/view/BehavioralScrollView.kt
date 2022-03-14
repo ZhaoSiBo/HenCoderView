@@ -237,7 +237,6 @@ abstract class BehavioralScrollView : CustomLayout, NestedScrollingParent3, Nest
         scrollBy(0, 0)
     }
 
-
     /**
      * 调整默认的滚动边界
      */

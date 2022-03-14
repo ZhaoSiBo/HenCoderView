@@ -232,11 +232,6 @@ fun BehavioralScrollView.inStablePosition(): Boolean {
  * 发生嵌套滚动的直接子 view 是否完全展示出来
  */
 fun BehavioralScrollView.isScrollChildTotalShowing(): Boolean {
-//    Log.d(
-//        NestScrollContainerLayout.TAG,"nestedScrollChild = ${nestedScrollChild}" +
-//                "，nestedScrollChild.y = ${nestedScrollChild?.y} " +
-//                ",nestedScrollChild.scrollY =  ${scrollY}," +
-//                "nestedScrollChild height = ${nestedScrollChild?.height},view height = ${height}")
     val v = nestedScrollChild ?: return true
     return when (nestedScrollAxes) {
         ViewCompat.SCROLL_AXIS_VERTICAL -> v.y - scrollY >= 0 && v.y + v.height - scrollY <= height

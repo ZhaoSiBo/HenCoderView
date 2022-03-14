@@ -1,12 +1,10 @@
-package com.starts.hencoderview.view
+package com.starts.hencoderview.link
 
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.FrameLayout
+import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
 import com.starts.hencoderview.R
 import kotlin.math.max
@@ -19,10 +17,10 @@ import kotlin.math.max
  */
 class DoubanDetailView: FrameLayout {
 
-    public val toolBar: ToolbarView
-    public val linkedScrollView:LinkedScrollView
-    public val bottomSheetLayout: BottomSheetLayout
-    public val topRecyclerView: RecyclerView
+    val toolBar: Toolbar
+    val linkedScrollView: LinkedScrollView
+    val bottomSheetLayout: BottomSheetLayout
+    val topRecyclerView: RecyclerView
 
     val bottomLayout: FrameLayout
     var bottomScrollViewProvider: (()->View?)? = null
@@ -47,22 +45,24 @@ class DoubanDetailView: FrameLayout {
         linkedScrollView = LinkedScrollView(context)
         addView(linkedScrollView)
         bottomSheetLayout = BottomSheetLayout(context)
-        addView(bottomSheetLayout, LayoutParams(MATCH_PARENT, MATCH_PARENT).apply {
+        addView(bottomSheetLayout, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT).apply {
             topMargin = toolbarHeight
         })
-        toolBar = ToolbarView(context)
-        addView(toolBar, LayoutParams(MATCH_PARENT, toolbarHeight))
+        toolBar = Toolbar(context)
+        addView(toolBar, LayoutParams(LayoutParams.MATCH_PARENT, toolbarHeight))
 
-        linkedScrollView.topContainer.layoutParams = LayoutParams(MATCH_PARENT, WRAP_CONTENT)
-        linkedScrollView.bottomContainer.layoutParams = LayoutParams(MATCH_PARENT, MATCH_PARENT).apply {
+        linkedScrollView.topContainer.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
+        linkedScrollView.bottomContainer.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT).apply {
             bottomMargin = toolbarHeight
         }
 
+//        linkedScrollView.setOnScrollChangeListener { _, _, _, _, _ ->
+//            updateBottomView()
+//            updateToolbar()
+//        }
         linkedScrollView.viewTreeObserver.addOnScrollChangedListener {
             updateBottomView()
-            updateToolbar()
         }
-
         bottomSheetLayout.onProcessChangedListener = { updateToolbar() }
 
         topRecyclerView = RecyclerView(context)
@@ -103,11 +103,11 @@ class DoubanDetailView: FrameLayout {
     }
 
     private fun updateToolbar() {
-        toolBar.process = if (bottomSheetLayout.state == BOTTOM_SHEET_STATE_EXTENDED) {
-            1F
-        } else {
-            max(topScrolledY, linkedScrollView.scrollY.toFloat()) / toolbarHeight
-        }
+//        toolBar.process = if (bottomSheetLayout.state == BOTTOM_SHEET_STATE_EXTENDED) {
+//            1F
+//        } else {
+//            max(topScrolledY, linkedScrollView.scrollY.toFloat()) / toolbarHeight
+//        }
     }
 
 }

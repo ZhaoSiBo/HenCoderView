@@ -6,8 +6,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_DRAGGING
 import com.starts.hencoderview.InnerAdapter
 import com.starts.hencoderview.databinding.FragmentListBinding
 import java.util.*
@@ -42,6 +45,19 @@ class ListFragment:Fragment() {
         val data = arrayListOf("120023","12323124","48999584","239863436","12323124","48999584","239863436","12323124","48999584","239863436","12323124","48999584","239863436","12323124","48999584","239863436","12323124","48999584","239863436")
         binding.list.adapter = InnerAdapter(data)
         binding.list.layoutManager = LinearLayoutManager(requireContext())
+        var isLoadMore = false
+        binding.list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                if(!recyclerView.canScrollVertically(dy) && !isLoadMore){
+                    isLoadMore = true
+                    Toast.makeText(requireContext() , "滑动到底", Toast.LENGTH_SHORT).show()
+                    val newData = arrayListOf("加载更多数据","120023","12323124","48999584","239863436")
+                    data.addAll(newData)
+                    recyclerView.adapter?.notifyDataSetChanged()
+                }
+            }
+        })
 
     }
 

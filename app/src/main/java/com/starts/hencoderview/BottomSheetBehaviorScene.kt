@@ -74,6 +74,7 @@ class InnerAdapter(private val data:List<String>) : RecyclerView.Adapter<InnerHo
         return data.size
     }
 
+
 }
 
 class InnerHolder(item:View) : RecyclerView.ViewHolder(item){
