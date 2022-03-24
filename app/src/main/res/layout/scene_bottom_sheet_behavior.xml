@@ -6,61 +6,47 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/appbarLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <androidx.recyclerview.widget.RecyclerView
-            android:id ="@+id/rvInfo"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/light_blue_300"
-            app:layout_scrollFlags="scroll"
-            />
-    </com.google.android.material.appbar.AppBarLayout>
-
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <androidx.recyclerview.widget.RecyclerView
+        android:id ="@+id/rvInfo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        android:background="@color/light_blue_300"
+        app:layout_scrollFlags="scroll"
+        />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutBottomSheet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="80dp"
+        app:behavior_expandedOffset="40dp"
+        app:behavior_fitToContents="true"
+        app:layout_behavior=".behavior.BottomSheetBehavior"
         >
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layoutBottomSheet"
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/subTableLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:behavior_hideable="false"
-            app:behavior_peekHeight="80dp"
-            app:behavior_expandedOffset="40dp"
-            app:behavior_fitToContents="true"
-            app:layout_behavior=".behavior.BottomSheetBehavior"
-            >
-            <com.google.android.material.tabs.TabLayout
-                android:id="@+id/subTableLayout"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                app:tabIndicatorFullWidth="false"
-                app:tabMode="fixed"
-                app:tabIndicatorHeight="4dp"
-                android:background="@color/red_300"
-                app:tabIndicatorColor="@color/blue_300"
-                app:tabTextColor="#000000"
-                app:tabSelectedTextColor="@color/white"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="45dp"
+            app:tabIndicatorFullWidth="false"
+            app:tabMode="fixed"
+            app:tabIndicatorHeight="4dp"
+            android:background="@color/red_300"
+            app:tabIndicatorColor="@color/blue_300"
+            app:tabTextColor="#000000"
+            app:tabSelectedTextColor="@color/white"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <androidx.viewpager2.widget.ViewPager2
-                android:id="@+id/subViewPager"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/subTableLayout" />
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/subViewPager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/subTableLayout" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 

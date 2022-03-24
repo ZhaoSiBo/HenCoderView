@@ -1,12 +1,21 @@
-package com.starts.hencoderview.link
+package com.starts.hencoderview.view
 
 import android.content.Context
+import android.graphics.Insets
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
+import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+import android.view.WindowInsets
 import android.widget.FrameLayout
-import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.RecyclerView
 import com.starts.hencoderview.R
+import com.starts.hencoderview.dp2px
+import com.starts.hencoderview.link.BOTTOM_SHEET_STATE_EXTENDED
+import com.starts.hencoderview.link.BottomSheetLayout
+import com.starts.hencoderview.link.LinkedScrollView
 import kotlin.math.max
 
 /**
@@ -15,13 +24,12 @@ import kotlin.math.max
  * @author https://github.com/funnywolfdadada
  * @since 2020/4/10
  */
-class DoubanDetailView: FrameLayout {
+class AlbumDetailContainer: FrameLayout {
 
-    val toolBar: Toolbar
-    val linkedScrollView: LinkedScrollView
-    val bottomSheetLayout: BottomSheetLayout
-    val topRecyclerView: RecyclerView
-
+    public val toolBar: ToolbarView
+    public val linkedScrollView: LinkedScrollView
+    public val bottomSheetLayout: BottomSheetLayout
+    public val topRecyclerView: RecyclerView
     val bottomLayout: FrameLayout
     var bottomScrollViewProvider: (()->View?)? = null
         set(value) {
@@ -30,8 +38,9 @@ class DoubanDetailView: FrameLayout {
         }
 
     var toolbarHeight = context.resources.getDimension(R.dimen.toolbar_height).toInt()
-    var minBottomShowingHeight = toolbarHeight
-
+    var minBottomShowingHeight = dp2px(120)
+    var midBottomShowingHeight = dp2px(400)
+    var expandedOffset = dp2px(56)
     var isBottomViewFloating = false
         private set
 
@@ -45,42 +54,40 @@ class DoubanDetailView: FrameLayout {
         linkedScrollView = LinkedScrollView(context)
         addView(linkedScrollView)
         bottomSheetLayout = BottomSheetLayout(context)
-        addView(bottomSheetLayout, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT).apply {
-            topMargin = toolbarHeight
-        })
-        toolBar = Toolbar(context)
-        addView(toolBar, LayoutParams(LayoutParams.MATCH_PARENT, toolbarHeight))
+        addView(bottomSheetLayout, LayoutParams(MATCH_PARENT, MATCH_PARENT))
+        toolBar = ToolbarView(context)
+        addView(toolBar, LayoutParams(MATCH_PARENT, toolbarHeight))
 
-        linkedScrollView.topContainer.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT)
-        linkedScrollView.bottomContainer.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT).apply {
-            bottomMargin = toolbarHeight
+        linkedScrollView.topContainer.layoutParams = LayoutParams(MATCH_PARENT, WRAP_CONTENT)
+        linkedScrollView.bottomContainer.layoutParams = LayoutParams(MATCH_PARENT, MATCH_PARENT).apply {
+            topMargin = toolbarHeight
         }
 
-//        linkedScrollView.setOnScrollChangeListener { _, _, _, _, _ ->
-//            updateBottomView()
-//            updateToolbar()
-//        }
         linkedScrollView.viewTreeObserver.addOnScrollChangedListener {
             updateBottomView()
+            updateToolbar()
         }
         bottomSheetLayout.onProcessChangedListener = { updateToolbar() }
-
         topRecyclerView = RecyclerView(context)
-        topRecyclerView.setPaddingRelative(0, toolbarHeight, 0, 0)
         topRecyclerView.clipToPadding = false
-        topRecyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener() {
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                topScrolledY += dy
-                if (topScrolledY < 0) {
-                    topScrolledY = 0F
-                }
-                updateToolbar()
-            }
-        })
+//        topRecyclerView.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+//            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+//                topScrolledY += dy
+//                if (topScrolledY < 0) {
+//                    topScrolledY = 0F
+//                }
+//                updateToolbar()
+//            }
+//        })
         linkedScrollView.setTopView(topRecyclerView) { topRecyclerView }
 
         bottomLayout = FrameLayout(context)
         linkedScrollView.setBottomView(bottomLayout, bottomScrollViewProvider)
+    }
+
+    override fun onApplyWindowInsets(insets: WindowInsets?): WindowInsets {
+        Log.d("onApplyWindowInsets" , "$insets")
+        return super.onApplyWindowInsets(insets)
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
@@ -94,7 +101,11 @@ class DoubanDetailView: FrameLayout {
         if (shouldBottomFloating && !isBottomViewFloating) {
             isBottomViewFloating = true
             linkedScrollView.removeBottomView()
-            bottomSheetLayout.setContentView(bottomLayout, minBottomShowingHeight)
+            bottomSheetLayout.setContentView(
+                contentView =  bottomLayout,
+                minShowingHeight = minBottomShowingHeight,
+                midShowingHeight =  midBottomShowingHeight,
+                expandedOffset = expandedOffset)
         } else if (!shouldBottomFloating && isBottomViewFloating) {
             isBottomViewFloating = false
             bottomSheetLayout.removeContentView()
@@ -103,11 +114,11 @@ class DoubanDetailView: FrameLayout {
     }
 
     private fun updateToolbar() {
-//        toolBar.process = if (bottomSheetLayout.state == BOTTOM_SHEET_STATE_EXTENDED) {
-//            1F
-//        } else {
-//            max(topScrolledY, linkedScrollView.scrollY.toFloat()) / toolbarHeight
-//        }
+        toolBar.process = if (bottomSheetLayout.state == BOTTOM_SHEET_STATE_EXTENDED) {
+            1F
+        } else {
+            max(topScrolledY, linkedScrollView.scrollY.toFloat()) / toolbarHeight
+        }
     }
 
 }

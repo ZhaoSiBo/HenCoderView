@@ -280,52 +280,6 @@ open class BottomSheetBehavior<V : ViewGroup> : CoordinatorLayout.Behavior<V> {
         )
     }
 
-    override fun layoutDependsOn(parent: CoordinatorLayout, child: V, dependency: View): Boolean {
-        return dependency is AppBarLayout
-    }
-
-    override fun onDependentViewChanged(
-        parent: CoordinatorLayout,
-        child: V,
-        dependency: View
-    ): Boolean {
-        val isNeedOffset = dependency is AppBarLayout && dependency.isLiftOnScroll
-        if (isNeedOffset){
-            child.layout(
-                child.left,
-                dependency.bottom,
-                child.left + child.measuredWidth,
-                dependency.bottom + child.measuredHeight
-            )
-        }
-        return isNeedOffset
-    }
-
-
-//    fun offsetChildAsNeeded(child: View, dependency: View) {
-//        val behavior = (dependency.layoutParams as CoordinatorLayout.LayoutParams).behavior
-//        if (behavior is AppBarLayout.Behavior) {
-//            // Offset the child, pinning it to the bottom the header-dependency, maintaining
-//            // any vertical gap and overlap
-//            ViewCompat.offsetTopAndBottom(
-//                child, (dependency.bottom - child.top
-//                        + behavior.offsetDelta
-//                        + getVerticalLayoutGap())
-//                        - getOverlapPixelsForOffset(dependency)
-//            )
-//        }
-//    }
-
-//    fun updateLiftedStateIfNeeded(child: View, dependency: View) {
-//        if (dependency is AppBarLayout) {
-//            val appBarLayout = dependency
-//            if (appBarLayout.isLiftOnScroll) {
-//                appBarLayout.setLiftedState(appBarLayout.shouldLift(child))
-//            }
-//        }
-//    }
-
-
     override fun onRestoreInstanceState(parent: CoordinatorLayout, child: V, state: Parcelable) {
         val ss = state as SavedState
         super.onRestoreInstanceState(parent, child, ss.superState ?: Bundle.EMPTY)

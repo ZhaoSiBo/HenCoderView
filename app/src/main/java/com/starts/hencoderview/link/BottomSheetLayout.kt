@@ -3,6 +3,7 @@ package com.starts.hencoderview.link
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.view.VelocityTracker
 import android.view.View
@@ -12,6 +13,8 @@ import androidx.annotation.FloatRange
 import com.starts.hencoderview.util.findScrollableTarget
 import com.starts.hencoderview.util.isUnder
 import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * 底部弹出式的 view 容器
@@ -24,16 +27,21 @@ import kotlin.math.abs
  * 折叠状态，此时只露出最小显示高度
  */
 const val BOTTOM_SHEET_STATE_COLLAPSED = 1
+
 /**
  * 正在滚动的状态
  */
 const val BOTTOM_SHEET_STATE_SCROLLING = 2
+
 /**
  * 展开状态，此时露出全部内容
  */
 const val BOTTOM_SHEET_STATE_EXTENDED = 3
 
-class BottomSheetLayout: FrameLayout {
+const val BOTTOM_SHEET_STATE_HALF_EXTENDED = 4
+
+
+class BottomSheetLayout : FrameLayout {
 
     /**
      * 内容视图的状态
@@ -42,6 +50,7 @@ class BottomSheetLayout: FrameLayout {
         get() = when (scrollY) {
             minScrollY -> BOTTOM_SHEET_STATE_COLLAPSED
             maxScrollY -> BOTTOM_SHEET_STATE_EXTENDED
+            midScrollY -> BOTTOM_SHEET_STATE_HALF_EXTENDED
             else -> BOTTOM_SHEET_STATE_SCROLLING
         }
         private set
@@ -67,12 +76,12 @@ class BottomSheetLayout: FrameLayout {
     /**
      * 当 [process] 发生变化时的回调
      */
-    var onProcessChangedListener: ((BottomSheetLayout)->Unit)? = null
+    var onProcessChangedListener: ((BottomSheetLayout) -> Unit)? = null
 
     /**
      * 松开回弹时的回调，返回是否拦截该事件
      */
-    var onReleaseListener: ((BottomSheetLayout)->Boolean)? = null
+    var onReleaseListener: ((BottomSheetLayout) -> Boolean)? = null
 
     /**
      * 内容视图
@@ -85,6 +94,16 @@ class BottomSheetLayout: FrameLayout {
      */
     private var minShowingHeight = 0
 
+
+    /**
+     * 内容视图的半展开高度
+     */
+    private var midShowingHeight = 0
+
+    /**
+     * 展开状态下，浮窗距离顶部的距离 = 0
+     */
+    private var expandedOffset = 0
     /**
      * 添加内容视图时的初始状态
      */
@@ -100,6 +119,12 @@ class BottomSheetLayout: FrameLayout {
      * y 轴最大的滚动值，此时 [contentView] 全部露出
      */
     private var maxScrollY = 0
+
+    /**
+     * y 轴的中间值，此时 [contentView] 半露出
+     */
+
+    private var midScrollY = 0
 
     /**
      * 上次触摸事件的 x 值，用于判断是否拦截事件
@@ -131,18 +156,34 @@ class BottomSheetLayout: FrameLayout {
      */
     private var lastComputeY = 0
 
-    constructor(context: Context): super(context)
-    constructor(context: Context, attrs: AttributeSet?): super(context, attrs)
-    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int): super(context, attrs, defStyleAttr)
+    constructor(context: Context) : super(context)
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(
+        context,
+        attrs,
+        defStyleAttr
+    )
 
     fun setContentView(
         contentView: View,
         minShowingHeight: Int,
+        midShowingHeight:Int,
+        expandedOffset:Int,
         initState: Int = BOTTOM_SHEET_STATE_COLLAPSED
     ) {
         removeAllViews()
         this.contentView = contentView
-        this.minShowingHeight = if (minShowingHeight < 0) { 0 } else { minShowingHeight }
+        this.minShowingHeight = if (minShowingHeight < 0) {
+            0
+        } else {
+            minShowingHeight
+        }
+        this.midShowingHeight = if (midShowingHeight < minShowingHeight) {
+            minShowingHeight
+        } else {
+            midShowingHeight
+        }
+        this.expandedOffset = expandedOffset
         this.initState = initState
         addView(contentView)
     }
@@ -155,6 +196,7 @@ class BottomSheetLayout: FrameLayout {
         initState = 0
         minScrollY = 0
         maxScrollY = 0
+        midScrollY = 0
     }
 
     fun setProcess(@FloatRange(from = 0.0, to = 1.0) process: Float, smoothly: Boolean = true) {
@@ -169,21 +211,32 @@ class BottomSheetLayout: FrameLayout {
     /**
      * 布局正常布局，布局完成后根据 [minShowingHeight] 和 [contentView] 的位置计算滚动范围，并滚动到初始状态的位置
      */
+    var isFirstLayout = true
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
         super.onLayout(changed, left, top, right, bottom)
+        Log.d("AlbumDetailContainer", "BottomSheetLayout onLayout")
         minScrollY = 0
         maxScrollY = 0
+        midScrollY = 0
         contentView?.also {
             if (minShowingHeight > it.height) {
                 minShowingHeight = it.height
             }
             minScrollY = it.top + minShowingHeight - height
-            maxScrollY = it.bottom - height
+            maxScrollY = it.bottom - height - expandedOffset
+            midScrollY = it.top + midShowingHeight - height
+            midScrollY = min(max(minScrollY,midScrollY),maxScrollY)
+            if (!isFirstLayout) {
+                return
+            }
             if (initState == BOTTOM_SHEET_STATE_EXTENDED) {
+                Log.d("AlbumDetailContainer", "setProcess 1f")
                 setProcess(1F, false)
             } else {
+                Log.d("AlbumDetailContainer", "setProcess 0f")
                 setProcess(0F, false)
             }
+            isFirstLayout = false
         }
     }
 
@@ -203,8 +256,28 @@ class BottomSheetLayout: FrameLayout {
                 // 发生了移动，且处于滚动中的状态，且未被拦截，则自己处理
                 if (lastDir != 0
                     && state == BOTTOM_SHEET_STATE_SCROLLING
-                    && onReleaseListener?.invoke(this) != true) {
-                    smoothScrollToY(if (lastDir > 0) { maxScrollY } else { minScrollY })
+                    && onReleaseListener?.invoke(this) != true
+                ) {
+                    smoothScrollToY(
+//                        if (lastDir > 0) {
+//                            maxScrollY
+//                        } else {
+//                            minScrollY
+//                        }
+                        if (scrollY > midScrollY) {
+                            if (lastDir > 0) {
+                                maxScrollY
+                            } else {
+                                midScrollY
+                            }
+                        } else {
+                            if (lastDir > 0) {
+                                midScrollY
+                            } else {
+                                minScrollY
+                            }
+                        }
+                    )
                     // 这里返回 true 防止分发给子 view 导致其抖动
                     return true
                 }
@@ -350,11 +423,13 @@ class BottomSheetLayout: FrameLayout {
      * 滚动前做范围限制
      */
     override fun scrollTo(x: Int, y: Int) {
-        super.scrollTo(x, when {
-            y < minScrollY -> minScrollY
-            y > maxScrollY -> maxScrollY
-            else -> y
-        })
+        super.scrollTo(
+            x, when {
+                y < minScrollY -> minScrollY
+                y > maxScrollY -> maxScrollY
+                else -> y
+            }
+        )
     }
 
     /**
