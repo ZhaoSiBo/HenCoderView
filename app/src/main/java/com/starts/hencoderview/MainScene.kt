@@ -77,6 +77,9 @@ class MainScene : AppCompatScene() {
         binding.linkedScroll.setOnClickListener {
             requireNavigationScene().push(LinkedScene::class.java)
         }
+        binding.nestScroll.setOnClickListener {
+            requireNavigationScene().push(NestScene::class.java)
+        }
 
         setStatusBarVisible(true)
         setToolbarVisible(true)
