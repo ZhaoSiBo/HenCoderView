@@ -132,9 +132,10 @@ class NestScrollContainer : CustomLayout ,NestedScrollingParent3{
         if ( dy > 0){
             //不能看更多的下面内容
             if(!target.canScrollVertically(dy)){
-                isFloat = abs(topRecyclerView.translationY) < abs(currentPeekHeight)
+                isFloat = abs(topRecyclerView.bottom) > abs(floatView.top)
                 if(isFloat){
-                    topRecyclerView.translationY -=dy
+//                    topRecyclerView.translationY -=dy
+                    ViewCompat.offsetTopAndBottom(topRecyclerView , -dy)
                 }else{
                     scrollBy(0,dy)
                 }
