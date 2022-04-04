@@ -1,18 +1,18 @@
 package com.starts.hencoderview.behavior
 
 import android.content.Context
+import android.graphics.Rect
 import android.util.AttributeSet
 import android.util.Log
-import android.view.MotionEvent
-import android.view.VelocityTracker
-import android.view.View
-import android.view.ViewConfiguration
+import android.view.*
 import android.widget.Scroller
 import androidx.coordinatorlayout.widget.CoordinatorLayout
-import com.starts.hencoderview.dp2px
+import androidx.core.view.GestureDetectorCompat
+import com.starts.hencoderview.util.findChildUnder
+import com.starts.hencoderview.util.findScrollableTarget
 import kotlin.math.abs
 
-class ScrollCoordinatorLayout : CoordinatorLayout {
+class ScrollCoordinatorLayout : CoordinatorLayout, GestureDetector.OnGestureListener,Runnable {
     companion object{
         const val TAG = "ScrollCoordinatorLayout"
     }
@@ -23,14 +23,14 @@ class ScrollCoordinatorLayout : CoordinatorLayout {
         attrs,
         defStyleAttr
     )
-    // 滚动工具类
+
+    private val velocityTracker = VelocityTracker.obtain()
     val scroller = Scroller(context)
-    // 速度计算工具
-    val velocityTracker = VelocityTracker.obtain()
-
-    val viewConfiguration = ViewConfiguration.get(context)
-
+    private val gestureDetector: GestureDetectorCompat by lazy {
+        GestureDetectorCompat(context, this)
+    }
     var maxScrollY = 0
+
 
     override fun canScrollVertically(direction: Int): Boolean {
         return if (direction > 0) {
@@ -52,59 +52,149 @@ class ScrollCoordinatorLayout : CoordinatorLayout {
 
     var lastX = 0f
     var lastY = 0f
+
+    override fun dispatchTouchEvent(e: MotionEvent): Boolean {
+        if (e.action == MotionEvent.ACTION_DOWN) {
+            // 手指按下就中止 fling 等滑动行为
+            scroller.forceFinished(true)
+        }
+        return super.dispatchTouchEvent(e)
+    }
+
+
     override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
-        when(ev.action){
+        return when(ev.action){
             MotionEvent.ACTION_DOWN->{
                 lastX = ev.x
                 lastY = ev.y
-                velocityTracker.clear()
-                velocityTracker.addMovement(ev)
+                Log.d(TAG,"scrollY = ${scrollY}")
+                false
             }
-            MotionEvent.ACTION_MOVE->{
-                Log.d(TAG,"isShouldLindScroll() = ${isShouldLindScroll()} , " +
-                        "${ abs(ev.y - lastY) > abs(ev.x - lastX)},${abs(ev.y - lastY) > viewConfiguration.scaledTouchSlop}")
-                if(isShouldLindScroll() && abs(ev.y - lastY) > abs(ev.x - lastX) && abs(ev.y - lastY) > viewConfiguration.scaledTouchSlop){
-                    return true
-                }else{
+            MotionEvent.ACTION_MOVE -> {
+                if (abs(lastX - ev.x) < abs(lastY - ev.y) && !isIntersect() && canScrollVertically((lastY - ev.y).toInt())) {
+                    Log.d(TAG,"[ onInterceptTouchEvent ] true")
+                    true
+                } else {
                     lastX = ev.x
                     lastY = ev.y
+                    false
                 }
             }
+            else->{
+                return super.onInterceptTouchEvent(ev)
+            }
         }
-        return super.onInterceptTouchEvent(ev)
+
     }
 
+
+
     override fun onTouchEvent(ev: MotionEvent): Boolean {
-        when(ev.action){
-            MotionEvent.ACTION_DOWN -> {
-                // 手指按下时记录 y 轴初始位置
+        return when(ev.action){
+            MotionEvent.ACTION_DOWN->{
                 lastY = ev.y
                 velocityTracker.clear()
                 velocityTracker.addMovement(ev)
-
+                true
             }
             MotionEvent.ACTION_MOVE->{
-                val scrollY = ev.y - lastY
-                scrollBy(0 ,scrollY.toInt())
-                lastY = ev.y
-                lastX = ev.x
+                // 移动时分发滚动量
+                val dScrollY = (lastY - ev.y).toInt()
+//                val child = findChildUnder(e.rawX, e.rawY)
+//                dispatchScrollY(dScrollY, child, child?.findScrollableTarget(e.rawX, e.rawY, dScrollY))
+//                lastY = e.y
+                if (canScrollVertically(dScrollY)){
+                    scrollBy(0, dScrollY)
+                }
                 velocityTracker.addMovement(ev)
+                true
             }
             MotionEvent.ACTION_UP->{
+                lastX = 0f
+                lastY = 0f
                 velocityTracker.addMovement(ev)
                 velocityTracker.computeCurrentVelocity(1000)
                 val yv = -velocityTracker.yVelocity.toInt()
-                scroller.fling(0, ev.y.toInt(), 0, yv, 0, 0, Int.MIN_VALUE, Int.MAX_VALUE)
+//                scroller.fling(0, 0, 0, yv, 0, 0, Int.MIN_VALUE, Int.MAX_VALUE)
+                true
             }
+            else ->{
+                super.onTouchEvent(ev)
+            }
+        }
+    }
+
+    override fun requestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {
+//        Log.d(TAG ,"[requestDisallowInterceptTouchEvent]  = $disallowIntercept" )
+//        super.requestDisallowInterceptTouchEvent(disallowIntercept)
+    }
+
+    private val topRect = Rect()
+    private val bottomRect = Rect()
+
+    private fun getTopRect(){
+        getChildAt(0).getGlobalVisibleRect(topRect)
+    }
+
+    private fun getBottomRect(){
+        getChildAt(1).getGlobalVisibleRect(bottomRect)
+    }
+
+    private fun isIntersect():Boolean{
+        getTopRect()
+        getBottomRect()
+        return Rect.intersects(topRect,bottomRect)
+    }
+
+    override fun onDown(e: MotionEvent?): Boolean {
+        return false
+    }
+
+    override fun onShowPress(e: MotionEvent?) {
+
+    }
+
+    override fun onSingleTapUp(e: MotionEvent?): Boolean {
+        return false
+    }
+
+    override fun onScroll(
+        e1: MotionEvent?,
+        e2: MotionEvent?,
+        distanceX: Float,
+        distanceY: Float
+    ): Boolean {
+        Log.d(TAG,"[onScroll] distanceY = ${distanceY},scrollY = ${scrollY}")
+        if (canScrollVertically(distanceY.toInt())){
+            scrollBy(0,distanceY.toInt())
 
         }
-        return super.onTouchEvent(ev)
+        return false
     }
 
-    private fun isShouldLindScroll():Boolean{
-        val topRecyclerView = getChildAt(0)
-        val bottomSheetLayout = getChildAt(1)
-        return  (topRecyclerView.bottom >= bottomSheetLayout.top)
+    override fun onLongPress(e: MotionEvent?) {
     }
+
+    var lastFlingY = 0
+
+    override fun onFling(
+        e1: MotionEvent?,
+        e2: MotionEvent?,
+        velocityX: Float,
+        velocityY: Float
+    ): Boolean {
+//        scroller.fling(0, lastFlingY, velocityX.toInt(), velocityY.toInt(), 0, 0, Int.MIN_VALUE, Int.MAX_VALUE)
+//        postOnAnimation(this)
+        return false
+    }
+
+    override fun run() {
+        if(scroller.computeScrollOffset()){
+            lastFlingY = scroller.currY
+            invalidate()
+            postOnAnimation(this)
+        }
+    }
+
 
 }

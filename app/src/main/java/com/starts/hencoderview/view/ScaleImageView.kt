@@ -143,6 +143,7 @@ class ScaleImageView(context: Context, attrs: AttributeSet) : View(context, attr
         distanceX: Float,
         distanceY: Float
     ): Boolean {
+        Log.d("TEST" ,"distanceY = $distanceY,distanceX = $distanceX")
         if (isBig) {
             offsetX -= distanceX
             offsetY -= distanceY
