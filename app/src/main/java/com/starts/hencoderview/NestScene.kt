@@ -36,6 +36,7 @@ class NestScene : AppCompatScene() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setToolbarVisible(false)
+        setStatusBarVisible(false)
         val data = arrayListOf(
             "我是第一个",
             "2000",

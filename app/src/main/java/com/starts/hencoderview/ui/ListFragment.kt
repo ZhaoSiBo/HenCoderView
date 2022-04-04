@@ -42,7 +42,7 @@ class ListFragment:Fragment() {
         val g = random.nextInt(256)
         val b = random.nextInt(256)
         binding.root.setBackgroundColor(Color.rgb(r, g, b))
-        val data = arrayListOf("120023","12323124","48999584","239863436","12323124","48999584","239863436","12323124","48999584","239863436","12323124","48999584","239863436","12323124","48999584","239863436","12323124","48999584","239863436")
+        val data = arrayListOf("我是第一个","12323124","48999584","239863436","12323124","48999584","239863436","12323124","48999584","239863436","12323124","48999584","239863436","12323124","48999584","239863436","12323124","48999584","我是最后一个")
         binding.list.adapter = InnerAdapter(data)
         binding.list.layoutManager = LinearLayoutManager(requireContext())
         var isLoadMore = false
@@ -53,8 +53,9 @@ class ListFragment:Fragment() {
                     isLoadMore = true
                     Toast.makeText(requireContext() , "滑动到底", Toast.LENGTH_SHORT).show()
                     val newData = arrayListOf("加载更多数据","120023","12323124","48999584","239863436")
+                    val oldsize = data.size
                     data.addAll(newData)
-                    recyclerView.adapter?.notifyDataSetChanged()
+                    recyclerView.adapter?.notifyItemRangeInserted(oldsize , data.size)
                 }
             }
         })
