@@ -385,7 +385,6 @@ open class BottomSheetBehavior<V : ViewGroup> : CoordinatorLayout.Behavior<V> {
         child: V,
         event: MotionEvent
     ): Boolean {
-        Log.d(TAG, "child = ${child.javaClass.simpleName},event = ${event.action}")
         if (!isDraggable || !child.isShown) {
             acceptTouches = false
             return false
@@ -429,7 +428,6 @@ open class BottomSheetBehavior<V : ViewGroup> : CoordinatorLayout.Behavior<V> {
                 // CoordinatorLayout can call us before the view is laid out. >_<
                 ::dragHelper.isInitialized &&
                 dragHelper.shouldInterceptTouchEvent(event)
-        Log.d(TAG, "onInterceptTouchEvent result = $result")
         return result
     }
 
@@ -493,7 +491,7 @@ open class BottomSheetBehavior<V : ViewGroup> : CoordinatorLayout.Behavior<V> {
         axes: Int,
         type: Int
     ): Boolean {
-        nestedScrolled = false
+        Log.d(TAG,"onStartNestedScroll isDraggable = $isDraggable" )
         if (isDraggable &&
             viewRef?.get() == directTargetChild &&
             (axes and ViewCompat.SCROLL_AXIS_VERTICAL) != 0
@@ -501,10 +499,8 @@ open class BottomSheetBehavior<V : ViewGroup> : CoordinatorLayout.Behavior<V> {
             // Scrolling view is a descendent of the sheet and scrolling vertically.
             // Let's follow along!
             nestedScrollingChildRef = WeakReference(target)
-            Log.d(TAG, "onStartNestedScroll : true")
             return true
         }
-        Log.d(TAG, "onStartNestedScroll : false")
         return false
     }
 
@@ -517,9 +513,6 @@ open class BottomSheetBehavior<V : ViewGroup> : CoordinatorLayout.Behavior<V> {
         consumed: IntArray,
         type: Int
     ) {
-        if (type == ViewCompat.TYPE_NON_TOUCH) {
-            return // Ignore fling here
-        }
         if (target != nestedScrollingChildRef?.get()) {
             return
         }
@@ -559,7 +552,9 @@ open class BottomSheetBehavior<V : ViewGroup> : CoordinatorLayout.Behavior<V> {
         target: View,
         type: Int
     ) {
+        Log.d(TAG,"[onStopNestedScroll] isDraggable = $isDraggable" )
         if (child.top == getExpandedOffset()) {
+            Log.d(TAG,"[onStopNestedScroll][setStateInternal] isDraggable = $isDraggable" )
             setStateInternal(STATE_EXPANDED)
             return
         }
@@ -623,7 +618,6 @@ open class BottomSheetBehavior<V : ViewGroup> : CoordinatorLayout.Behavior<V> {
             type,
             consumed
         )
-        Log.d(TAG, "onNestedScroll dyConsumed = ${dyConsumed}")
     }
 
     private fun settleBottomSheet(sheet: View, yVelocity: Float, isNestedScroll: Boolean) {
@@ -801,6 +795,8 @@ open class BottomSheetBehavior<V : ViewGroup> : CoordinatorLayout.Behavior<V> {
             // Check for scrolling content underneath the touch point that can scroll in the
             // appropriate direction.
             val scrollingChild = findScrollingChildUnder(child, lastTouchX, lastTouchY, -dy)
+            val result = scrollingChild == null
+            Log.d(TAG, "tryCaptureView = ${result} ")
             return scrollingChild == null
         }
 

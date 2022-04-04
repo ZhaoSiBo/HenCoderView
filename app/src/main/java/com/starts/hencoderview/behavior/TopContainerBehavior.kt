@@ -3,12 +3,15 @@ package com.starts.hencoderview.behavior
 import android.content.Context
 import android.util.AttributeSet
 import android.util.Log
-import android.view.MotionEvent
 import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.ViewCompat
+import androidx.core.view.forEachIndexed
 import com.starts.hencoderview.R
+import java.lang.ref.WeakReference
+import kotlin.math.abs
+import kotlin.math.min
 
 /**
 
@@ -17,10 +20,13 @@ import com.starts.hencoderview.R
  *版本号：1.0
 
  */
-class TopContainerBehavior<V : View> : HeaderBehavior<V> {
+class TopContainerBehavior<V : View> : CoordinatorLayout.Behavior<V> {
     companion object {
         val TAG = "TopContainerBehavior"
     }
+
+    var bottomTop = 0
+    var offsetRange = 0
 
     constructor() : super()
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
@@ -35,25 +41,10 @@ class TopContainerBehavior<V : View> : HeaderBehavior<V> {
     ): Boolean {
         // Return true if we're nested scrolling vertically, and we either have lift on scroll enabled
         // or we can scroll the children.
-        val result = (axes and ViewCompat.SCROLL_AXIS_VERTICAL) != 0
-        Log.d(TAG, "onStartNestedScroll = $result")
+        val result =  viewRef?.get() == directTargetChild &&
+                (axes and ViewCompat.SCROLL_AXIS_VERTICAL) != 0
         return result
     }
-
-    override fun onNestedPreScroll(
-        coordinatorLayout: CoordinatorLayout,
-        child: V,
-        target: View,
-        dx: Int,
-        dy: Int,
-        consumed: IntArray,
-        type: Int
-    ) {
-        super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed, type)
-//        Log.d(TAG, "onNestedPreScroll ，child = ${child::class.java.simpleName} , target = ${target::class.java.simpleName},dy = $dy, consumed = $consumed")
-//        Log.d(TAG, "onNestedPreScroll ，consumed 0= ${consumed[0]} ,consumed 1 = ${consumed[1]} }")
-    }
-
 
     override fun onNestedScroll(
         coordinatorLayout: CoordinatorLayout,
@@ -77,27 +68,56 @@ class TopContainerBehavior<V : View> : HeaderBehavior<V> {
             type,
             consumed
         )
-        scroll(coordinatorLayout, child, dyUnconsumed, getMaxDragOffset(child), 0)
+        val overage = overageOffsetValue(dyUnconsumed)
+        if (overage > abs(dyUnconsumed)){
+            Log.d(TAG ,"overage > abs(dyUnconsumed)" )
+            ViewCompat.offsetTopAndBottom(target,-dyUnconsumed)
+        }else if(overage < abs(dyUnconsumed)){
+            Log.d(TAG ,"overage < abs(dyUnconsumed)" )
+            ViewCompat.offsetTopAndBottom(target, -overage)
+        }
     }
-
-    override fun onInterceptTouchEvent(
-        parent: CoordinatorLayout,
-        child: V,
-        ev: MotionEvent
-    ): Boolean {
-        val result = super.onInterceptTouchEvent(parent, child, ev)
-        Log.d(TAG, "onInterceptTouchEvent = $result")
-        return result
-    }
-
-    override fun onTouchEvent(parent: CoordinatorLayout, child: V, ev: MotionEvent): Boolean {
-        val result = super.onTouchEvent(parent, child, ev)
-        Log.d(TAG, "onTouchEvent = $result")
-        return result
-    }
-
 
     override fun onLayoutChild(parent: CoordinatorLayout, child: V, layoutDirection: Int): Boolean {
-        return super.onLayoutChild(parent, child, layoutDirection)
+        val result = super.onLayoutChild(parent, child, layoutDirection)
+        viewRef = WeakReference(child)
+        bottomSheetBehaviorRef = WeakReference(getBottomSheetBehavior(parent))
+        offsetRange = bottomSheetBehaviorRef?.get()?.peekHeight?:0
+        parent.addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
+            val bottom = parent.findViewById<ConstraintLayout>(R.id.layoutBottomSheet)
+            bottomTop = bottom.top
+        }
+        return result
     }
+
+    private var bottomSheetBehaviorRef: WeakReference<BottomSheetBehavior<*>?>? = null
+    private var viewRef: WeakReference<View>? = null
+
+    private fun getBottomSheetBehavior(parent: CoordinatorLayout):BottomSheetBehavior<*>? {
+        parent.forEachIndexed { index, view ->
+            val lp = view.layoutParams as CoordinatorLayout.LayoutParams
+            val behavior = lp.behavior
+            if (behavior is BottomSheetBehavior)
+                return behavior
+        }
+        return null
+    }
+
+    /**
+     * @return 剩余偏移量 ,大于0表示还能偏移，小于0 不能偏移
+     *
+     */
+    private fun overageOffsetValue(dyUnconsumed:Int):Int{
+        val topBottom = viewRef?.get()?.bottom?:0
+        val topTop = viewRef?.get()?.top?:0
+        val result = if(dyUnconsumed > 0){
+            topBottom - bottomTop
+        }else{
+            Log.d(TAG ,"topTop = ${topTop}" )
+            0 - topTop
+        }
+        Log.d(TAG ,"dyUnconsumed = ${dyUnconsumed} overageOffsetValue = ${result}" )
+        return result
+    }
+
 }

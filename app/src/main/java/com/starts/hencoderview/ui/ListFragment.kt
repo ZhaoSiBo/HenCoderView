@@ -55,7 +55,7 @@ class ListFragment:Fragment() {
                     val newData = arrayListOf("加载更多数据","120023","12323124","48999584","239863436")
                     val oldsize = data.size
                     data.addAll(newData)
-                    recyclerView.adapter?.notifyItemRangeInserted(oldsize , data.size)
+                    recyclerView.adapter?.notifyItemRangeInserted(data.size - newData.size , data.size)
                 }
             }
         })

@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<com.starts.hencoderview.behavior.ScrollCoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/rootCoordinator"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
     <androidx.recyclerview.widget.RecyclerView
         android:id ="@+id/rvInfo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/light_blue_300"
-        app:layout_scrollFlags="scroll"
+        app:layout_behavior=".behavior.TopContainerBehavior"
         />
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,7 +21,6 @@
         android:layout_height="match_parent"
         app:behavior_hideable="false"
         app:behavior_peekHeight="80dp"
-        app:behavior_expandedOffset="40dp"
         app:behavior_fitToContents="true"
         app:layout_behavior=".behavior.BottomSheetBehavior"
         >
@@ -30,6 +30,7 @@
             android:layout_height="45dp"
             app:tabIndicatorFullWidth="false"
             app:tabMode="fixed"
+            android:nestedScrollingEnabled="true"
             app:tabIndicatorHeight="4dp"
             android:background="@color/red_300"
             app:tabIndicatorColor="@color/blue_300"
@@ -50,4 +51,4 @@
 
 
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout >
+</com.starts.hencoderview.behavior.ScrollCoordinatorLayout >
