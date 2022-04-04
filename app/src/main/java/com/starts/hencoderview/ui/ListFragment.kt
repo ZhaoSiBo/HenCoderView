@@ -54,7 +54,7 @@ class ListFragment:Fragment() {
                     Toast.makeText(requireContext() , "滑动到底", Toast.LENGTH_SHORT).show()
                     val newData = arrayListOf("加载更多数据","120023","12323124","48999584","239863436")
                     data.addAll(newData)
-                    recyclerView.adapter?.notifyDataSetChanged()
+                    recyclerView.adapter?.notifyItemRangeInserted(data.size - newData.size , data.size)
                 }
             }
         })

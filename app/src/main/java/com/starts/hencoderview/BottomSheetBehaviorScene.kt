@@ -38,7 +38,7 @@ class BottomSheetBehaviorScene : AppCompatScene() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setToolbarVisible(false)
-        val data = arrayListOf("1000","2000","346","50000","2000","346","50000","2000","346","50000","2000","346","50000","2000","346","50000","2000","346","50000","2000","346","50000")
+        val data = arrayListOf("第一个","2000","346","50000","2000","346","50000","2000","346","50000","2000","346","50000","2000","346","50000","2000","346","50000","最后3个","最后2个","最后一个")
         val adapter = InnerAdapter(data)
         binding.rvInfo .adapter = adapter
         binding.rvInfo.layoutManager = LinearLayoutManager(requireSceneContext())

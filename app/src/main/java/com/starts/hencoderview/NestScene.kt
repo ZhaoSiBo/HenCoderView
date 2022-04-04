@@ -36,8 +36,9 @@ class NestScene : AppCompatScene() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setToolbarVisible(false)
+        setStatusBarVisible(false)
         val data = arrayListOf(
-            "我是第一个",
+            "第一个",
             "2000",
             "346",
             "50000",
@@ -53,11 +54,11 @@ class NestScene : AppCompatScene() {
             "2000",
             "346",
             "50000",
-            "2000",
-            "346",
-            "50000",
-            "2000",
-            "我到底了"
+            "倒数第五",
+            "倒数第四",
+            "倒数第三",
+            "倒数第二",
+            "倒数第一"
         )
         mRoot.topRecyclerView.adapter = InnerAdapter(data)
         mRoot.topRecyclerView.layoutManager = LinearLayoutManager(requireSceneContext())
@@ -77,5 +78,6 @@ class NestScene : AppCompatScene() {
         TabLayoutMediator(tabLayout, viewpage) { tab, positon ->
             tab.text = titles[positon]
         }.attach()
+
     }
 }
