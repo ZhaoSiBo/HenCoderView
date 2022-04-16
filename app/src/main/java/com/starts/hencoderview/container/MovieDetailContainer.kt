@@ -26,7 +26,7 @@ import kotlin.math.max
 /**
  * 顶部 TopRecyclerView 顶部内容
  * 底部 BottomSheetLayout 底部浮窗布局（已经扩展使用ViewPager2支持新增Fragment）
- * AlbumDetailScrollLayout 通过 NestedScrollingParent3 处理滑动分发，自己滑动，还是整体滑动
+ * MovieDetailContainer 通过 NestedScrollingParent3 处理滑动分发，自己滑动，还是整体滑动
  * 在非悬浮状态下的手动滚动分发，全部在PreNestScroll中处理，预处理逻辑统一，好写好理解，尽量不要分开，不要和OnNestScrolled混合处理
  * 在非悬浮状态下的fling滚动分发，全部在PreNestFling中处理，在PreNestFling中返回true，全部拦截，然后通过scroller，
  * 计算fling，再重写computeScroll来调用dispatchFling来分发fling
