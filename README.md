@@ -62,11 +62,11 @@
                                 //right to left
                             
                                 fromRightToLeft = true
-                                currentPosition = fixPosition(position)
+                                currentPosition = fixPosition(position)ø
                                 nextPosition = fixPosition(currentPosition + 1)
 
-                                calculateDirection()
                             } else {
+                                calculateDirection()
                                 //left to right
                               
                                 fromRightToLeft = false
@@ -89,6 +89,7 @@
 1. 在使用过程中，先画的是目标图像，后画的源图像，使用过程中注意使用离屏缓冲，避免port的使用失效
 2. port的原理是在融合出，通过算法处理颜色保留
 
+### 电影详情页视图框架
 
 
 
