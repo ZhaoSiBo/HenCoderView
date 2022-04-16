@@ -6,19 +6,15 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.Log
 import androidx.annotation.ColorInt
 import androidx.annotation.DrawableRes
 import androidx.appcompat.widget.AppCompatTextView
-import androidx.core.content.ContextCompat
-import androidx.core.text.TextUtilsCompat
 import com.starts.hencoderview.BuildConfig
 import com.starts.hencoderview.R
 import com.starts.hencoderview.SpanUtils
-import com.starts.hencoderview.dp2px
 
 /**
  *  文件描述：实现 文字...文字，文字...icon，文字...文字+icon的样式

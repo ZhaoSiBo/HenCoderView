@@ -1,22 +1,13 @@
 package com.starts.hencoderview
 
-import android.content.Context
-import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Rect
-import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
-import android.text.*
-import android.text.style.ImageSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.core.content.ContextCompat
 import com.bytedance.scene.ui.template.AppCompatScene
 import com.starts.hencoderview.databinding.SceneEllipsizedTextBinding
-import kotlin.math.ceil
+import com.starts.hencoderview.util.sp
 
 
 /**

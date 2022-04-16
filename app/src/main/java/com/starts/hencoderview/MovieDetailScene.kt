@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
+import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -12,9 +12,8 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.bytedance.scene.ktx.requireFragmentActivity
 import com.bytedance.scene.ui.template.AppCompatScene
 import com.google.android.material.tabs.TabLayoutMediator
-import com.starts.hencoderview.databinding.SceneBottomSheetBehaviorBinding
+import com.starts.hencoderview.container.MovieDetailContainer
 import com.starts.hencoderview.ui.ListFragment
-import com.starts.hencoderview.util.getRandomColor
 import com.starts.hencoderview.view.ColoredTextView
 
 /**
@@ -24,15 +23,15 @@ import com.starts.hencoderview.view.ColoredTextView
  *版本号：1.0
 
  */
-class BottomSheetBehaviorScene : AppCompatScene() {
-    lateinit var binding: SceneBottomSheetBehaviorBinding
+class MovieDetailScene : AppCompatScene() {
+    lateinit var binding: MovieDetailContainer
     override fun onCreateContentView(
         inflater: LayoutInflater,
         container: ViewGroup,
         savedInstanceState: Bundle?
     ): View {
-        binding = SceneBottomSheetBehaviorBinding.inflate(inflater)
-        return binding.root
+        binding = MovieDetailContainer(context = container.context)
+        return binding
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -40,10 +39,10 @@ class BottomSheetBehaviorScene : AppCompatScene() {
         setToolbarVisible(false)
         val data = arrayListOf("第一个","2000","346","50000","2000","346","50000","2000","346","50000","2000","346","50000","2000","346","50000","2000","346","50000","最后3个","最后2个","最后一个")
         val adapter = InnerAdapter(data)
-        binding.rvInfo .adapter = adapter
-        binding.rvInfo.layoutManager = LinearLayoutManager(requireSceneContext())
-        val titles = arrayListOf("歌曲面板","相似面板")
-        val fragments = arrayListOf(ListFragment(), ListFragment())
+        binding.topRecyclerView .adapter = adapter
+        binding.topRecyclerView.layoutManager = LinearLayoutManager(requireSceneContext())
+//        val titles = arrayListOf("影评","讨论")
+        val fragments = arrayListOf(ListFragment())
         val viewPagerAdapter = object :FragmentStateAdapter(requireFragmentActivity()){
             override fun getItemCount(): Int {
                 return fragments.size
@@ -53,11 +52,12 @@ class BottomSheetBehaviorScene : AppCompatScene() {
                 return fragments[position]
             }
         }
-
-        binding.subViewPager .adapter = viewPagerAdapter
-        TabLayoutMediator(binding.subTableLayout,binding.subViewPager){tab,positon->
-            tab.text = titles[positon]
-        }.attach()
+        binding.bottomSheetLayout.bottomTabLayout.isGone = true
+        binding.bottomSheetLayout.bottomViewPager.adapter = viewPagerAdapter
+//        TabLayoutMediator(binding.bottomSheetLayout.bottomTabLayout,binding.bottomSheetLayout.bottomViewPager){tab,positon->
+//            tab.text = titles[positon]
+//        }.attach()
+        setStatusBarVisible(false)
     }
 }
 

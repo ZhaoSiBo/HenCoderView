@@ -165,28 +165,6 @@
             android:textAllCaps="false"
             android:textColor="@color/white" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/linkedScroll"
-            android:layout_width="120dp"
-            android:layout_height="60dp"
-            android:background="#59B0FF"
-            android:elevation="5dp"
-            android:layout_marginTop="12dp"
-            android:text="linkedScroll"
-            android:textAllCaps="false"
-            android:textColor="@color/white" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/nestScroll"
-            android:layout_width="120dp"
-            android:layout_height="60dp"
-            android:background="#59B0FF"
-            android:elevation="5dp"
-            android:layout_marginTop="12dp"
-            android:text="NestScroll"
-            android:textAllCaps="false"
-            android:textColor="@color/white" />
-
     </LinearLayout>
 
 

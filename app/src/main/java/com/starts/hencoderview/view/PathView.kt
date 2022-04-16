@@ -5,8 +5,8 @@ import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
-import com.starts.hencoderview.dp2px
-import com.starts.hencoderview.getMaterialColor
+import com.starts.hencoderview.util.dp2px
+import com.starts.hencoderview.util.getMaterialColor
 import kotlin.math.min
 
 /**

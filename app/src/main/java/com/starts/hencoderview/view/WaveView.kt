@@ -10,7 +10,7 @@ import android.widget.ImageView
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.starts.hencoderview.R
-import com.starts.hencoderview.getMaterialColor
+import com.starts.hencoderview.util.getMaterialColor
 import com.zhpan.bannerview.BannerViewPager
 import com.zhpan.bannerview.BaseBannerAdapter
 import com.zhpan.bannerview.BaseViewHolder

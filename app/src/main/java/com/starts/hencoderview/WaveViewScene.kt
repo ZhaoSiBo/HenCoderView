@@ -6,9 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bytedance.scene.ui.template.AppCompatScene
-import com.starts.hencoderview.databinding.SceneParticleScatteringBinding
 import com.starts.hencoderview.databinding.SceneWaveViewBinding
 import com.starts.hencoderview.ui.ScalePageTransformer
+import com.starts.hencoderview.util.dp2px
 import com.starts.hencoderview.view.ViewPager2LoopAdapter
 import com.starts.hencoderview.view.ViewPager2LoopViewHolder
 import com.zhpan.bannerview.BannerViewPager

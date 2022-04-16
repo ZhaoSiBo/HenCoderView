@@ -1,4 +1,4 @@
-package com.starts.hencoderview.view
+package com.starts.hencoderview.container
 
 import android.content.Context
 import android.graphics.Color

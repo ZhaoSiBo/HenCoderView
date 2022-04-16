@@ -8,7 +8,7 @@ import android.util.AttributeSet;
 
 import androidx.annotation.Nullable;
 
-import com.starts.hencoderview.ExtKt;
+import com.starts.hencoderview.util.ExtKt;
 
 import java.util.Random;
 

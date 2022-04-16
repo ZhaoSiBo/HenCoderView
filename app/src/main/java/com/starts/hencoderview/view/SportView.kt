@@ -4,8 +4,8 @@ import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
 import android.view.View
-import com.starts.hencoderview.dp2px
-import com.starts.hencoderview.sp
+import com.starts.hencoderview.util.dp2px
+import com.starts.hencoderview.util.sp
 
 /**
 

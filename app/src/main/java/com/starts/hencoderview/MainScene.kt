@@ -2,11 +2,9 @@ package com.starts.hencoderview
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatButton
 import com.bytedance.scene.ui.template.AppCompatScene
 import com.starts.hencoderview.databinding.ActivityMainBinding
 import com.starts.hencoderview.ui.MemoryLeakActivity
@@ -72,13 +70,7 @@ class MainScene : AppCompatScene() {
             requireNavigationScene().push(ScaleAlphaAnimScene::class.java)
         }
         binding.btnBottomSheetBehavior.setOnClickListener {
-            requireNavigationScene().push(BottomSheetBehaviorScene::class.java)
-        }
-        binding.linkedScroll.setOnClickListener {
-            requireNavigationScene().push(LinkedScene::class.java)
-        }
-        binding.nestScroll.setOnClickListener {
-            requireNavigationScene().push(NestScene::class.java)
+            requireNavigationScene().push(MovieDetailScene::class.java)
         }
 
         setStatusBarVisible(true)
