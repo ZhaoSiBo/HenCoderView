@@ -90,6 +90,7 @@
 2. port的原理是在融合出，通过算法处理颜色保留
 
 ### 电影详情页视图框架
+![电影详情页效果图](https://github.com/ZhaoSiBo/HenCoderView/blob/master/movie.gif)
 
 
 
