@@ -92,7 +92,7 @@
 ### 电影详情页视图框架
 [![电影详情页视图](https://s1.ax1x.com/2022/04/16/LtkGhF.gif)](https://imgtu.com/i/LtkGhF)
 仿照豆瓣详情页写的滚动视图，不过豆瓣本身是做的两个View，一个用来拖拽，一个用来滑动，这里做了个升级，直接用一个ViewGroup来实现
-拖动和滚动可以无缝联动
+拖动和无缝滚动
 ### 思路：
 1. 通过自定义ViewGroup来实现布局部分，onMeasure和onLayout中更方便获取自身的大小和位置
 2. 通过NestScrollParent接口处理滚动联动和fling的分发
