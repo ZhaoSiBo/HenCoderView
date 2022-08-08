@@ -4,13 +4,14 @@
 ### 电影详情页视图框架
 [![电影详情页视图](https://s1.ax1x.com/2022/04/16/LtkGhF.gif)](https://imgtu.com/i/LtkGhF)
 
-仿照豆瓣详情页写的滚动视图，不过豆瓣本身是做的两个View，一个用来拖拽，一个用来滑动，这里做了个升级，直接用一个ViewGroup来实现
-拖动和无缝滚动
+仿照豆瓣详情页写的滚动视图，不过豆瓣本身是做的两个View，一个用来拖拽，一个用来滑动，这里做了个升级，直接用一个ViewGroup来实现拖动和无缝滚动
+动图中显示效果为两个RcyclerView实现，内部可以无限制使用类似多类型Adapter方面的库，任意组装数据，构造多类型复杂列表
+
 ### 思路：
-1. 通过自定义ViewGroup来实现布局部分，onMeasure和onLayout中更方便获取自身的大小和位置
+1. 通过自定义ViewGroup来实现布局部分，onMeasure和onLayout中自定义RecyclerView的测绘和布局
 2. 通过NestScrollParent接口处理滚动联动和fling的分发
 3. 通过ViewDragHelper来处理拖拽
-4. 通过事件分发机制解决事件冲突，处理重叠部分
+4. 通过事件分发机制解决事件冲突，处理重叠部分的拖拽冲突
 
 ### 轮播图的水波纹背景
 ![轮播图的水波纹背景](https://ftp.bmp.ovh/imgs/2020/11/3286b2d39b8cd13d.gif)
