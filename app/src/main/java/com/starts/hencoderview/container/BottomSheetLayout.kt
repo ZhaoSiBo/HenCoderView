@@ -54,10 +54,11 @@ class BottomSheetLayout : CustomLayout {
             defStyleAttr
     )
 
-    override fun onMeasureChildren(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+    override fun onMeasureChildren(widthMeasureSpec: Int, heightMeasureSpec: Int):Dimension {
         dragTip.autoMeasure()
         bottomTabLayout.autoMeasure()
         bottomViewPager.measure(widthMeasureSpec,heightMeasureSpec - dragTip.measuredHeight -  bottomTabLayout.measuredHeight)
+        return Dimension(widthMeasureSpec,heightMeasureSpec)
     }
 
     /**

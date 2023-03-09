@@ -1,11 +1,11 @@
 # HenCoderView
 工作过程中和平时，针对自定义View进行的实践和总结
 
-### 电影详情页视图框架
-[![电影详情页视图](https://s1.ax1x.com/2022/04/16/LtkGhF.gif)](https://imgtu.com/i/LtkGhF)
+### 双RecyclerView浮层联动
+[![双RecyclerView浮层联动](https://s1.ax1x.com/2022/04/16/LtkGhF.gif)](https://imgtu.com/i/LtkGhF)
 
 仿照豆瓣详情页写的滚动视图，不过豆瓣本身是做的两个View，一个用来拖拽，一个用来滑动，这里做了个升级，直接用一个ViewGroup来实现拖动和无缝滚动
-动图中显示效果为两个RcyclerView实现，内部可以无限制使用类似多类型Adapter方面的库，任意组装数据，构造多类型复杂列表
+动图中显示效果为两个RecyclerView实现，内部可以无限制使用类似多类型Adapter方面的库，任意组装数据，构造多类型复杂列表
 
 ### 思路：
 1. 通过自定义ViewGroup来实现布局部分，onMeasure和onLayout中自定义RecyclerView的测绘和布局
@@ -76,7 +76,7 @@
 
 
 ### Taglayout
-![Taglayout](https://ftp.bmp.ovh/imgs/2020/11/99b24a4f62fb1578.gif)
+![TagLayout](https://ftp.bmp.ovh/imgs/2020/11/99b24a4f62fb1578.gif)
 ### 思路：
 1. 整体上，是测绘完所有子View，得到子View的坐标点，然后保存起来，在onlayout中使用
 2. 通过for循环，遍历所有子View，通过measureChildWithMargins方法，讲View的宽高，配合剩余的在纵横两个方向上的空间，得到子View的合适位置

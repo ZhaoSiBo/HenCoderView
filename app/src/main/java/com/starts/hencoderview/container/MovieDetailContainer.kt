@@ -248,11 +248,11 @@ class MovieDetailContainer : CustomLayout, NestedScrollingParent3 {
         maximumVelocity = configuration.scaledMaximumFlingVelocity
     }
 
-    override fun onMeasureChildren(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+    override fun onMeasureChildren(widthMeasureSpec: Int, heightMeasureSpec: Int):Dimension {
         val topRecyclerViewMinHeight = heightMeasureSpec - initPeekHeight
         topRecyclerView.measure(widthMeasureSpec , topRecyclerViewMinHeight)
         bottomSheetLayout.measure(widthMeasureSpec, heightMeasureSpec)
-        setMeasuredDimension(widthMeasureSpec,heightMeasureSpec)
+        return Dimension(widthMeasureSpec,heightMeasureSpec)
     }
 
     /**

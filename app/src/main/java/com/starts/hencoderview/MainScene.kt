@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.bytedance.scene.ktx.requireNavigationScene
 import com.bytedance.scene.ui.template.AppCompatScene
 import com.starts.hencoderview.databinding.ActivityMainBinding
 import com.starts.hencoderview.ui.MemoryLeakActivity
@@ -64,13 +65,16 @@ class MainScene : AppCompatScene() {
             requireNavigationScene().push(EllipsizedTextScene::class.java)
         }
         binding.btnCustom.setOnClickListener {
-            requireNavigationScene().push(SongDetailScene::class.java)
+            requireNavigationScene().push(ViewGroupScene::class.java)
         }
         binding.btnScaleAlphaImg.setOnClickListener {
             requireNavigationScene().push(ScaleAlphaAnimScene::class.java)
         }
         binding.btnBottomSheetBehavior.setOnClickListener {
             requireNavigationScene().push(MovieDetailScene::class.java)
+        }
+        binding.btnTransition.setOnClickListener {
+            requireNavigationScene().push(TransitionScene::class.java)
         }
 
         setStatusBarVisible(true)

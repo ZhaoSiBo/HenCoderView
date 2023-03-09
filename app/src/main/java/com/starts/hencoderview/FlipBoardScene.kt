@@ -57,19 +57,16 @@ class FlipBoardScene : AppCompatScene() {
         animatorSet.startDelay = 500
         animatorSet.start()
         animatorSet.addListener(object : Animator.AnimatorListener {
-            override fun onAnimationRepeat(animation: Animator?) {
-
-            }
-            override fun onAnimationEnd(animation: Animator?) {
-                seekRotate.visibility = View.VISIBLE
-                seekCamera.visibility = View.VISIBLE
+            override fun onAnimationStart(animation: Animator) {
             }
 
-            override fun onAnimationCancel(animation: Animator?) {
-
+            override fun onAnimationEnd(animation: Animator) {
             }
 
-            override fun onAnimationStart(animation: Animator?) {
+            override fun onAnimationCancel(animation: Animator) {
+            }
+
+            override fun onAnimationRepeat(animation: Animator) {
             }
 
         })

@@ -35,6 +35,7 @@ class EmptyFragment : Fragment() {
     }
 
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val random = Random()
@@ -50,6 +51,7 @@ class EmptyFragment : Fragment() {
         Log.d("fragmentLife", "onHiddenChanged${hidden}")
     }
 
+    @Deprecated("Deprecated in Java")
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {
         super.setUserVisibleHint(isVisibleToUser)
         Log.d("fragmentLife", "setUserVisibleHint${isVisibleToUser}")

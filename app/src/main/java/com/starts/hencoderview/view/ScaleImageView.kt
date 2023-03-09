@@ -90,7 +90,7 @@ class ScaleImageView(context: Context, attrs: AttributeSet) : View(context, attr
         return gestureDetector.onTouchEvent(event)
     }
 
-    override fun onDoubleTap(e: MotionEvent?): Boolean {
+    override fun onDoubleTap(e: MotionEvent): Boolean {
         isBig = !isBig
         if (isBig) {
             scaleAnimation.start()
@@ -100,19 +100,19 @@ class ScaleImageView(context: Context, attrs: AttributeSet) : View(context, attr
         return false
     }
 
-    override fun onDoubleTapEvent(e: MotionEvent?) = false
-    override fun onSingleTapConfirmed(e: MotionEvent?) = false
-    override fun onShowPress(e: MotionEvent?) {
+    override fun onDoubleTapEvent(e: MotionEvent) = false
+    override fun onSingleTapConfirmed(e: MotionEvent) = false
+    override fun onShowPress(e: MotionEvent) {
 
     }
 
-    override fun onSingleTapUp(e: MotionEvent?): Boolean = false
+    override fun onSingleTapUp(e: MotionEvent): Boolean = false
 
-    override fun onDown(e: MotionEvent?) = true
+    override fun onDown(e: MotionEvent) = true
 
     override fun onFling(
-        e1: MotionEvent?,
-        e2: MotionEvent?,
+        e1: MotionEvent,
+        e2: MotionEvent,
         velocityX: Float,
         velocityY: Float
     ): Boolean {
@@ -138,8 +138,8 @@ class ScaleImageView(context: Context, attrs: AttributeSet) : View(context, attr
     }
 
     override fun onScroll(
-        e1: MotionEvent?,
-        e2: MotionEvent?,
+        e1: MotionEvent,
+        e2: MotionEvent,
         distanceX: Float,
         distanceY: Float
     ): Boolean {
@@ -154,10 +154,9 @@ class ScaleImageView(context: Context, attrs: AttributeSet) : View(context, attr
         return false
     }
 
-    override fun onLongPress(e: MotionEvent?) {
+    override fun onLongPress(e: MotionEvent) {
 
     }
-
 
     private fun fixOffsets() {
         offsetX = min(offsetX, (bitmap.width * bigScale - width * 1f) / 2)
