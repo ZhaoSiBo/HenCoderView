@@ -41,7 +41,7 @@ class TestLinearLayout :LinearLayout {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        canvas.drawText("measureCount = $measureCount" , 40f,80f,paint)
+        canvas.drawText("measureCount = $measureCount" , 40f,40f,paint)
     }
 
 }
