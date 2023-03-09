@@ -60,13 +60,13 @@ class ParticleScatteringView(context: Context, attrs: AttributeSet?) : View(cont
         particleAnimator.repeatCount = -1
         particleAnimator.interpolator = LinearInterpolator()
         particleAnimator.addUpdateListener {
-            updateParticle(it.animatedValue as Float)
+            updateParticle()
             imageAngle = 360 * it.animatedValue as Float
             invalidate()//重绘界面
         }
     }
 
-    private fun updateParticle(fl: Float) {
+    private fun updateParticle() {
         particleList.forEach {
             if (it.offset > it.maxOffset) {
                 it.offset = 0f

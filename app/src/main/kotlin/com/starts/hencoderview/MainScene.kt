@@ -25,7 +25,7 @@ class MainScene : AppCompatScene() {
         inflater: LayoutInflater,
         container: ViewGroup,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = ActivityMainBinding.inflate(inflater)
         return binding.root
     }

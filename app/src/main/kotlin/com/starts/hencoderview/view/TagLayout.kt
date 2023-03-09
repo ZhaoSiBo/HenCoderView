@@ -25,7 +25,7 @@ class TagLayout(context: Context?, attrs: AttributeSet?) : ViewGroup(context, at
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
 
         val widthMeasureSize  = MeasureSpec.getSize(widthMeasureSpec)
-        val widthMeasureMode = MeasureSpec.getMode(widthMeasureSpec)
+//        val widthMeasureMode = MeasureSpec.getMode(widthMeasureSpec)
 
         var widthUsed = 0
         var heightUsed = 0

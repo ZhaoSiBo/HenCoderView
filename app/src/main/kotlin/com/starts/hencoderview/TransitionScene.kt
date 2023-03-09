@@ -12,12 +12,12 @@ import com.starts.hencoderview.util.getScreenWidth
 import com.starts.hencoderview.view.TransitionLayout
 
 class TransitionScene : AppCompatScene() {
-    lateinit var rootView : TransitionLayout
+    private lateinit var rootView : TransitionLayout
     override fun onCreateContentView(
         inflater: LayoutInflater,
         container: ViewGroup,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         rootView = TransitionLayout(container.context)
         return rootView
     }
@@ -28,7 +28,6 @@ class TransitionScene : AppCompatScene() {
         setStatusBarVisible(true)
         setTitle("TransitionScene")
         rootView.button.setOnClickListener {
-            val scene1 = Scene(rootView)
             val scene2 = Scene(rootView)
             val manager = TransitionManager()
             manager.transitionTo(scene2)

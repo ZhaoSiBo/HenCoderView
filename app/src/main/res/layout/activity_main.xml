@@ -138,7 +138,7 @@
             android:layout_height="60dp"
             android:background="#59B0FF"
             android:elevation="5dp"
-            android:text="自定义ViewGroup"
+            android:text="ViewGroup"
             android:textAllCaps="false"
             android:textColor="@color/white" />
 

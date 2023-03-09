@@ -1,11 +1,13 @@
 package com.starts.hencoderview
 
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import com.bytedance.scene.ui.template.AppCompatScene
-import com.starts.hencoderview.databinding.LayoutViewGroupBinding
+import com.starts.hencoderview.util.getMaterialColor
 
 /**
 
@@ -16,15 +18,17 @@ import com.starts.hencoderview.databinding.LayoutViewGroupBinding
  */
 class ViewGroupScene : AppCompatScene() {
 
-    lateinit var binding:LayoutViewGroupBinding
 
     override fun onCreateContentView(
         inflater: LayoutInflater,
         container: ViewGroup,
         savedInstanceState: Bundle?
-    ): View? {
-        val root = LayoutViewGroupBinding.inflate(inflater)
-        return root.root
+    ): View {
+        val root = View(container.context).apply {
+            layoutParams = ViewGroup.LayoutParams(MATCH_PARENT,MATCH_PARENT)
+            background = ColorDrawable(getMaterialColor(resources , 1))
+        }
+        return root
     }
 
 
@@ -33,7 +37,7 @@ class ViewGroupScene : AppCompatScene() {
         super.onActivityCreated(savedInstanceState)
         setStatusBarVisible(true)
         setToolbarVisible(true)
-        setTitle("SongDetailViewGroup")
+        setTitle("ViewGroupScene")
     }
 
 }
