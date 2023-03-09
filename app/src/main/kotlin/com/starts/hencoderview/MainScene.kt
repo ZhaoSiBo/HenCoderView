@@ -1,14 +1,22 @@
 package com.starts.hencoderview
 
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.bytedance.scene.ktx.requireNavigationScene
+import androidx.appcompat.widget.AppCompatButton
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ItemDecoration
+import com.bytedance.scene.Scene
+import com.bytedance.scene.navigation.NavigationSceneGetter.requireNavigationScene
 import com.bytedance.scene.ui.template.AppCompatScene
 import com.starts.hencoderview.databinding.ActivityMainBinding
-import com.starts.hencoderview.ui.MemoryLeakActivity
+import com.starts.hencoderview.util.dp2px
 
 
 /**
@@ -19,7 +27,7 @@ import com.starts.hencoderview.ui.MemoryLeakActivity
 
  */
 class MainScene : AppCompatScene() {
-   lateinit var binding : ActivityMainBinding
+    lateinit var binding: ActivityMainBinding
 
     override fun onCreateContentView(
         inflater: LayoutInflater,
@@ -33,51 +41,68 @@ class MainScene : AppCompatScene() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setTitle("HenCoderView")
-        binding.btnSport.setOnClickListener {
-            requireNavigationScene().push(SportScene::class.java)
-        }
-        binding.btnFlipBoard.setOnClickListener {
-            requireNavigationScene().push(FlipBoardScene::class.java)
-        }
-        binding.btnTagLayout.setOnClickListener {
-            requireNavigationScene().push(TagLayoutScene::class.java)
-        }
-        binding.btnScaleImg.setOnClickListener {
-            requireNavigationScene().push(ScaleImageScene::class.java)
-        }
-        binding.btnFragmentTest.setOnClickListener {
-            requireNavigationScene().push(ViewPagerTestScene::class.java)
-        }
-        binding.btnPSView.setOnClickListener {
-            requireNavigationScene().push(ParticleScatteringScene::class.java)
-        }
-        binding.btnWave.setOnClickListener{
-            requireNavigationScene().push(WaveViewScene::class.java)
-        }
-        binding.btnLeak.setOnClickListener {
-            val intent = Intent(requireActivity() , MemoryLeakActivity::class.java)
-            requireActivity().startActivity(intent)
-        }
-        binding.btnPath.setOnClickListener {
-            requireNavigationScene().push(PathScene::class.java)
-        }
-        binding.btnEllipsize.setOnClickListener {
-            requireNavigationScene().push(EllipsizedTextScene::class.java)
-        }
-        binding.btnCustom.setOnClickListener {
-            requireNavigationScene().push(ViewGroupScene::class.java)
-        }
-        binding.btnScaleAlphaImg.setOnClickListener {
-            requireNavigationScene().push(ScaleAlphaAnimScene::class.java)
-        }
-        binding.btnBottomSheetBehavior.setOnClickListener {
-            requireNavigationScene().push(MovieDetailScene::class.java)
-        }
-        binding.btnTransition.setOnClickListener {
-            requireNavigationScene().push(TransitionScene::class.java)
-        }
-
         setStatusBarVisible(true)
         setToolbarVisible(true)
+        binding.rvCard.layoutManager =
+            GridLayoutManager(requireSceneContext(), 3, RecyclerView.VERTICAL, false)
+        val array = arrayListOf<MainCard>().apply {
+            addAll(MainCard.values())
+        }
+        binding.rvCard.addItemDecoration(object : ItemDecoration() {
+            override fun getItemOffsets(
+                outRect: Rect,
+                view: View,
+                parent: RecyclerView,
+                state: RecyclerView.State
+            ) {
+                super.getItemOffsets(outRect, view, parent, state)
+                outRect.top += dp2px(12)
+            }
+        })
+        binding.rvCard.adapter = MainAdapter(array,this)
     }
 }
+
+class MainAdapter(private val data: ArrayList<MainCard>,val scene: Scene) : RecyclerView.Adapter<MainHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainHolder {
+        return MainHolder(AppCompatButton(parent.context).apply {
+            layoutParams = ViewGroup.LayoutParams(dp2px(120), dp2px(60))
+            this.setTextColor(ContextCompat.getColor(this.context, R.color.white))
+            elevation = 5f
+            isAllCaps = false
+            this.setBackgroundColor(Color.parseColor("#59B0FF"))
+        })
+    }
+
+    override fun onBindViewHolder(holder: MainHolder, position: Int) {
+        holder.itemRoot.text = data[position].content
+        holder.itemRoot.setOnClickListener {
+            data[position].onItemClick?.invoke(scene)
+        }
+    }
+
+    override fun getItemCount(): Int {
+        return data.size
+    }
+
+}
+
+class MainHolder(val itemRoot: AppCompatButton) : RecyclerView.ViewHolder(itemRoot)
+
+enum class MainCard(val id: Int, val content: String,val onItemClick:((Scene)->Unit)? = null){
+    Sport(0,"环形进度条",{scene->requireNavigationScene(scene).push(SportScene::class.java)}),
+    FlipBoard(1,"FlipBoard",{scene->requireNavigationScene(scene).push(FlipBoardScene::class.java)}),
+    TagLayout(2,"TagLayout",{scene->requireNavigationScene(scene).push(TagLayoutScene::class.java)}),
+    ScaleImage(3,"ScaleImage",{scene->requireNavigationScene(scene).push(ScaleImageScene::class.java)}),
+    FragmentTest(4,"FragmentTest",{scene->requireNavigationScene(scene).push(FragmentTestScene::class.java)}),
+    Particle(5,"粒子消散",{scene->requireNavigationScene(scene).push(ParticleScatteringScene::class.java)}),
+    WaveView(6,"WaveView",{scene->requireNavigationScene(scene).push(WaveViewScene::class.java)}),
+    MemoryLeak(7,"内存泄漏",{scene->
+        val intent = Intent(scene.requireActivity() , com.starts.hencoderview.ui.MemoryLeakActivity::class.java)
+        scene.requireActivity().startActivity(intent)
+    }),
+    ScaleAlpha(8,"呼吸放大",{scene->requireNavigationScene(scene).push(ScaleAlphaAnimScene::class.java)}),
+    DoubleRecycler(9,"双RecyclerView分发",{scene->requireNavigationScene(scene).push(FloatRecyclerScene::class.java)}),
+    Transition(10,"Transition动画",{scene->requireNavigationScene(scene).push(TransitionScene::class.java)})
+}
+

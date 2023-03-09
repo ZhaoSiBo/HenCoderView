@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.bytedance.scene.ktx.requireFragmentActivity
 import com.bytedance.scene.ui.template.AppCompatScene
@@ -19,7 +18,7 @@ import com.starts.hencoderview.ui.EmptyFragment
  *版本号：1.0
 
  */
-class ViewPagerTestScene : AppCompatScene() {
+class FragmentTestScene : AppCompatScene() {
 
 
     var f1: Fragment? = null

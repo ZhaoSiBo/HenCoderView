@@ -24,13 +24,13 @@ import com.zhpan.indicator.enums.IndicatorStyle
  */
 class WaveViewScene : AppCompatScene() {
     lateinit var binding: SceneWaveViewBinding
- 
+
     private val bannerAdapter = ViewPager2LoopAdapter()
 
-    lateinit var banner:BannerViewPager<String , ViewPager2LoopViewHolder>
+    private lateinit var banner: BannerViewPager<String, ViewPager2LoopViewHolder>
 
 
-    val imageList = arrayListOf(
+    private val imageList = arrayListOf(
         "https://pic2.zhimg.com/80/v2-f6466210c615e67f70cb8c1f4bf4621f_720w.jpg?source=1940ef5c",
         "https://pic2.zhimg.com/80/v2-40a15ca300e5c32eb58bab6b54614cd8_720w.jpg?source=1940ef5c",
         "https://pic1.zhimg.com/80/v2-c3e869051a97652c5cd0289e8a9005a4_720w.jpg?source=1940ef5c",
@@ -45,9 +45,9 @@ class WaveViewScene : AppCompatScene() {
         inflater: LayoutInflater,
         container: ViewGroup,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = SceneWaveViewBinding.inflate(inflater)
-        banner = binding.banner as BannerViewPager<String , ViewPager2LoopViewHolder>
+        banner = binding.banner as BannerViewPager<String, ViewPager2LoopViewHolder>
         return binding.root
     }
 
@@ -70,7 +70,6 @@ class WaveViewScene : AppCompatScene() {
         }.create(imageList)
         binding.waveView.bindViewPager(banner)
     }
-
 
 
 }

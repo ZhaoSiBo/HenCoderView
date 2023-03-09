@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.bytedance.scene.ktx.requireFragmentActivity
 import com.bytedance.scene.ui.template.AppCompatScene
-import com.google.android.material.tabs.TabLayoutMediator
 import com.starts.hencoderview.container.MovieDetailContainer
 import com.starts.hencoderview.ui.ListFragment
 import com.starts.hencoderview.view.ColoredTextView
@@ -23,7 +22,7 @@ import com.starts.hencoderview.view.ColoredTextView
  *版本号：1.0
 
  */
-class MovieDetailScene : AppCompatScene() {
+class FloatRecyclerScene : AppCompatScene() {
     lateinit var binding: MovieDetailContainer
     override fun onCreateContentView(
         inflater: LayoutInflater,
