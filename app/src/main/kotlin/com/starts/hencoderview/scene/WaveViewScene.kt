@@ -1,4 +1,4 @@
-package com.starts.hencoderview
+package com.starts.hencoderview.scene
 
 import android.graphics.Color
 import android.os.Bundle

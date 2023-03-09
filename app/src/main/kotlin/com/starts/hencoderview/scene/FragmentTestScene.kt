@@ -1,4 +1,4 @@
-package com.starts.hencoderview
+package com.starts.hencoderview.scene
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -30,7 +30,7 @@ class FragmentTestScene : AppCompatScene() {
         inflater: LayoutInflater,
         container: ViewGroup,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = SceneViewpagerTestBinding.inflate(inflater)
         return binding.root
 //        return inflater.inflate(R.layout.scene_viewpager_test,null)

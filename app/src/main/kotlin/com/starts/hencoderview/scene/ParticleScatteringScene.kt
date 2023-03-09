@@ -1,4 +1,4 @@
-package com.starts.hencoderview
+package com.starts.hencoderview.scene
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -24,7 +24,7 @@ class ParticleScatteringScene: AppCompatScene() {
         inflater: LayoutInflater,
         container: ViewGroup,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = SceneParticleScatteringBinding.inflate(inflater)
         return binding.root
     }

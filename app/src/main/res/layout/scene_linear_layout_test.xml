@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.starts.hencoderview.view.TestLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <com.starts.hencoderview.view.TestLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/blue_300"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/red_300" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/orange_300" />
+
+
+    </com.starts.hencoderview.view.TestLinearLayout>
+
+    <com.starts.hencoderview.view.TestLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/blue_grey_300"
+        android:orientation="horizontal">
+
+    </com.starts.hencoderview.view.TestLinearLayout>
+
+</com.starts.hencoderview.view.TestLinearLayout>

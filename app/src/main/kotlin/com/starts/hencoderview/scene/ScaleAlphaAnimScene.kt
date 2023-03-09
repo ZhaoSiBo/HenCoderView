@@ -1,4 +1,4 @@
-package com.starts.hencoderview
+package com.starts.hencoderview.scene
 
 import android.animation.Animator
 import android.animation.AnimatorSet
@@ -27,7 +27,7 @@ class ScaleAlphaAnimScene : AppCompatScene() {
         inflater: LayoutInflater,
         container: ViewGroup,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = SceneScaleAlphaBinding.inflate(inflater)
         return binding.root
     }

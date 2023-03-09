@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.starts.hencoderview.InnerAdapter
+import com.starts.hencoderview.scene.InnerAdapter
 
 /**
 

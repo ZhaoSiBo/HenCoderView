@@ -1,4 +1,4 @@
-package com.starts.hencoderview
+package com.starts.hencoderview.scene
 
 import android.animation.Animator
 import android.animation.ObjectAnimator
@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
 import android.widget.SeekBar
 import com.bytedance.scene.ui.template.AppCompatScene
+import com.starts.hencoderview.R
 import com.starts.hencoderview.view.SportView
 
 /**
@@ -27,7 +28,7 @@ class SportScene : AppCompatScene() {
         inflater: LayoutInflater,
         container: ViewGroup,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val view = inflater.inflate(R.layout.scene_sport_view, null, false)
         sportView = view.findViewById(R.id.sportView)
         seekBar = view.findViewById(R.id.seekBar)

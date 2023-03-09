@@ -1,4 +1,4 @@
-package com.starts.hencoderview
+package com.starts.hencoderview.scene
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.bytedance.scene.ktx.requireFragmentActivity
 import com.bytedance.scene.ui.template.AppCompatScene
+import com.starts.hencoderview.R
 import com.starts.hencoderview.container.MovieDetailContainer
 import com.starts.hencoderview.ui.ListFragment
 import com.starts.hencoderview.view.ColoredTextView

@@ -1,4 +1,4 @@
-package com.starts.hencoderview
+package com.starts.hencoderview.scene
 
 import android.animation.Animator
 import android.animation.AnimatorSet
@@ -11,6 +11,7 @@ import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import android.widget.SeekBar
 import com.bytedance.scene.ui.template.AppCompatScene
+import com.starts.hencoderview.R
 import com.starts.hencoderview.view.FlipBoardView
 
 
@@ -29,7 +30,7 @@ class FlipBoardScene : AppCompatScene() {
         inflater: LayoutInflater,
         container: ViewGroup,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         val view = inflater.inflate(R.layout.scene_flip_bord_view, null, false)
         flipView = view.findViewById(R.id.flipView)
         seekRotate = view.findViewById(R.id.seekRotate)

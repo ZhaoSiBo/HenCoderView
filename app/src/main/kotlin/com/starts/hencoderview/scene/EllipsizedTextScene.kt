@@ -1,4 +1,4 @@
-package com.starts.hencoderview
+package com.starts.hencoderview.scene
 
 import android.graphics.Color
 import android.os.Bundle
@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bytedance.scene.ui.template.AppCompatScene
+import com.starts.hencoderview.R
 import com.starts.hencoderview.databinding.SceneEllipsizedTextBinding
 import com.starts.hencoderview.util.sp
 
@@ -35,7 +36,7 @@ class EllipsizedTextScene : AppCompatScene() {
         inflater: LayoutInflater,
         container: ViewGroup,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = SceneEllipsizedTextBinding.inflate(inflater)
         return binding.root
     }

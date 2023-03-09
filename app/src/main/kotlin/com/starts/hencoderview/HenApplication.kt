@@ -1,6 +1,7 @@
 package com.starts.hencoderview
 
 import android.app.Application
+import timber.log.Timber
 import kotlin.properties.Delegates
 
 /**
@@ -19,6 +20,7 @@ class HenApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         instance = this
+        Timber.plant(Timber.DebugTree())
     }
 
 }
