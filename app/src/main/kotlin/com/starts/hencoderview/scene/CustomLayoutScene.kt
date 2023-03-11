@@ -5,11 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bytedance.scene.ui.template.AppCompatScene
+import com.starts.hencoderview.util.ARGUMENTS_STRING_TITLE
 import com.starts.hencoderview.view.TestViewLayout
 import com.starts.hencoderview.view.matchParent
 
 class CustomLayoutScene : AppCompatScene() {
-    private lateinit var rootView : TestViewLayout
+    private lateinit var rootView: TestViewLayout
     override fun onCreateContentView(p0: LayoutInflater, p1: ViewGroup, p2: Bundle?): View {
         rootView = TestViewLayout(p1.context).apply {
             layoutParams = ViewGroup.LayoutParams(matchParent, matchParent)
@@ -19,8 +20,11 @@ class CustomLayoutScene : AppCompatScene() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        setTitle("CustomViewGroupScene")
+        setTitle(requireArguments().getString(ARGUMENTS_STRING_TITLE))
         setToolbarVisible(true)
-        rootView.leftTv.postDelayed({rootView.leftTv.text = "我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，"},4000)
+        rootView.leftTv.postDelayed({
+            rootView.leftTv.text =
+                "我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，"
+        }, 4000)
     }
 }

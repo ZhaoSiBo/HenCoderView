@@ -59,3 +59,5 @@ fun ViewGroup.findFirst(recursively: Boolean, predict: (View) -> Boolean): View?
     }
     return null
 }
+
+const val  ARGUMENTS_STRING_TITLE = "ARGUMENTS_STRING_TITLE"

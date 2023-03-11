@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.bytedance.scene.ui.template.AppCompatScene
 import com.starts.hencoderview.R
+import com.starts.hencoderview.util.ARGUMENTS_STRING_TITLE
 
 /**
 
@@ -25,7 +26,8 @@ class ScaleImageScene :AppCompatScene() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        setTitle("ScaleImageView")
+        setTitle(requireArguments().getString(ARGUMENTS_STRING_TITLE))
+
     }
 
 }

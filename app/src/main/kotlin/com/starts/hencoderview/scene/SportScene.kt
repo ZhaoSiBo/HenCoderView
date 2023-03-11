@@ -10,6 +10,7 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.SeekBar
 import com.bytedance.scene.ui.template.AppCompatScene
 import com.starts.hencoderview.R
+import com.starts.hencoderview.util.ARGUMENTS_STRING_TITLE
 import com.starts.hencoderview.view.SportView
 
 /**
@@ -39,7 +40,7 @@ class SportScene : AppCompatScene() {
         super.onActivityCreated(savedInstanceState)
         setToolbarVisible(true)
         setStatusBarVisible(true)
-        setTitle("SportView")
+        setTitle(requireArguments().getString(ARGUMENTS_STRING_TITLE))
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 //            requireActivity().window.decorView.systemUiVisibility =
 //                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR

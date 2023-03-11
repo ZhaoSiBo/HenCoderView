@@ -13,6 +13,7 @@ import android.view.animation.DecelerateInterpolator
 import android.view.animation.LinearInterpolator
 import com.bytedance.scene.ui.template.AppCompatScene
 import com.starts.hencoderview.databinding.SceneScaleAlphaBinding
+import com.starts.hencoderview.util.ARGUMENTS_STRING_TITLE
 
 /**
 
@@ -36,7 +37,7 @@ class ScaleAlphaAnimScene : AppCompatScene() {
         super.onActivityCreated(savedInstanceState)
         setStatusBarVisible(true)
         setToolbarVisible(true)
-        setTitle("ScaleAlphaAnim")
+        setTitle(requireArguments().getString(ARGUMENTS_STRING_TITLE))
         startScaleAnimation(binding.view)
     }
 

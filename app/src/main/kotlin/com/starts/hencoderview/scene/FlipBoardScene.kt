@@ -12,6 +12,7 @@ import android.view.animation.LinearInterpolator
 import android.widget.SeekBar
 import com.bytedance.scene.ui.template.AppCompatScene
 import com.starts.hencoderview.R
+import com.starts.hencoderview.util.ARGUMENTS_STRING_TITLE
 import com.starts.hencoderview.view.FlipBoardView
 
 
@@ -42,8 +43,7 @@ class FlipBoardScene : AppCompatScene() {
         super.onActivityCreated(savedInstanceState)
         setToolbarVisible(true)
         setStatusBarVisible(true)
-        setTitle("FlipBoardView")
-
+        setTitle(requireArguments().getString(ARGUMENTS_STRING_TITLE))
 
         val cameraAnimator = ObjectAnimator.ofFloat(flipView, "cameraAngle", 0f, 45f)
         cameraAnimator.interpolator = LinearInterpolator()
@@ -97,8 +97,5 @@ class FlipBoardScene : AppCompatScene() {
             }
 
         })
-
-
-
     }
 }

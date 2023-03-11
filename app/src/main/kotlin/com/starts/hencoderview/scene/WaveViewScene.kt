@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.bytedance.scene.ui.template.AppCompatScene
 import com.starts.hencoderview.databinding.SceneWaveViewBinding
 import com.starts.hencoderview.ui.ScalePageTransformer
+import com.starts.hencoderview.util.ARGUMENTS_STRING_TITLE
 import com.starts.hencoderview.util.dp2px
 import com.starts.hencoderview.view.ViewPager2LoopAdapter
 import com.starts.hencoderview.view.ViewPager2LoopViewHolder
@@ -53,7 +54,7 @@ class WaveViewScene : AppCompatScene() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        setTitle("WaveView")
+        setTitle(requireArguments().getString(ARGUMENTS_STRING_TITLE))
 
         banner.apply {
             adapter = bannerAdapter

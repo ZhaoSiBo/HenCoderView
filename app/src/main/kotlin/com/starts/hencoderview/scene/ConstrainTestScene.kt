@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import com.bytedance.scene.ui.template.AppCompatScene
 import com.starts.hencoderview.databinding.SceneConstraintLayoutTestBinding
+import com.starts.hencoderview.util.ARGUMENTS_STRING_TITLE
 import timber.log.Timber
 
 class ConstrainTestScene : AppCompatScene() {
@@ -27,7 +28,7 @@ class ConstrainTestScene : AppCompatScene() {
     @SuppressLint("SetTextI18n")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        setTitle("LinearTestScene")
+        setTitle(requireArguments().getString(ARGUMENTS_STRING_TITLE))
         binding.tvShort.postDelayed({binding.tvShort.text = "我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，"},4000)
     }
 

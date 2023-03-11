@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import com.bytedance.scene.ui.template.AppCompatScene
 import com.starts.hencoderview.databinding.SceneParticleScatteringBinding
 import com.starts.hencoderview.databinding.SceneViewpagerTestBinding
+import com.starts.hencoderview.util.ARGUMENTS_STRING_TITLE
 
 /**
 
@@ -31,7 +32,8 @@ class ParticleScatteringScene: AppCompatScene() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        setTitle("ParticleScatteringView")
+        setTitle(requireArguments().getString(ARGUMENTS_STRING_TITLE))
+
 
 
     }

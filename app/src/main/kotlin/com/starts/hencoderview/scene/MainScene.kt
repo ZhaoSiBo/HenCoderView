@@ -19,6 +19,7 @@ import com.bytedance.scene.navigation.NavigationSceneGetter.requireNavigationSce
 import com.bytedance.scene.ui.template.AppCompatScene
 import com.starts.hencoderview.R
 import com.starts.hencoderview.databinding.ActivityMainBinding
+import com.starts.hencoderview.util.ARGUMENTS_STRING_TITLE
 import com.starts.hencoderview.util.dp2px
 import timber.log.Timber
 
@@ -39,14 +40,16 @@ class MainScene : AppCompatScene() {
         binding = ActivityMainBinding.inflate(inflater)
         return binding.root
     }
+
     @RequiresApi(Build.VERSION_CODES.N)
-    val onFrameMetricsAvailableListener = (Window.OnFrameMetricsAvailableListener { window, frameMetrics, dropCountSinceLastInvocation ->
-        val frameMetricsCopy = FrameMetrics(frameMetrics);
-        val layoutMeasureDurationNs =
-            frameMetricsCopy.getMetric(FrameMetrics.LAYOUT_MEASURE_DURATION);
-        Timber.tag("OnFrameMetricsAvailable")
-            .d("layoutMeasureDurationNs = $layoutMeasureDurationNs")
-    })
+    val onFrameMetricsAvailableListener =
+        (Window.OnFrameMetricsAvailableListener { window, frameMetrics, dropCountSinceLastInvocation ->
+            val frameMetricsCopy = FrameMetrics(frameMetrics);
+            val layoutMeasureDurationNs =
+                frameMetricsCopy.getMetric(FrameMetrics.LAYOUT_MEASURE_DURATION);
+            Timber.tag("OnFrameMetricsAvailable")
+                .d("layoutMeasureDurationNs = $layoutMeasureDurationNs")
+        })
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -71,7 +74,6 @@ class MainScene : AppCompatScene() {
             }
         })
         binding.rvCard.adapter = MainAdapter(array, this)
-
 //        requireActivity().window.addOnFrameMetricsAvailableListener(onFrameMetricsAvailableListener,Handler(Looper.getMainLooper()))
 
     }
@@ -115,20 +117,69 @@ class MainHolder(val itemRoot: AppCompatButton) : RecyclerView.ViewHolder(itemRo
 enum class MainCard(val content: String, val onItemClick: ((Scene) -> Unit)? = null) {
     Sport(
         "环形进度条",
-        { scene -> requireNavigationScene(scene).push(SportScene::class.java) }),
+        { scene ->
+            requireNavigationScene(scene).push(SportScene::class.java, Bundle().apply {
+                this.putString(ARGUMENTS_STRING_TITLE, "环形进度条")
+            })
+        }),
     FlipBoard(
-        "FlipBoard", { scene -> requireNavigationScene(scene).push(FlipBoardScene::class.java) }),
+        "FlipBoard", { scene ->
+            requireNavigationScene(scene).push(FlipBoardScene::class.java,
+                Bundle().apply {
+                    this.putString(ARGUMENTS_STRING_TITLE, "FlipBoard")
+                })
+        }),
     TagLayout(
-        "TagLayout", { scene -> requireNavigationScene(scene).push(TagLayoutScene::class.java) }),
+        "TagLayout", { scene ->
+            requireNavigationScene(scene).push(TagLayoutScene::class.java,
+                Bundle().apply {
+                    this.putString(
+                        ARGUMENTS_STRING_TITLE,
+                        "TagLayout"
+                    )
+                })
+        }),
     ScaleImage(
-        "ScaleImage", { scene -> requireNavigationScene(scene).push(ScaleImageScene::class.java) }),
+        "ScaleImage", { scene ->
+            requireNavigationScene(scene).push(ScaleImageScene::class.java,
+                Bundle().apply {
+                    this.putString(
+                        ARGUMENTS_STRING_TITLE,
+                        "ScaleImage"
+                    )
+                })
+        }),
     FragmentTest(
         "FragmentTest",
-        { scene -> requireNavigationScene(scene).push(FragmentTestScene::class.java) }),
+        { scene ->
+            requireNavigationScene(scene).push(FragmentTestScene::class.java, android.os.Bundle()
+                .apply {
+                    this.putString(
+                        ARGUMENTS_STRING_TITLE,
+                        "FragmentTest"
+                    )
+                })
+        }),
     Particle("粒子消散",
-        { scene -> requireNavigationScene(scene).push(ParticleScatteringScene::class.java) }),
+        { scene ->
+            requireNavigationScene(scene).push(ParticleScatteringScene::class.java,
+                Bundle().apply {
+                    this.putString(
+                        ARGUMENTS_STRING_TITLE,
+                        "粒子消散"
+                    )
+                })
+        }),
     WaveView("WaveView",
-        { scene -> requireNavigationScene(scene).push(WaveViewScene::class.java) }),
+        { scene ->
+            requireNavigationScene(scene).push(WaveViewScene::class.java,
+                Bundle().apply {
+                    this.putString(
+                        ARGUMENTS_STRING_TITLE,
+                        "WaveView"
+                    )
+                })
+        }),
     MemoryLeak("内存泄漏", { scene ->
         val intent = Intent(
             scene.requireActivity(), com.starts.hencoderview.ui.MemoryLeakActivity::class.java
@@ -136,24 +187,63 @@ enum class MainCard(val content: String, val onItemClick: ((Scene) -> Unit)? = n
         scene.requireActivity().startActivity(intent)
     }),
     ScaleAlpha("呼吸放大",
-        { scene -> requireNavigationScene(scene).push(ScaleAlphaAnimScene::class.java) }),
+        { scene ->
+            requireNavigationScene(scene).push(ScaleAlphaAnimScene::class.java,
+                Bundle().apply {
+                    this.putString(
+                        ARGUMENTS_STRING_TITLE,
+                        "呼吸放大"
+                    )
+                })
+        }),
     DoubleRecycler("双RecyclerView分发",
-        { scene -> requireNavigationScene(scene).push(FloatRecyclerScene::class.java) }),
+        { scene ->
+            requireNavigationScene(scene).push(FloatRecyclerScene::class.java,
+                Bundle().apply {
+                    this.putString(
+                        ARGUMENTS_STRING_TITLE,
+                        "双RecyclerView分发"
+                    )
+                })
+        }),
     Transition("Transition动画",
-        { scene -> requireNavigationScene(scene).push(TransitionScene::class.java) }),
+        { scene ->
+            requireNavigationScene(scene).push(TransitionScene::class.java,
+                Bundle().apply {
+                    this.putString(
+                        ARGUMENTS_STRING_TITLE,
+                        "Transition动画"
+                    )
+                })
+        }),
     LinearLayoutTest("LinearLayoutTest", { scene ->
         requireNavigationScene(scene).push(
-            LinearTestScene::class.java
+            LinearTestScene::class.java,
+            Bundle().apply {
+                this.putString(
+                    ARGUMENTS_STRING_TITLE,
+                    "LinearLayoutTest"
+                )
+            }
         )
     }),
     ConstrainLayoutTest("ConstrainLayoutTest", { scene ->
         requireNavigationScene(scene).push(
-            ConstrainTestScene::class.java
+            ConstrainTestScene::class.java,
+            Bundle().apply {
+                this.putString(ARGUMENTS_STRING_TITLE, "ConstrainLayoutTest")
+            }
         )
     }),
     CustomGroupTest("CustomLayoutTest", { scene ->
         requireNavigationScene(scene).push(
-            CustomLayoutScene::class.java
+            CustomLayoutScene::class.java,
+            Bundle().apply {
+                this.putString(
+                    ARGUMENTS_STRING_TITLE,
+                    "CustomLayoutTest"
+                )
+            }
         )
     }),
 }

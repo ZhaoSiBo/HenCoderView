@@ -14,6 +14,7 @@ import com.bytedance.scene.ui.template.AppCompatScene
 import com.starts.hencoderview.R
 import com.starts.hencoderview.container.MovieDetailContainer
 import com.starts.hencoderview.ui.ListFragment
+import com.starts.hencoderview.util.ARGUMENTS_STRING_TITLE
 import com.starts.hencoderview.view.ColoredTextView
 
 /**
@@ -37,6 +38,8 @@ class FloatRecyclerScene : AppCompatScene() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setToolbarVisible(false)
+        setStatusBarVisible(false)
+        setTitle(requireArguments().getString(ARGUMENTS_STRING_TITLE))
         val data = arrayListOf("第一个","2000","346","50000","2000","346","50000","2000","346","50000","2000","346","50000","2000","346","50000","2000","346","50000","最后3个","最后2个","最后一个")
         val adapter = InnerAdapter(data)
         binding.topRecyclerView .adapter = adapter
@@ -57,7 +60,6 @@ class FloatRecyclerScene : AppCompatScene() {
 //        TabLayoutMediator(binding.bottomSheetLayout.bottomTabLayout,binding.bottomSheetLayout.bottomViewPager){tab,positon->
 //            tab.text = titles[positon]
 //        }.attach()
-        setStatusBarVisible(false)
     }
 }
 

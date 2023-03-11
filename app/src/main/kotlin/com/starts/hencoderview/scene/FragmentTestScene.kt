@@ -10,6 +10,7 @@ import com.bytedance.scene.ktx.requireFragmentActivity
 import com.bytedance.scene.ui.template.AppCompatScene
 import com.starts.hencoderview.databinding.SceneViewpagerTestBinding
 import com.starts.hencoderview.ui.EmptyFragment
+import com.starts.hencoderview.util.ARGUMENTS_STRING_TITLE
 
 /**
 
@@ -38,7 +39,7 @@ class FragmentTestScene : AppCompatScene() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        setTitle("Viewpager测试")
+        setTitle(requireArguments().getString(ARGUMENTS_STRING_TITLE))
         val fragments = arrayListOf<Fragment>(EmptyFragment(),EmptyFragment(),EmptyFragment(),EmptyFragment(),EmptyFragment())
         binding.bt1.setOnClickListener {
             val b = requireFragmentActivity().supportFragmentManager.beginTransaction()

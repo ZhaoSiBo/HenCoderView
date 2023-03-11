@@ -8,6 +8,7 @@ import androidx.transition.Scene
 import androidx.transition.TransitionManager
 import com.bytedance.scene.ui.template.AppCompatScene
 import com.starts.hencoderview.container.CustomLayout
+import com.starts.hencoderview.util.ARGUMENTS_STRING_TITLE
 import com.starts.hencoderview.util.getScreenWidth
 import com.starts.hencoderview.view.TransitionLayout
 
@@ -26,7 +27,7 @@ class TransitionScene : AppCompatScene() {
         super.onViewCreated(view, savedInstanceState)
         setToolbarVisible(true)
         setStatusBarVisible(true)
-        setTitle("TransitionScene")
+        setTitle(requireArguments().getString(ARGUMENTS_STRING_TITLE))
         rootView.button.setOnClickListener {
             val scene2 = Scene(rootView)
             val manager = TransitionManager()
