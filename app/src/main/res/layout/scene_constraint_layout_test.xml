@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.starts.hencoderview.view.TestConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <com.starts.hencoderview.view.TestTextView
+        android:id="@+id/tv1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="40dp"
+        android:background="@color/blue_300"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/tv2"
+        />
+
+    <com.starts.hencoderview.view.TestTextView
+        android:id="@+id/tv2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="40dp"
+        android:background="@color/blue_grey_300"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv1"
+        />
+
+
+    <com.starts.hencoderview.view.TestTextView
+        android:id="@+id/tvShort"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/red_300"
+        android:padding="20dp"
+        android:text="现在我是个短文字"
+        app:layout_constraintBottom_toBottomOf="@+id/tv1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/tvRight"
+        app:layout_constraintTop_toTopOf="@+id/tv1" />
+
+    <com.starts.hencoderview.view.TestTextView
+        android:id="@+id/tvRight"
+        android:layout_width="0dp"
+        android:layout_height="120dp"
+        android:padding="20dp"
+        android:background="@color/orange_300"
+        app:layout_constraintBottom_toBottomOf="@+id/tv1"
+        app:layout_constraintTop_toTopOf="@+id/tv1"
+        app:layout_constraintLeft_toRightOf="@+id/tvShort"
+        app:layout_constraintRight_toRightOf="parent"
+        />
+
+
+</com.starts.hencoderview.view.TestConstraintLayout>

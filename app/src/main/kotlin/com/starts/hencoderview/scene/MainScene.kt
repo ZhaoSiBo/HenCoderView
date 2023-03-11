@@ -3,10 +3,12 @@ package com.starts.hencoderview.scene
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Rect
+import android.os.Build
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.os.Handler
+import android.os.Looper
+import android.view.*
+import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatButton
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
@@ -18,6 +20,7 @@ import com.bytedance.scene.ui.template.AppCompatScene
 import com.starts.hencoderview.R
 import com.starts.hencoderview.databinding.ActivityMainBinding
 import com.starts.hencoderview.util.dp2px
+import timber.log.Timber
 
 
 /**
@@ -36,7 +39,16 @@ class MainScene : AppCompatScene() {
         binding = ActivityMainBinding.inflate(inflater)
         return binding.root
     }
+    @RequiresApi(Build.VERSION_CODES.N)
+    val onFrameMetricsAvailableListener = (Window.OnFrameMetricsAvailableListener { window, frameMetrics, dropCountSinceLastInvocation ->
+        val frameMetricsCopy = FrameMetrics(frameMetrics);
+        val layoutMeasureDurationNs =
+            frameMetricsCopy.getMetric(FrameMetrics.LAYOUT_MEASURE_DURATION);
+        Timber.tag("OnFrameMetricsAvailable")
+            .d("layoutMeasureDurationNs = $layoutMeasureDurationNs")
+    })
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setTitle("HenCoderView")
@@ -52,11 +64,25 @@ class MainScene : AppCompatScene() {
                 outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State
             ) {
                 super.getItemOffsets(outRect, view, parent, state)
+                if (parent.getChildLayoutPosition(view) % 3 == 0) {
+                    outRect.left += dp2px(12)
+                }
                 outRect.top += dp2px(12)
             }
         })
         binding.rvCard.adapter = MainAdapter(array, this)
+
+//        requireActivity().window.addOnFrameMetricsAvailableListener(onFrameMetricsAvailableListener,Handler(Looper.getMainLooper()))
+
     }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    override fun onDestroyView() {
+//        requireActivity().window.removeOnFrameMetricsAvailableListener(onFrameMetricsAvailableListener)
+        super.onDestroyView()
+
+    }
+
 }
 
 class MainAdapter(private val data: ArrayList<MainCard>, val scene: Scene) :
@@ -119,6 +145,16 @@ enum class MainCard(val content: String, val onItemClick: ((Scene) -> Unit)? = n
         requireNavigationScene(scene).push(
             LinearTestScene::class.java
         )
-    })
+    }),
+    ConstrainLayoutTest("ConstrainLayoutTest", { scene ->
+        requireNavigationScene(scene).push(
+            ConstrainTestScene::class.java
+        )
+    }),
+    CustomGroupTest("CustomLayoutTest", { scene ->
+        requireNavigationScene(scene).push(
+            CustomLayoutScene::class.java
+        )
+    }),
 }
 

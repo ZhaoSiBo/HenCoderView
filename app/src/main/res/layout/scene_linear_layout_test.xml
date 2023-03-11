@@ -25,6 +25,7 @@
             android:background="@color/red_300" />
 
         <com.starts.hencoderview.view.TestTextView
+            android:id="@+id/tvRight"
             android:layout_width="0dp"
             android:layout_height="120dp"
             android:layout_weight="1"

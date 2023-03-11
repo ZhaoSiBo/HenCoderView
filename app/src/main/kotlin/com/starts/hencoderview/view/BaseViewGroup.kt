@@ -6,6 +6,10 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 
+fun Int.toExactlyMeasureSpace(): Int {
+    return View.MeasureSpec.makeMeasureSpec(this, View.MeasureSpec.EXACTLY)
+}
+
 /**
  *  文件描述：.业务中，经常遇到，根据业务的数据值，或有或无，来控制UI的显示隐藏，位置上下，使用自定义ViewGroup来实现这种效果
  *  也为了更好的空安全
@@ -20,8 +24,8 @@ abstract class BaseViewGroup : ViewGroup {
 
     protected fun View.autoMeasure() {
         measure(
-                this.defaultWithMeasureSpace(this@BaseViewGroup),
-                this.defaultHeightMeasureSpace(this@BaseViewGroup)
+            this.defaultWithMeasureSpace(this@BaseViewGroup),
+            this.defaultHeightMeasureSpace(this@BaseViewGroup)
         )
     }
 
@@ -33,10 +37,6 @@ abstract class BaseViewGroup : ViewGroup {
         }
     }
 
-}
-
-fun Int.toExactlyMeasureSpace(): Int {
-    return View.MeasureSpec.makeMeasureSpec(this, View.MeasureSpec.EXACTLY)
 }
 
 fun Int.toAtMostMeasureSpace(): Int {
