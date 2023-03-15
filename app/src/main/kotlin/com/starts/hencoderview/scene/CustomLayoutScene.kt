@@ -8,13 +8,12 @@ import com.bytedance.scene.ui.template.AppCompatScene
 import com.starts.hencoderview.util.ARGUMENTS_STRING_TITLE
 import com.starts.hencoderview.view.TestViewLayout
 import com.starts.hencoderview.view.matchParent
+import com.starts.hencoderview.view.wrapContent
 
 class CustomLayoutScene : AppCompatScene() {
     private lateinit var rootView: TestViewLayout
     override fun onCreateContentView(p0: LayoutInflater, p1: ViewGroup, p2: Bundle?): View {
-        rootView = TestViewLayout(p1.context).apply {
-            layoutParams = ViewGroup.LayoutParams(matchParent, matchParent)
-        }
+        rootView = TestViewLayout(p1.context)
         return rootView
     }
 
@@ -24,7 +23,7 @@ class CustomLayoutScene : AppCompatScene() {
         setToolbarVisible(true)
         rootView.leftTv.postDelayed({
             rootView.leftTv.text =
-                "我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，"
+                "我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字，我是长文字"
         }, 4000)
     }
 }

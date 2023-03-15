@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">HenCoderView</string>
+    <string name="introduce">在Android界面的展示中，我们常见工作流程是在xml写好布局文件，之后在Activity或者fragment中展示一个UI界面， 画面需要经
+过xml解析，之后window要通过setView方法实际构造各个View对象，并且按照层级排列好，之后Android系统再找到合适
+的时机，触发measure，layout，draw这一流程，但是随着布局嵌套的加深，xml的解析越来越复杂，测绘的次数会逐步提高，逐渐到
+达失控的地步。那么，需要一种方式可以一次性解决这个问题，让我们的布局不再需要多次测量来确定自己的宽高，答案就是完全自己
+接管ViewGroup的onMeasure，onLayout过程</string>
 </resources>

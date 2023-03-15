@@ -7,7 +7,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.setPadding
 import com.starts.hencoderview.R
 
-class TestViewLayout : CustomLayout {
+class TestViewLayout(context: Context) : CustomLayout(context) {
 
     private val topBg = TestTextView(context).apply {
         this.layoutParams = LayoutParams(matchParent, matchParent)
@@ -39,14 +39,6 @@ class TestViewLayout : CustomLayout {
         setBackgroundColor(Color.WHITE)
     }
 
-    constructor(context: Context?) : super(context)
-    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs)
-    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(
-        context,
-        attrs,
-        defStyleAttr
-    )
-
     override fun onMeasureChildren(widthMeasureSpec: Int, heightMeasureSpec: Int): Dimension {
         topBg.measure(
             widthMeasureSpec,
@@ -64,6 +56,7 @@ class TestViewLayout : CustomLayout {
             (MeasureSpec.getSize(widthMeasureSpec) / 2).toExactlyMeasureSpec(),
             MeasureSpec.getSize(heightMeasureSpec).toAtMostMeasureSpec()
         )
+
         return Dimension(widthMeasureSpec, heightMeasureSpec)
     }
 

@@ -68,7 +68,7 @@ abstract class CustomLayout : ViewGroup {
     protected fun View.defaultWidthMeasureSpec(parentView: ViewGroup): Int {
         return when (layoutParams.width) {
             ViewGroup.LayoutParams.MATCH_PARENT -> parentView.measuredWidth.toExactlyMeasureSpec()
-            ViewGroup.LayoutParams.WRAP_CONTENT -> Int.MAX_VALUE.toAtMostMeasureSpec()
+            ViewGroup.LayoutParams.WRAP_CONTENT -> ViewGroup.LayoutParams.WRAP_CONTENT.toAtMostMeasureSpec()
             0 -> throw IllegalAccessException("Need special treatment for $this")
             else -> layoutParams.width.toExactlyMeasureSpec()
         }
@@ -77,7 +77,7 @@ abstract class CustomLayout : ViewGroup {
     protected fun View.defaultHeightMeasureSpec(parentView: ViewGroup): Int {
         return when (layoutParams.height) {
             ViewGroup.LayoutParams.MATCH_PARENT -> parentView.measuredHeight.toExactlyMeasureSpec()
-            ViewGroup.LayoutParams.WRAP_CONTENT -> Int.MAX_VALUE.toAtMostMeasureSpec()
+            ViewGroup.LayoutParams.WRAP_CONTENT -> ViewGroup.LayoutParams.WRAP_CONTENT.toAtMostMeasureSpec()
             0 -> throw IllegalAccessException("Need special treatment for $this")
             else -> layoutParams.height.toExactlyMeasureSpec()
         }

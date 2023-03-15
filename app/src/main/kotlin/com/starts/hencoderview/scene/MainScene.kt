@@ -29,7 +29,6 @@ import timber.log.Timber
  *文件描述：.
  *作者：Created by Administrator on 2020/4/29.
  *版本号：1.0
-
  */
 class MainScene : AppCompatScene() {
     lateinit var binding: ActivityMainBinding
@@ -44,9 +43,9 @@ class MainScene : AppCompatScene() {
     @RequiresApi(Build.VERSION_CODES.N)
     val onFrameMetricsAvailableListener =
         (Window.OnFrameMetricsAvailableListener { window, frameMetrics, dropCountSinceLastInvocation ->
-            val frameMetricsCopy = FrameMetrics(frameMetrics);
+            val frameMetricsCopy = FrameMetrics(frameMetrics)
             val layoutMeasureDurationNs =
-                frameMetricsCopy.getMetric(FrameMetrics.LAYOUT_MEASURE_DURATION);
+                frameMetricsCopy.getMetric(FrameMetrics.LAYOUT_MEASURE_DURATION)
             Timber.tag("OnFrameMetricsAvailable")
                 .d("layoutMeasureDurationNs = $layoutMeasureDurationNs")
         })
@@ -74,15 +73,14 @@ class MainScene : AppCompatScene() {
             }
         })
         binding.rvCard.adapter = MainAdapter(array, this)
-//        requireActivity().window.addOnFrameMetricsAvailableListener(onFrameMetricsAvailableListener,Handler(Looper.getMainLooper()))
+        requireActivity().window.addOnFrameMetricsAvailableListener(onFrameMetricsAvailableListener,Handler(Looper.getMainLooper()))
 
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun onDestroyView() {
-//        requireActivity().window.removeOnFrameMetricsAvailableListener(onFrameMetricsAvailableListener)
+        requireActivity().window.removeOnFrameMetricsAvailableListener(onFrameMetricsAvailableListener)
         super.onDestroyView()
-
     }
 
 }
@@ -246,5 +244,26 @@ enum class MainCard(val content: String, val onItemClick: ((Scene) -> Unit)? = n
             }
         )
     }),
+    CustomUITest("CustomUITest", { scene ->
+        requireNavigationScene(scene).push(
+            CustomUIScene::class.java,
+            Bundle().apply {
+                this.putString(
+                    ARGUMENTS_STRING_TITLE,
+                    "CustomUITest"
+                )
+            }
+        )
+    }),ConstrainCompareTest("ConstrainCompareTest", { scene ->
+        requireNavigationScene(scene).push(
+            ConstrainCompareScene::class.java,
+            Bundle().apply {
+                this.putString(
+                    ARGUMENTS_STRING_TITLE,
+                    "ConstrainCompareTest"
+                )
+            }
+        )
+    })
 }
 
