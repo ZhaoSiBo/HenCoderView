@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:ignore="MissingDefaultResource">
+
+    <TextView
+        android:id="@+id/tvFirst"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:background="@color/pink_300"
+        android:gravity="center"
+        android:text="first"
+        android:textColor="@color/white"
+        android:visibility="visible"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintEnd_toStartOf="@+id/tvSecond"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/tvSecond"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:background="@color/colorPrimaryDark"
+        android:gravity="center"
+        android:text="second"
+        android:textColor="@color/white"
+        android:visibility="visible"
+        app:layout_constraintEnd_toStartOf="@+id/tvThird"
+        app:layout_constraintStart_toEndOf="@+id/tvFirst"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/tvThird"
+        android:layout_width="80dp"
+        android:layout_height="40dp"
+        android:background="@color/red_300"
+        android:gravity="center"
+        android:text="third"
+        android:textColor="@color/white"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tvSecond"
+        tools:ignore="MissingConstraints" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

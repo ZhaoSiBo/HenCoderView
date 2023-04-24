@@ -6,12 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import com.bytedance.scene.ui.template.AppCompatScene
+import com.starts.hencoderview.databinding.RelatelayoutUiTestBinding
 import com.starts.hencoderview.util.ARGUMENTS_STRING_TITLE
-import com.starts.hencoderview.view.CustomUITest
 import timber.log.Timber
 
-class CustomUIScene : AppCompatScene() {
-    lateinit var root: CustomUITest
+class RelateLayoutScene : AppCompatScene() {
+    lateinit  var binding : RelatelayoutUiTestBinding
     var firstDate = 0L
     var secondDate = 0L
     val preDraw = ViewTreeObserver.OnPreDrawListener {
@@ -21,11 +21,13 @@ class CustomUIScene : AppCompatScene() {
         Timber.tag("preDraw").d("result = $result")
         true
     }
+
+
     override fun onCreateContentView(p0: LayoutInflater, p1: ViewGroup, p2: Bundle?): View {
         firstDate = System.currentTimeMillis()
-        root = CustomUITest(context = p1.context)
-        root.viewTreeObserver.addOnPreDrawListener(preDraw)
-        return root
+        binding = RelatelayoutUiTestBinding.inflate(p0)
+        binding.root.viewTreeObserver.addOnPreDrawListener(preDraw)
+        return binding.root
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -35,9 +37,12 @@ class CustomUIScene : AppCompatScene() {
 
 
     override fun onDestroyView() {
-        root.viewTreeObserver.removeOnPreDrawListener(preDraw)
+        binding.root.viewTreeObserver.removeOnPreDrawListener(preDraw)
         super.onDestroyView()
 
     }
+
+
+
 
 }

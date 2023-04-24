@@ -5,4 +5,5 @@
 的时机，触发measure，layout，draw这一流程，但是随着布局嵌套的加深，xml的解析越来越复杂，测绘的次数会逐步提高，逐渐到
 达失控的地步。那么，需要一种方式可以一次性解决这个问题，让我们的布局不再需要多次测量来确定自己的宽高，答案就是完全自己
 接管ViewGroup的onMeasure，onLayout过程</string>
+    <string name="lorem_ipsum">As the sun began to set over the horizon, Mary sat on the edge of the pier and dangled her feet over the water. She had come to this spot every evening for the past week in an attempt to clear her mind and find some peace. As the sound of waves lapping against the pier filled her ears, Mary closed her eyes and took a deep breath in, allowing the salty air to fill her lungs. For a moment, she felt truly content and at ease, the worries of her everyday life fading away into the background. As the last rays of sunlight disappeared over the water, Mary stood up from the pier and walked back towards her car, feeling refreshed and ready to take on whatever challenges the next day may bring.</string>
 </resources>

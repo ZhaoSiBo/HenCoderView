@@ -44,7 +44,7 @@ class FlipBoardView(context: Context, attrs: AttributeSet) : View(context, attrs
         super.onSizeChanged(w, h, oldw, oldh)
         center = Point(w / 2, h / 2)
 
-        bitmap = BitmapFactory.decodeResource(context.resources, R.mipmap.fuliimage)
+        bitmap = BitmapFactory.decodeResource(context.resources, R.mipmap.red)
         srcRect = Rect(0, 0, bitmap.width, bitmap.height)
         radius = (bitmap.width) * sin(Math.toRadians(45.0))
     }

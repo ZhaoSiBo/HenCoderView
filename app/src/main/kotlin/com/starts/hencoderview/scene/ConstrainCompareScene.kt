@@ -17,7 +17,7 @@ class ConstrainCompareScene : AppCompatScene() {
         secondDate = System.currentTimeMillis()
         val result = secondDate - firstDate
         firstDate = secondDate
-        Timber.d("result = $result")
+        Timber.tag("preDraw").d("result = $result")
         true
     }
     lateinit var binding: ConstrainCompareLayoutBinding

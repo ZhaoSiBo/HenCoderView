@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+    Copyright 2017 Google Inc.
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+    -->
+<com.starts.hencoderview.view.TestConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.starts.hencoderview.view.TestImageView
+        android:id="@+id/header"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/singapore"
+        app:layout_constraintBottom_toBottomOf="@+id/favorite"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintLeft_toLeftOf="@+id/container"
+        app:layout_constraintRight_toRightOf="@+id/container"
+        app:layout_constraintTop_toTopOf="@+id/container"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <com.starts.hencoderview.view.TestImageView
+        android:id="@+id/favorite"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/info_background"
+        android:padding="5dp"
+        android:src="@drawable/ic_star"
+        app:layout_constraintBottom_toBottomOf="@+id/container"
+        app:layout_constraintRight_toRightOf="@+id/container"
+        app:layout_constraintTop_toTopOf="@+id/container"
+        app:layout_constraintVertical_bias="0.19" />
+
+    <com.starts.hencoderview.view.TestTextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="singapore"
+        android:textSize="24sp"
+        app:layout_constraintLeft_toLeftOf="@+id/container"
+        app:layout_constraintTop_toBottomOf="@+id/header" />
+
+    <com.starts.hencoderview.view.TestEditText
+        android:id="@+id/cameraType"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        android:text="camera_value"
+        app:layout_constraintLeft_toLeftOf="@+id/settings"
+        app:layout_constraintRight_toRightOf="@+id/settings"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
+
+    <com.starts.hencoderview.view.TestTextView
+        android:id="@+id/cameraLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:labelFor="@+id/cameraType"
+        android:text="camera"
+        app:layout_constraintBaseline_toBaselineOf="@+id/cameraType"
+        app:layout_constraintLeft_toLeftOf="@+id/container" />
+
+    <com.starts.hencoderview.view.TestTextView
+        android:id="@+id/settingsLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:labelFor="@+id/settings"
+        android:text="settings"
+        app:layout_constraintBaseline_toBaselineOf="@+id/settings"
+        app:layout_constraintLeft_toLeftOf="@+id/container" />
+
+    <com.starts.hencoderview.view.TestTextView
+        android:id="@+id/settings"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:minHeight="48dp"
+        android:text="camera_settings"
+        app:layout_constraintLeft_toRightOf="@+id/settingsLabel"
+        app:layout_constraintRight_toRightOf="@+id/description"
+        app:layout_constraintTop_toBottomOf="@+id/cameraType" />
+
+    <Button
+        android:id="@+id/upload"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="upload"
+        app:layout_constraintBottom_toBottomOf="@+id/container"
+        app:layout_constraintRight_toRightOf="@+id/container" />
+
+    <Button
+        android:id="@+id/discard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:elevation="0dp"
+        android:text="discard"
+        app:layout_constraintBaseline_toBaselineOf="@+id/upload"
+        app:layout_constraintRight_toLeftOf="@+id/upload" />
+
+    <com.starts.hencoderview.view.TestTextView
+        android:id="@+id/description"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:ellipsize="end"
+        android:fadingEdge="vertical"
+        android:text="singapore_description"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toTopOf="@+id/discard"
+        app:layout_constraintLeft_toLeftOf="@+id/container"
+        app:layout_constraintRight_toRightOf="@+id/container"
+        app:layout_constraintTop_toBottomOf="@+id/settings" />
+</com.starts.hencoderview.view.TestConstraintLayout>

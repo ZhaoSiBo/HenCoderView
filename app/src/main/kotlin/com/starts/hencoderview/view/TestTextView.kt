@@ -5,11 +5,13 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
+import androidx.core.content.ContextCompat
+import com.starts.hencoderview.R
 import timber.log.Timber
 
 class TestTextView :androidx.appcompat.widget.AppCompatTextView {
     val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-        color = Color.WHITE
+        color = ContextCompat.getColor(context, R.color.pink_300)
         textSize = 32f
     }
     var measureCount  = 0
@@ -28,7 +30,7 @@ class TestTextView :androidx.appcompat.widget.AppCompatTextView {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        canvas.drawText("measureCount = $measureCount" , 40f,40f,paint)
+        canvas.drawText("c=$measureCount" , 40f,40f,paint)
     }
 
 }

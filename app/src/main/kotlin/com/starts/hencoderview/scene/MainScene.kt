@@ -19,6 +19,7 @@ import com.bytedance.scene.navigation.NavigationSceneGetter.requireNavigationSce
 import com.bytedance.scene.ui.template.AppCompatScene
 import com.starts.hencoderview.R
 import com.starts.hencoderview.databinding.ActivityMainBinding
+import com.starts.hencoderview.databinding.RelatelayoutUiTestBinding
 import com.starts.hencoderview.util.ARGUMENTS_STRING_TITLE
 import com.starts.hencoderview.util.dp2px
 import timber.log.Timber
@@ -44,10 +45,10 @@ class MainScene : AppCompatScene() {
     val onFrameMetricsAvailableListener =
         (Window.OnFrameMetricsAvailableListener { window, frameMetrics, dropCountSinceLastInvocation ->
             val frameMetricsCopy = FrameMetrics(frameMetrics)
-            val layoutMeasureDurationNs =
-                frameMetricsCopy.getMetric(FrameMetrics.LAYOUT_MEASURE_DURATION)
+            val onMeasureAndLayout = frameMetricsCopy.getMetric(FrameMetrics.LAYOUT_MEASURE_DURATION) / 1000
+//            val transformations = frameMetricsCopy.getMetric(FrameMetrics.DRAW_DURATION) / 1000
             Timber.tag("OnFrameMetricsAvailable")
-                .d("layoutMeasureDurationNs = $layoutMeasureDurationNs")
+                .d("测绘布局时间 = $onMeasureAndLayout")
         })
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -261,6 +262,26 @@ enum class MainCard(val content: String, val onItemClick: ((Scene) -> Unit)? = n
                 this.putString(
                     ARGUMENTS_STRING_TITLE,
                     "ConstrainCompareTest"
+                )
+            }
+        )
+    }),RelateCompareTest("RelateCompareTest", { scene ->
+        requireNavigationScene(scene).push(
+            RelateLayoutScene::class.java,
+            Bundle().apply {
+                this.putString(
+                    ARGUMENTS_STRING_TITLE,
+                    "RelateCompareTest"
+                )
+            }
+        )
+    }),LinearCompareTest("LinearCompareTest", { scene ->
+        requireNavigationScene(scene).push(
+            LinearLayoutScene::class.java,
+            Bundle().apply {
+                this.putString(
+                    ARGUMENTS_STRING_TITLE,
+                    "LinearCompareTest"
                 )
             }
         )
