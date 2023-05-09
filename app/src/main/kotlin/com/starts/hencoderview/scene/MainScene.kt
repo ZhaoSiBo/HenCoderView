@@ -58,7 +58,7 @@ class MainScene : AppCompatScene() {
         setStatusBarVisible(true)
         setToolbarVisible(true)
         binding.rvCard.layoutManager =
-            GridLayoutManager(requireSceneContext(), 3, RecyclerView.VERTICAL, false)
+            GridLayoutManager(requireSceneContext(), 2, RecyclerView.VERTICAL, false)
         val array = arrayListOf<MainCard>().apply {
             addAll(MainCard.values())
         }
@@ -67,8 +67,15 @@ class MainScene : AppCompatScene() {
                 outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State
             ) {
                 super.getItemOffsets(outRect, view, parent, state)
-                if (parent.getChildLayoutPosition(view) % 3 == 0) {
-                    outRect.left += dp2px(12)
+                if (parent.getChildLayoutPosition(view) % 2 == 0) {
+                    outRect.left += dp2px(6)
+                    outRect.right += dp2px(3)
+                }else if(parent.getChildLayoutPosition(view) % 2 == 1){
+                    outRect.left += dp2px(3)
+                    outRect.right += dp2px(6)
+                }else{
+                    outRect.left += dp2px(3)
+                    outRect.right += dp2px(3)
                 }
                 outRect.top += dp2px(12)
             }
@@ -90,7 +97,7 @@ class MainAdapter(private val data: ArrayList<MainCard>, val scene: Scene) :
     RecyclerView.Adapter<MainHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainHolder {
         return MainHolder(AppCompatButton(parent.context).apply {
-            layoutParams = ViewGroup.LayoutParams(dp2px(120), dp2px(60))
+            layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp2px(60))
             this.setTextColor(ContextCompat.getColor(this.context, R.color.white))
             elevation = 5f
             isAllCaps = false
@@ -114,107 +121,107 @@ class MainAdapter(private val data: ArrayList<MainCard>, val scene: Scene) :
 class MainHolder(val itemRoot: AppCompatButton) : RecyclerView.ViewHolder(itemRoot)
 
 enum class MainCard(val content: String, val onItemClick: ((Scene) -> Unit)? = null) {
-    Sport(
-        "环形进度条",
-        { scene ->
-            requireNavigationScene(scene).push(SportScene::class.java, Bundle().apply {
-                this.putString(ARGUMENTS_STRING_TITLE, "环形进度条")
-            })
-        }),
-    FlipBoard(
-        "FlipBoard", { scene ->
-            requireNavigationScene(scene).push(FlipBoardScene::class.java,
-                Bundle().apply {
-                    this.putString(ARGUMENTS_STRING_TITLE, "FlipBoard")
-                })
-        }),
-    TagLayout(
-        "TagLayout", { scene ->
-            requireNavigationScene(scene).push(TagLayoutScene::class.java,
-                Bundle().apply {
-                    this.putString(
-                        ARGUMENTS_STRING_TITLE,
-                        "TagLayout"
-                    )
-                })
-        }),
-    ScaleImage(
-        "ScaleImage", { scene ->
-            requireNavigationScene(scene).push(ScaleImageScene::class.java,
-                Bundle().apply {
-                    this.putString(
-                        ARGUMENTS_STRING_TITLE,
-                        "ScaleImage"
-                    )
-                })
-        }),
-    FragmentTest(
-        "FragmentTest",
-        { scene ->
-            requireNavigationScene(scene).push(FragmentTestScene::class.java, android.os.Bundle()
-                .apply {
-                    this.putString(
-                        ARGUMENTS_STRING_TITLE,
-                        "FragmentTest"
-                    )
-                })
-        }),
-    Particle("粒子消散",
-        { scene ->
-            requireNavigationScene(scene).push(ParticleScatteringScene::class.java,
-                Bundle().apply {
-                    this.putString(
-                        ARGUMENTS_STRING_TITLE,
-                        "粒子消散"
-                    )
-                })
-        }),
-    WaveView("WaveView",
-        { scene ->
-            requireNavigationScene(scene).push(WaveViewScene::class.java,
-                Bundle().apply {
-                    this.putString(
-                        ARGUMENTS_STRING_TITLE,
-                        "WaveView"
-                    )
-                })
-        }),
-    MemoryLeak("内存泄漏", { scene ->
-        val intent = Intent(
-            scene.requireActivity(), com.starts.hencoderview.ui.MemoryLeakActivity::class.java
-        )
-        scene.requireActivity().startActivity(intent)
-    }),
-    ScaleAlpha("呼吸放大",
-        { scene ->
-            requireNavigationScene(scene).push(ScaleAlphaAnimScene::class.java,
-                Bundle().apply {
-                    this.putString(
-                        ARGUMENTS_STRING_TITLE,
-                        "呼吸放大"
-                    )
-                })
-        }),
-    DoubleRecycler("双RecyclerView分发",
-        { scene ->
-            requireNavigationScene(scene).push(FloatRecyclerScene::class.java,
-                Bundle().apply {
-                    this.putString(
-                        ARGUMENTS_STRING_TITLE,
-                        "双RecyclerView分发"
-                    )
-                })
-        }),
-    Transition("Transition动画",
-        { scene ->
-            requireNavigationScene(scene).push(TransitionScene::class.java,
-                Bundle().apply {
-                    this.putString(
-                        ARGUMENTS_STRING_TITLE,
-                        "Transition动画"
-                    )
-                })
-        }),
+//    Sport(
+//        "环形进度条",
+//        { scene ->
+//            requireNavigationScene(scene).push(SportScene::class.java, Bundle().apply {
+//                this.putString(ARGUMENTS_STRING_TITLE, "环形进度条")
+//            })
+//        }),
+//    FlipBoard(
+//        "FlipBoard", { scene ->
+//            requireNavigationScene(scene).push(FlipBoardScene::class.java,
+//                Bundle().apply {
+//                    this.putString(ARGUMENTS_STRING_TITLE, "FlipBoard")
+//                })
+//        }),
+//    TagLayout(
+//        "TagLayout", { scene ->
+//            requireNavigationScene(scene).push(TagLayoutScene::class.java,
+//                Bundle().apply {
+//                    this.putString(
+//                        ARGUMENTS_STRING_TITLE,
+//                        "TagLayout"
+//                    )
+//                })
+//        }),
+//    ScaleImage(
+//        "ScaleImage", { scene ->
+//            requireNavigationScene(scene).push(ScaleImageScene::class.java,
+//                Bundle().apply {
+//                    this.putString(
+//                        ARGUMENTS_STRING_TITLE,
+//                        "ScaleImage"
+//                    )
+//                })
+//        }),
+//    FragmentTest(
+//        "FragmentTest",
+//        { scene ->
+//            requireNavigationScene(scene).push(FragmentTestScene::class.java, android.os.Bundle()
+//                .apply {
+//                    this.putString(
+//                        ARGUMENTS_STRING_TITLE,
+//                        "FragmentTest"
+//                    )
+//                })
+//        }),
+//    Particle("粒子消散",
+//        { scene ->
+//            requireNavigationScene(scene).push(ParticleScatteringScene::class.java,
+//                Bundle().apply {
+//                    this.putString(
+//                        ARGUMENTS_STRING_TITLE,
+//                        "粒子消散"
+//                    )
+//                })
+//        }),
+//    WaveView("WaveView",
+//        { scene ->
+//            requireNavigationScene(scene).push(WaveViewScene::class.java,
+//                Bundle().apply {
+//                    this.putString(
+//                        ARGUMENTS_STRING_TITLE,
+//                        "WaveView"
+//                    )
+//                })
+//        }),
+//    MemoryLeak("内存泄漏", { scene ->
+//        val intent = Intent(
+//            scene.requireActivity(), com.starts.hencoderview.ui.MemoryLeakActivity::class.java
+//        )
+//        scene.requireActivity().startActivity(intent)
+//    }),
+//    ScaleAlpha("呼吸放大",
+//        { scene ->
+//            requireNavigationScene(scene).push(ScaleAlphaAnimScene::class.java,
+//                Bundle().apply {
+//                    this.putString(
+//                        ARGUMENTS_STRING_TITLE,
+//                        "呼吸放大"
+//                    )
+//                })
+//        }),
+//    DoubleRecycler("双RecyclerView分发",
+//        { scene ->
+//            requireNavigationScene(scene).push(FloatRecyclerScene::class.java,
+//                Bundle().apply {
+//                    this.putString(
+//                        ARGUMENTS_STRING_TITLE,
+//                        "双RecyclerView分发"
+//                    )
+//                })
+//        }),
+//    Transition("Transition动画",
+//        { scene ->
+//            requireNavigationScene(scene).push(TransitionScene::class.java,
+//                Bundle().apply {
+//                    this.putString(
+//                        ARGUMENTS_STRING_TITLE,
+//                        "Transition动画"
+//                    )
+//                })
+//        }),
     LinearLayoutTest("LinearLayoutTest", { scene ->
         requireNavigationScene(scene).push(
             LinearTestScene::class.java,
