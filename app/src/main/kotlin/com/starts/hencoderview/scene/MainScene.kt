@@ -58,7 +58,7 @@ class MainScene : AppCompatScene() {
         setStatusBarVisible(true)
         setToolbarVisible(true)
         binding.rvCard.layoutManager =
-            GridLayoutManager(requireSceneContext(), 3, RecyclerView.VERTICAL, false)
+            GridLayoutManager(requireSceneContext(), 2, RecyclerView.VERTICAL, false)
         val array = arrayListOf<MainCard>().apply {
             addAll(MainCard.values())
         }
@@ -67,8 +67,15 @@ class MainScene : AppCompatScene() {
                 outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State
             ) {
                 super.getItemOffsets(outRect, view, parent, state)
-                if (parent.getChildLayoutPosition(view) % 3 == 0) {
-                    outRect.left += dp2px(12)
+                if (parent.getChildLayoutPosition(view) % 2 == 0) {
+                    outRect.left += dp2px(6)
+                    outRect.right += dp2px(3)
+                }else if(parent.getChildLayoutPosition(view) % 2 == 1){
+                    outRect.left += dp2px(3)
+                    outRect.right += dp2px(6)
+                }else{
+                    outRect.left += dp2px(3)
+                    outRect.right += dp2px(3)
                 }
                 outRect.top += dp2px(12)
             }
@@ -90,7 +97,7 @@ class MainAdapter(private val data: ArrayList<MainCard>, val scene: Scene) :
     RecyclerView.Adapter<MainHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainHolder {
         return MainHolder(AppCompatButton(parent.context).apply {
-            layoutParams = ViewGroup.LayoutParams(dp2px(120), dp2px(60))
+            layoutParams = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, dp2px(80))
             this.setTextColor(ContextCompat.getColor(this.context, R.color.white))
             elevation = 5f
             isAllCaps = false
